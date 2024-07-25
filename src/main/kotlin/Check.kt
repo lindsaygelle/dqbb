@@ -4,12 +4,35 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 abstract class Check<T>(
-    private val attribute: Attribute,
-    private val expression: Expression,
-    private val operator: Operator,
-    override val priority: Priority,
-    private val value: Comparable<T>,
+    expression: Expression,
+    operator: Operator,
+    priority: Priority,
+    value: Comparable<T>,
 ) : Checker {
+
+    private var expression: Expression = Expression.EXACT
+        set(value) {
+            field = value
+            logger.debug("expression=$field")
+        }
+
+    private var operator: Operator = Operator.EQUAL
+        set(value) {
+            field = value
+            logger.debug("operator=$field")
+        }
+
+    final override var priority: Priority = Priority.LOWEST
+        set(value) {
+            field = value
+            logger.debug("priority=$field")
+        }
+
+    private var value: Comparable<T> = value
+        set(value) {
+            field = value
+            logger.debug("value=$value")
+        }
 
     protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
@@ -24,7 +47,7 @@ abstract class Check<T>(
     }
 
     override fun check(actor: Actor): Boolean {
-        logger.info("attribute=$attribute expression=$expression operator=$operator value=$value")
+        logger.info("expression=$expression operator=$operator value=$value")
         val result = checkValue(
             when (expression) {
                 Expression.EXACT -> getExact(actor)
@@ -37,6 +60,17 @@ abstract class Check<T>(
 
     protected abstract fun getExact(actor: Actor): T
     protected abstract fun getPercentage(actor: Actor): T
+
+    init {
+        this.expression = expression
+        this.operator = operator
+        this.priority = priority
+        this.value = value
+        logger.info("expression=$expression " +
+                "operator=$operator " +
+                "priority=$priority " +
+                "value=$value")
+    }
 }
 
 class CheckHitPoints(
@@ -45,7 +79,6 @@ class CheckHitPoints(
     priority: Priority,
     value: HitPoints,
 ) : Check<HitPoints>(
-    attribute = Attribute.HIT_POINTS,
     expression = expression,
     operator = operator,
     priority = priority,
@@ -70,7 +103,6 @@ class CheckMagicPoints(
     priority: Priority,
     value: MagicPoints,
 ) : Check<MagicPoints>(
-    attribute = Attribute.MAGIC_POINTS,
     expression = expression,
     priority = priority,
     operator = operator,
@@ -95,7 +127,6 @@ class CheckTurnsSleep(
     priority: Priority,
     value: Turns,
 ) : Check<Turns>(
-    attribute = Attribute.TURNS_SLEEP,
     expression = expression,
     operator = operator,
     priority = priority,
@@ -120,7 +151,6 @@ class CheckTurnsStopSpell(
     priority: Priority,
     value: Turns,
 ) : Check<Turns>(
-    attribute = Attribute.TURNS_SLEEP,
     expression = expression,
     operator = operator,
     priority = priority,

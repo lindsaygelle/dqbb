@@ -1,9 +1,10 @@
 package dqbb
 
 abstract class Magic(
-    private val magicPoints: Int,
+    magicPoints: Int,
 ) : Ability() {
 
+    private val magicPoints: Int = maxOf(0, magicPoints)
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
         val checkResistanceValue = checkResistance(actor, otherActor)
         logger.info("checkResistance=$checkResistanceValue")
@@ -15,7 +16,8 @@ abstract class Magic(
 
     protected abstract fun applyEffect(actor: Actor, otherActor: Actor): Boolean
     override fun check(actor: Actor, otherActor: Actor): Boolean {
-        logger.debug("$actor.statusStopSpell=${actor.statusStopSpell}")
+        val statusStopSpell = actor.statusStopSpell
+        logger.debug("$actor.statusStopSpell=$statusStopSpell")
         if (actor.statusStopSpell) {
             return false
         }
@@ -29,6 +31,10 @@ abstract class Magic(
     }
 
     protected abstract fun checkResistance(actor: Actor, otherActor: Actor): Boolean
+
+    init {
+        logger.info("magicPoints=${this.magicPoints}")
+    }
 }
 
 class MagicHeal(
@@ -45,7 +51,9 @@ class MagicHeal(
     }
 
     override fun checkResistance(actor: Actor, otherActor: Actor): Boolean {
-        return true
+        val hasResistance = false
+        logger.debug("hasResistance=$hasResistance")
+        return hasResistance
     }
 }
 

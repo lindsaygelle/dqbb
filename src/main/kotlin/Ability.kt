@@ -11,8 +11,14 @@ abstract class Ability {
 
     fun use(actor: Actor, otherActor: Actor): Boolean {
         logger.info("actor=$actor otherActor=$otherActor")
-        logger.debug("$actor.statusSleep=${actor.statusSleep}")
-        if (actor.statusSleep) {
+        val isAlive = actor.isAlive
+        logger.debug("$actor.isAlive=$isAlive")
+        if (!isAlive) {
+            return false
+        }
+        val statusSleep = actor.statusSleep
+        logger.debug("$actor.statusSleep=$statusSleep")
+        if (statusSleep) {
             return false
         }
         val checkValue = check(actor, otherActor)

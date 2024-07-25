@@ -35,13 +35,17 @@ class Actor(
             logger.debug("actionPointsMaximum=$field")
         }
 
-    private var allegiance: Int = maxOf(0, allegiance)
+    private var allegiance: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug("allegiance=$field")
         }
 
-    private val decisions: List<Decision> = decisions.sortedBy { decision -> decision.priority }
+    private var decisions: List<Decision> = listOf()
+        set(value) {
+            field = value.sortedBy { decision: Decision -> decision.priority }
+            logger.debug("decisions.size=${field.size}")
+        }
 
     private val hasActionPoints: Boolean
         get() = this.actionPoints > 0
@@ -129,7 +133,6 @@ class Actor(
         return ((value.toDouble() / valueMaximum) * 100).toInt()
     }
 
-
     private fun performAbility(ability: Ability, actor: Actor): Boolean {
         logger.info("ability=${ability::class.simpleName}")
         return ability.use(this, actor)
@@ -146,6 +149,8 @@ class Actor(
     init {
         this.actionPointsMaximum = actionPointsMaximum
         this.actionPoints = actionPoints
+        this.allegiance = allegiance
+        this.decisions = decisions
         this.hitPointsMaximum = hitPointsMaximum
         this.hitPoints = hitPoints
         this.magicPointsMaximum = magicPointsMaximum
@@ -154,5 +159,20 @@ class Actor(
         this.turnsSleep = turnsSleep
         this.turnsStopSpellMaximum = turnsStopSpellMaximum
         this.turnsStopSpell = turnsStopSpell
+
+        logger.info(
+            "actionPointsMaximum=${this.actionPointsMaximum} " +
+                    "actionPoints=${this.actionPoints} " +
+                    "allegiance=${this.allegiance} " +
+                    "decisions.size=${this.decisions.size} " +
+                    "hitPointsMaximum=${this.hitPointsMaximum} " +
+                    "hitPoints=${this.hitPoints} " +
+                    "magicPointsMaximum=${this.magicPointsMaximum} " +
+                    "magicPoints=${this.magicPoints} " +
+                    "turnsSleepMaximum=${this.turnsSleepMaximum} " +
+                    "turnsSleep=${this.turnsSleep} " +
+                    "turnsStopSpellMaximum=${this.turnsStopSpellMaximum} " +
+                    "turnsStopSpell=${this.turnsStopSpell}"
+        )
     }
 }

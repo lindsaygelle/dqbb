@@ -25,7 +25,7 @@ open class Qualifier(
             logger.debug("match=$field")
         }
 
-    final override var priority: Priority = Priority.HIGHEST
+    final override var priority: Priority = Priority.LOWEST
         set(value) {
             field = value
             logger.debug("priority=$field")
@@ -72,5 +72,12 @@ open class Qualifier(
         this.match = match
         this.priority = priority
         this.target = target
+
+        logger.info(
+            "checkers.size=${this.checkers.size} " +
+                    "match=$match " +
+                    "priority=$priority " +
+                    "target=$target"
+        )
     }
 }
