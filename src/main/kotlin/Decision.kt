@@ -22,13 +22,13 @@ class Decision(
 
     fun isValid(actor: Actor, otherActors: List<Actor>): Boolean {
         logger.info("ability=${ability::class.simpleName}")
-        actors = condition.check(actor, otherActors)
-        logger.info("conditionActors.size=${actors.size}")
+        val conditionActors = condition.check(actor, otherActors)
+        logger.info("conditionActors.size=${conditionActors.size}")
         if (actors.isEmpty()) {
             return false
         }
         actors = apply.check(actor, otherActors)
-        logger.info("applyActors.size=${actors.size}")
+        logger.info("actors.size=${actors.size}")
         return actors.isNotEmpty()
     }
 

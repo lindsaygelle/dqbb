@@ -44,8 +44,9 @@ class MagicHeal(
 ) {
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         val hitPointsPrevious = otherActor.hitPoints
-        val hitPoints = otherActor.hitPoints + actor.healValue
-        logger.debug("hitPointsPrevious=$hitPointsPrevious hitPoints=$hitPoints")
+        val healValue = actor.healValue
+        val hitPoints = otherActor.hitPoints + healValue
+        logger.debug("healValue=$healValue hitPointsPrevious=$hitPointsPrevious hitPoints=$hitPoints")
         otherActor.hitPoints = hitPoints
         return otherActor.hitPoints > hitPointsPrevious
     }
@@ -54,6 +55,25 @@ class MagicHeal(
         val hasResistance = false
         logger.debug("hasResistance=$hasResistance")
         return hasResistance
+    }
+}
+
+class MagicHealMore(
+    magicPoints: Int
+) : Magic(
+    magicPoints = magicPoints,
+) {
+    override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
+        val hitPointsPrevious = otherActor.hitPoints
+        val healMoreValue = actor.healMoreValue
+        val hitPoints = otherActor.hitPoints + healMoreValue
+        logger.debug("healMoreValue=$healMoreValue hitPointsPrevious=$hitPointsPrevious hitPoints=$hitPoints")
+        otherActor.hitPoints = hitPoints
+        return otherActor.hitPoints > hitPointsPrevious
+    }
+
+    override fun checkResistance(actor: Actor, otherActor: Actor): Boolean {
+        return false
     }
 }
 

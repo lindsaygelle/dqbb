@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger
 
 
 abstract class Ability {
+
     protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
     protected abstract fun apply(actor: Actor, otherActor: Actor): Boolean
     protected abstract fun check(actor: Actor, otherActor: Actor): Boolean
