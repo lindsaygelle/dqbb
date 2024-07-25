@@ -1,37 +1,76 @@
 package dqbb
 
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
+
 abstract class Check<T>(
-    private val attribute: Attribute,
-    private val expression: Expression,
-    private val operator: Operator,
-    override val priority: Priority,
-    private val value: Comparable<T>,
+    expression: Expression,
+    operator: Operator,
+    priority: Priority,
+    value: Comparable<T>,
 ) : Checker {
 
+    private var expression: Expression = Expression.EXACT
+        set(value) {
+            field = value
+            logger.debug("expression=$field")
+        }
+
+    private var operator: Operator = Operator.EQUAL
+        set(value) {
+            field = value
+            logger.debug("operator=$field")
+        }
+
+    final override var priority: Priority = Priority.LOWEST
+        set(value) {
+            field = value
+            logger.debug("priority=$field")
+        }
+
+    private var value: Comparable<T> = value
+        set(value) {
+            field = value
+            logger.debug("value=$value")
+        }
+
+    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
+
     private fun checkValue(value: T): Boolean {
-        var result = when (operator) {
+        return when (operator) {
             Operator.EQUAL -> this.value == value
             Operator.GREATER_THAN -> this.value < value  // This is annoying. It won't compile without swapping them.
             /* Unresolved reference. None of the following candidates is applicable because of receiver type mismatch:
             public fun String.compareTo(other: String, ignoreCase: Boolean = ...): Int defined in kotlin.text */
             Operator.LESS_THAN -> this.value > value  // This is annoying. It won't compile without swapping them.
         }
-        println("${this::class.simpleName}: is ${this.value} $operator $value when $expression ? $result")
-        return result
     }
 
     override fun check(actor: Actor): Boolean {
-        println("${this::class.simpleName}: attribute=$attribute expression=$expression operator=$operator value=$value")
-        return checkValue(
+        logger.info("expression=$expression operator=$operator value=$value")
+        val result = checkValue(
             when (expression) {
                 Expression.EXACT -> getExact(actor)
                 Expression.PERCENTAGE -> getPercentage(actor)
             }
         )
+        logger.info("result=$result")
+        return result
     }
 
     protected abstract fun getExact(actor: Actor): T
     protected abstract fun getPercentage(actor: Actor): T
+
+    init {
+        this.expression = expression
+        this.operator = operator
+        this.priority = priority
+        this.value = value
+        logger.info("expression=$expression " +
+                "operator=$operator " +
+                "priority=$priority " +
+                "value=$value")
+    }
 }
 
 class CheckHitPoints(
@@ -40,7 +79,6 @@ class CheckHitPoints(
     priority: Priority,
     value: HitPoints,
 ) : Check<HitPoints>(
-    attribute = Attribute.HIT_POINTS,
     expression = expression,
     operator = operator,
     priority = priority,
@@ -48,13 +86,13 @@ class CheckHitPoints(
 ) {
     override fun getExact(actor: Actor): HitPoints {
         val hitPoints = actor.hitPoints
-        println("$actor hitPointsPercentage=$hitPoints")
+        logger.debug("$actor.hitPoints=$hitPoints")
         return hitPoints
     }
 
     override fun getPercentage(actor: Actor): HitPoints {
         val hitPointsPercentage = actor.hitPointsPercentage
-        println("$actor hitPointsPercentage=$hitPointsPercentage")
+        logger.debug("$actor.hitPointsPercentage=$hitPointsPercentage")
         return hitPointsPercentage
     }
 }
@@ -65,37 +103,21 @@ class CheckMagicPoints(
     priority: Priority,
     value: MagicPoints,
 ) : Check<MagicPoints>(
-    attribute = Attribute.MAGIC_POINTS,
     expression = expression,
     priority = priority,
     operator = operator,
     value = value,
 ) {
     override fun getExact(actor: Actor): MagicPoints {
-        return actor.magicPoints
+        val magicPoints = actor.magicPoints
+        logger.debug("$actor.magicPoints=$magicPoints")
+        return magicPoints
     }
 
     override fun getPercentage(actor: Actor): MagicPoints {
-        return actor.magicPointsPercentage
-    }
-}
-
-class CheckStatusSleep(
-    priority: Priority = Priority.HIGHEST,
-    value: Boolean,
-) : Check<Boolean>(
-    attribute = Attribute.STATUS_SLEEP,
-    expression = Expression.EXACT,
-    priority = priority,
-    operator = Operator.EQUAL,
-    value = value,
-) {
-    override fun getExact(actor: Actor): Boolean {
-        return actor.statusSleep
-    }
-
-    override fun getPercentage(actor: Actor): Boolean {
-        return false
+        val magicPointsPercentage = actor.magicPointsPercentage
+        logger.debug("$actor.magicPointsPercentage=$magicPointsPercentage")
+        return magicPointsPercentage
     }
 }
 
@@ -105,17 +127,44 @@ class CheckTurnsSleep(
     priority: Priority,
     value: Turns,
 ) : Check<Turns>(
-    attribute = Attribute.TURNS_SLEEP,
     expression = expression,
     operator = operator,
     priority = priority,
     value = value,
 ) {
     override fun getExact(actor: Actor): Turns {
-        return actor.turnsSleep
+        val turnsSleep = actor.turnsSleep
+        logger.debug("$actor.turnsSleep=$turnsSleep")
+        return turnsSleep
     }
 
     override fun getPercentage(actor: Actor): Turns {
-        return actor.turnsSleepPercentage
+        val turnsSleepPercentage = actor.turnsSleepPercentage
+        logger.debug("$actor.turnsSleepPercentage=$turnsSleepPercentage")
+        return turnsSleepPercentage
+    }
+}
+
+class CheckTurnsStopSpell(
+    expression: Expression,
+    operator: Operator,
+    priority: Priority,
+    value: Turns,
+) : Check<Turns>(
+    expression = expression,
+    operator = operator,
+    priority = priority,
+    value = value,
+) {
+    override fun getExact(actor: Actor): Turns {
+        val turnsStopSpell = actor.turnsStopSpell
+        logger.debug("$actor.turnsStopSpell=$turnsStopSpell")
+        return turnsStopSpell
+    }
+
+    override fun getPercentage(actor: Actor): Turns {
+        val turnsStopSpellPercentage = actor.turnsStopSpellPercentage
+        logger.debug("$actor.turnsStopSpellPercentage=$turnsStopSpellPercentage")
+        return turnsStopSpellPercentage
     }
 }
