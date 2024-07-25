@@ -9,7 +9,9 @@ fun main() {
         allegiance = 0,
         decisions = listOf(
             Decision(
-                ability = MagicHeal(),
+                ability = MagicHeal(
+                    magicPoints = 2,
+                ),
                 apply = Qualifier(
                     checkers = listOf(
                         CheckHitPoints(
@@ -25,9 +27,11 @@ fun main() {
                 ),
                 condition = Qualifier(
                     checkers = listOf(
-                        CheckStatusSleep(
+                        CheckTurnsSleep(
+                            expression = Expression.EXACT,
+                            operator = Operator.GREATER_THAN,
                             priority = Priority.HIGHEST,
-                            value = true
+                            value = 0
                         ),
                         CheckHitPoints(
                             expression = Expression.PERCENTAGE,
@@ -47,6 +51,7 @@ fun main() {
         hitPointsMaximum = 22,
         magicPointsMaximum = 20,
         turnsSleepMaximum = 3,
+        turnsStopSpellMaximum = 3,
     )
 
     actor.performDecisions(listOf(actor, actor))

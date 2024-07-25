@@ -1,17 +1,43 @@
 package dqbb
 
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
+
 
 open class Qualifier(
-    checkers: List<Checker> = listOf(),
-    private val match: Match = Match.OR,
-    final override val priority: Priority = Priority.HIGHEST,
-    private val target: Target = Target.ANY,
+    checkers: List<Checker>,
+    match: Match,
+    priority: Priority,
+    target: Target,
 ) : Prioritized {
 
-    private val checkers: List<Checker> = checkers.sortedBy { checker: Checker -> checker.priority }
+    private var checkers: List<Checker> = listOf()
+        set(value) {
+            field = value.sortedBy { checker -> checker.priority }
+            logger.debug("checkers.size=${field.size}")
+        }
+
+    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
+
+    private var match: Match = Match.OR
+        set(value) {
+            field = value
+            logger.debug("match=$field")
+        }
+
+    final override var priority: Priority = Priority.HIGHEST
+        set(value) {
+            field = value
+            logger.debug("priority=$field")
+        }
+    private var target: Target = target
+        set(value) {
+            field = value
+            logger.debug("target=$field")
+        }
 
     fun check(actor: Actor, otherActors: List<Actor>): List<Actor> {
-        println("${this::class.simpleName} checkers.size=${checkers.size} match=$match target=$target")
+        logger.info("match=$match target=$target")
         return otherActors.filter { otherActor ->
             (checkTarget(actor, otherActor) && checkMatch(otherActor))
         }
@@ -39,5 +65,12 @@ open class Qualifier(
 
     private fun matchOr(actor: Actor): Boolean {
         return checkers.any { checker -> checker.check(actor) }
+    }
+
+    init {
+        this.checkers = checkers
+        this.match = match
+        this.priority = priority
+        this.target = target
     }
 }
