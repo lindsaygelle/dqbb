@@ -66,10 +66,36 @@ abstract class Check<T>(
         this.operator = operator
         this.priority = priority
         this.value = value
-        logger.info("expression=$expression " +
-                "operator=$operator " +
-                "priority=$priority " +
-                "value=$value")
+        logger.info(
+            "expression=$expression " +
+                    "operator=$operator " +
+                    "priority=$priority " +
+                    "value=$value"
+        )
+    }
+}
+
+class CheckActionPoints(
+    expression: Expression,
+    operator: Operator,
+    priority: Priority,
+    value: Int,
+) : Check<Int>(
+    expression = expression,
+    operator = operator,
+    priority = priority,
+    value = value,
+) {
+    override fun getExact(actor: Actor): Int {
+        val actionPoints = actor.actionPoints
+        logger.debug("$actor.actionPoints=$actionPoints")
+        return actionPoints
+    }
+
+    override fun getPercentage(actor: Actor): Int {
+        val actionPointsPercentage = actor.actionPointsPercentage
+        logger.debug("$actor.actionPointsPercentage=$actionPointsPercentage")
+        return actionPointsPercentage
     }
 }
 
@@ -77,20 +103,20 @@ class CheckHitPoints(
     expression: Expression,
     operator: Operator,
     priority: Priority,
-    value: HitPoints,
-) : Check<HitPoints>(
+    value: Int,
+) : Check<Int>(
     expression = expression,
     operator = operator,
     priority = priority,
     value = value,
 ) {
-    override fun getExact(actor: Actor): HitPoints {
+    override fun getExact(actor: Actor): Int {
         val hitPoints = actor.hitPoints
         logger.debug("$actor.hitPoints=$hitPoints")
         return hitPoints
     }
 
-    override fun getPercentage(actor: Actor): HitPoints {
+    override fun getPercentage(actor: Actor): Int {
         val hitPointsPercentage = actor.hitPointsPercentage
         logger.debug("$actor.hitPointsPercentage=$hitPointsPercentage")
         return hitPointsPercentage
@@ -101,20 +127,20 @@ class CheckMagicPoints(
     expression: Expression,
     operator: Operator,
     priority: Priority,
-    value: MagicPoints,
-) : Check<MagicPoints>(
+    value: Int,
+) : Check<Int>(
     expression = expression,
     priority = priority,
     operator = operator,
     value = value,
 ) {
-    override fun getExact(actor: Actor): MagicPoints {
+    override fun getExact(actor: Actor): Int {
         val magicPoints = actor.magicPoints
         logger.debug("$actor.magicPoints=$magicPoints")
         return magicPoints
     }
 
-    override fun getPercentage(actor: Actor): MagicPoints {
+    override fun getPercentage(actor: Actor): Int {
         val magicPointsPercentage = actor.magicPointsPercentage
         logger.debug("$actor.magicPointsPercentage=$magicPointsPercentage")
         return magicPointsPercentage
@@ -125,20 +151,20 @@ class CheckTurnsSleep(
     expression: Expression,
     operator: Operator,
     priority: Priority,
-    value: Turns,
-) : Check<Turns>(
+    value: Int,
+) : Check<Int>(
     expression = expression,
     operator = operator,
     priority = priority,
     value = value,
 ) {
-    override fun getExact(actor: Actor): Turns {
+    override fun getExact(actor: Actor): Int {
         val turnsSleep = actor.turnsSleep
         logger.debug("$actor.turnsSleep=$turnsSleep")
         return turnsSleep
     }
 
-    override fun getPercentage(actor: Actor): Turns {
+    override fun getPercentage(actor: Actor): Int {
         val turnsSleepPercentage = actor.turnsSleepPercentage
         logger.debug("$actor.turnsSleepPercentage=$turnsSleepPercentage")
         return turnsSleepPercentage
@@ -149,20 +175,20 @@ class CheckTurnsStopSpell(
     expression: Expression,
     operator: Operator,
     priority: Priority,
-    value: Turns,
-) : Check<Turns>(
+    value: Int,
+) : Check<Int>(
     expression = expression,
     operator = operator,
     priority = priority,
     value = value,
 ) {
-    override fun getExact(actor: Actor): Turns {
+    override fun getExact(actor: Actor): Int {
         val turnsStopSpell = actor.turnsStopSpell
         logger.debug("$actor.turnsStopSpell=$turnsStopSpell")
         return turnsStopSpell
     }
 
-    override fun getPercentage(actor: Actor): Turns {
+    override fun getPercentage(actor: Actor): Int {
         val turnsStopSpellPercentage = actor.turnsStopSpellPercentage
         logger.debug("$actor.turnsStopSpellPercentage=$turnsStopSpellPercentage")
         return turnsStopSpellPercentage

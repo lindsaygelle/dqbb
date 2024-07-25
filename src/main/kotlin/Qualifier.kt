@@ -13,7 +13,7 @@ open class Qualifier(
 
     private var checkers: List<Checker> = listOf()
         set(value) {
-            field = value.sortedBy { checker -> checker.priority }
+            field = value.sortedBy { checker -> checker.priority.ordinal }
             logger.debug("checkers.size=${field.size}")
         }
 

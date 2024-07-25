@@ -1,6 +1,6 @@
 package dqbb
 
-enum class Expression(val value: String) {
-    EXACT("EXACT"),
-    PERCENTAGE("PERCENTAGE")
+enum class Expression {
+    EXACT,
+    PERCENTAGE
 }

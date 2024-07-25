@@ -3,37 +3,41 @@ package dqbb
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-typealias ActionPoints = Int
-typealias HitPoints = Int
-typealias MagicPoints = Int
-typealias Turns = Int
 
 class Actor(
-    actionPoints: Int = ActionPoints.MAX_VALUE,
+    actionPoints: Int = Int.MAX_VALUE,
     actionPointsMaximum: Int,
     allegiance: Int,
     decisions: List<Decision>,
-    hitPoints: HitPoints = HitPoints.MAX_VALUE,
-    hitPointsMaximum: HitPoints,
-    magicPoints: MagicPoints = MagicPoints.MAX_VALUE,
-    magicPointsMaximum: MagicPoints,
-    turnsSleep: Turns = 0,
-    turnsSleepMaximum: Turns,
-    turnsStopSpell: Turns = 0,
-    turnsStopSpellMaximum: Turns,
+    healMoreScale: Int = 0x55,
+    healScale: Int = 0x0A,
+    herbScale: Int = 0x17,
+    hitPoints: Int = Int.MAX_VALUE,
+    hitPointsMaximum: Int,
+    val items: MutableMap<Item, Int> = mutableMapOf(),
+    statusResistance: Int = 0x0F,
+    magicPoints: Int = Int.MAX_VALUE,
+    magicPointsMaximum: Int,
+    turnsSleep: Int = 0,
+    turnsSleepMaximum: Int,
+    turnsStopSpell: Int = 0,
+    turnsStopSpellMaximum: Int,
 ) {
 
-    private var actionPoints: ActionPoints = 0
+    var actionPoints: Int = 0
         set(value) {
             field = maxOf(0, minOf(this.actionPointsMaximum, value))
             logger.debug("actionPoints=$field")
         }
 
-    private var actionPointsMaximum: ActionPoints = 0
+    private var actionPointsMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug("actionPointsMaximum=$field")
         }
+
+    val actionPointsPercentage: Int
+        get() = this.getPercentage(this.actionPoints, this.actionPointsMaximum)
 
     private var allegiance: Int = 0
         set(value) {
@@ -50,42 +54,73 @@ class Actor(
     private val hasActionPoints: Boolean
         get() = this.actionPoints > 0
 
-    val healValue: HitPoints
-        get() = (0..7).random() and 0x07 + 0x0A
+    private var healMoreScale: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug("healMoreScale=$field")
+        }
 
-    var hitPoints: HitPoints = 0
+    val healMoreValue: Int
+        get() = (0..7).random() and 0x0F + this.healMoreScale
+
+    private var healScale: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug("healScale=$field")
+        }
+
+    val healValue: Int
+        get() = (0..7).random() and 0x07 + this.healScale
+
+    private var herbScale: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug("herbScale=$field")
+        }
+
+    val herbValue: Int
+        get() = (0..7).random() and 0x0F + this.healScale
+
+    var hitPoints: Int = 0
         set(value) {
             field = maxOf(0, minOf(this.hitPointsMaximum, value))
             logger.debug("hitPoints=$field")
         }
 
-    private var hitPointsMaximum: HitPoints = 0
+    private var hitPointsMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug("hitPointsMaximum=$field")
         }
 
-    val hitPointsPercentage: HitPoints
+    val hitPointsPercentage: Int
         get() = getPercentage(this.hitPoints, this.hitPointsMaximum)
 
     val isAlive: Boolean
         get() = this.hitPoints > 0
 
     private val logger: Logger = LogManager.getLogger(this::class.simpleName)
-    var magicPoints: MagicPoints = 0
+
+    var magicPoints: Int = 0
         set(value) {
             field = maxOf(0, minOf(this.magicPointsMaximum, value))
             logger.debug("magicPoints=$field")
         }
 
-    private var magicPointsMaximum: MagicPoints = 0
+    private var magicPointsMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug("magicPointsMaximum=$field")
         }
 
-    val magicPointsPercentage: MagicPoints
+    val magicPointsPercentage: Int
         get() = getPercentage(this.magicPoints, this.magicPointsMaximum)
+
+    var statusResistance: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug("statusResistance=$field")
+        }
 
     val statusSleep: Boolean
         get() = this.turnsSleep > 0
@@ -93,18 +128,18 @@ class Actor(
     val statusStopSpell: Boolean
         get() = this.turnsStopSpell > 0
 
-    var turnsSleep: Turns = 0
+    var turnsSleep: Int = 0
         set(value) {
             field = maxOf(0, minOf(this.turnsSleepMaximum, value))
             logger.debug("turnsSleep=$field")
         }
-    private var turnsSleepMaximum: Turns = 0
+    private var turnsSleepMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug("turnsSleepMaximum=$field")
         }
 
-    val turnsSleepPercentage: Turns
+    val turnsSleepPercentage: Int
         get() = getPercentage(this.turnsSleep, this.turnsSleepMaximum)
 
     var turnsStopSpell: Int = 0
@@ -112,13 +147,14 @@ class Actor(
             field = maxOf(0, minOf(this.turnsStopSpellMaximum, value))
             logger.debug("turnsStopSpell=$field")
         }
+
     private var turnsStopSpellMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug("turnsStopSpellMaximum=$field")
         }
 
-    val turnsStopSpellPercentage: Turns
+    val turnsStopSpellPercentage: Int
         get() = getPercentage(this.turnsStopSpell, this.turnsStopSpellMaximum)
 
     fun checkAlly(actor: Actor): Boolean {
@@ -151,10 +187,14 @@ class Actor(
         this.actionPoints = actionPoints
         this.allegiance = allegiance
         this.decisions = decisions
+        this.healMoreScale = healMoreScale
+        this.healScale = healScale
+        this.herbScale = herbScale
         this.hitPointsMaximum = hitPointsMaximum
         this.hitPoints = hitPoints
         this.magicPointsMaximum = magicPointsMaximum
         this.magicPoints = magicPoints
+        this.statusResistance = statusResistance
         this.turnsSleepMaximum = turnsSleepMaximum
         this.turnsSleep = turnsSleep
         this.turnsStopSpellMaximum = turnsStopSpellMaximum
@@ -165,10 +205,14 @@ class Actor(
                     "actionPoints=${this.actionPoints} " +
                     "allegiance=${this.allegiance} " +
                     "decisions.size=${this.decisions.size} " +
+                    "healMoreScale=${this.healMoreScale} " +
+                    "healScale=${this.healScale} " +
+                    "herbScale=${this.herbScale} " +
                     "hitPointsMaximum=${this.hitPointsMaximum} " +
                     "hitPoints=${this.hitPoints} " +
                     "magicPointsMaximum=${this.magicPointsMaximum} " +
                     "magicPoints=${this.magicPoints} " +
+                    "statusResistance=${this.statusResistance} " +
                     "turnsSleepMaximum=${this.turnsSleepMaximum} " +
                     "turnsSleep=${this.turnsSleep} " +
                     "turnsStopSpellMaximum=${this.turnsStopSpellMaximum} " +

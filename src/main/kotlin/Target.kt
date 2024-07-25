@@ -1,8 +1,5 @@
 package dqbb
 
-enum class Target(val value: String) {
-    ALLY("ALLY"),
-    ANY("ANY"),
-    ENEMY("ENEMY"),
-    SELF("SELF"),
+enum class Target {
+    ALLY, ANY, ENEMY, SELF,
 }

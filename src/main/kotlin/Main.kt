@@ -66,5 +66,35 @@ fun main() {
         turnsStopSpellMaximum = 3,
     )
 
-    actor.performDecisions(listOf(actor, actor))
+    val checker = CheckerBuilder.build(
+        CheckConfig(
+            "HIT_POINTS",
+            "EXACT",
+            "EQUAL",
+            "LOWEST",
+            1
+        )
+    )
+    println(checker)
+
+    val q = QualifierBuilder.build(
+        QualifierConfig(
+            checkers = listOf(
+                CheckConfig(
+                    attribute = "HIT_POINTS",
+                    expression = "EXACT",
+                    operator = "EQUAL",
+                    priority = "HIGHEST",
+                    value = 1
+                )
+            ),
+            match = "OR",
+            priority = "HIGHEST",
+            target = "SELF",
+        )
+    )
+
+    println(q)
+
+    ConsumableHerb().use(actor, actor)
 }
