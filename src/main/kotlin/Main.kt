@@ -1,100 +1,179 @@
 package dqbb
 
-
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
     val actor = Actor(
         actionPointsMaximum = 2,
+        agilityMaximum = 0,
         allegiance = 0,
         decisions = listOf(
             Decision(
                 ability = MagicHeal(
-                    magicPoints = 2,
+                    condition = ConditionType.HIT_POINTS,
+                    // orderBy = OrderBy.MIN,
                 ),
-                apply = Qualifier(
-                    checkers = listOf(
-                        CheckHitPoints(
-                            expression = Expression.PERCENTAGE,
-                            operator = Operator.LESS_THAN,
-                            priority = Priority.LOWEST,
-                            value = 10
+                priority = PriorityType.HIGHEST,
+                preCondition = State(
+                    match = MatchType.ALL,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(
+                                CheckHitPoints(
+                                    expression = ExpressionType.PERCENTAGE,
+                                    operator = OperatorType.LESS_THAN,
+                                    value = 10,
+                                )
+                            ),
+                            match = MatchType.ANY,
+                            target = TargetType.ALLY,
+                        ),
+                        Qualify(
+                            checkers = listOf(
+                                CheckMagicPoints(
+                                    expression = ExpressionType.EXACT,
+                                    operator = OperatorType.GREATER_THAN,
+                                    value = 1
+                                )
+                            ),
+                            match = MatchType.ALL,
+                            target = TargetType.SELF,
                         )
                     ),
-                    priority = Priority.HIGHEST,
-                    match = Match.OR,
-                    target = Target.SELF,
                 ),
-                condition = Qualifier(
-                    checkers = listOf(
-                        CheckTurnsStopSpell(
-                            expression = Expression.EXACT,
-                            operator = Operator.GREATER_THAN,
-                            priority = Priority.HIGHEST,
-                            value = 0,
-                        ),
-                        CheckTurnsSleep(
-                            expression = Expression.EXACT,
-                            operator = Operator.GREATER_THAN,
-                            priority = Priority.HIGHEST,
-                            value = 0
-                        ),
-                        CheckMagicPoints(
-                            expression = Expression.EXACT,
-                            operator = Operator.GREATER_THAN,
-                            priority = Priority.HIGHEST,
-                            value = 2,
-                        ),
-                        CheckHitPoints(
-                            expression = Expression.PERCENTAGE,
-                            operator = Operator.LESS_THAN,
-                            priority = Priority.LOWEST,
-                            value = 25,
-                        ),
-                    ),
-                    match = Match.ALL,
-                    priority = Priority.HIGHEST,
-                    target = Target.ALLY,
-                ),
-                priority = Priority.LOWEST,
-            )
+                targetSelection = State(
+                    match = MatchType.ANY,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(
+                                CheckHitPoints(
+                                    expression = ExpressionType.PERCENTAGE,
+                                    operator = OperatorType.LESS_THAN,
+                                    value = 10,
+                                )
+                            ),
+                            match = MatchType.ANY,
+                            target = TargetType.ALLY,
+                        )
+                    )
+                )
+            ),
         ),
-        hitPoints = 1,
-        hitPointsMaximum = 22,
+        hitPoints = 10,
+        hitPointsMaximum = 10,
+        magicPointsMaximum = 10,
+        turnsSleepMaximum = 3,
+        turnsStopSpellMaximum = 3,
+    )
+
+    val actor1 = Actor(
+        actionPointsMaximum = 2,
+        agilityMaximum = 1,
+        allegiance = 0,
+        decisions = listOf(
+           Decision(
+                ability = MagicHeal(
+                    condition = ConditionType.HIT_POINTS,
+                    // orderBy = OrderBy.MIN,
+                ),
+                priority = PriorityType.HIGHEST,
+                preCondition = State(
+                    match = MatchType.ALL,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(
+                                CheckHitPoints(
+                                    expression = ExpressionType.PERCENTAGE,
+                                    operator = OperatorType.LESS_THAN,
+                                    value = 10,
+                                )
+                            ),
+                            match = MatchType.ANY,
+                            target = TargetType.ALLY,
+                        ),
+                        Qualify(
+                            checkers = listOf(
+                                CheckMagicPoints(
+                                    expression = ExpressionType.EXACT,
+                                    operator = OperatorType.GREATER_THAN,
+                                    value = 1
+                                )
+                            ),
+                            match = MatchType.ALL,
+                            target = TargetType.SELF,
+                        )
+                    ),
+                ),
+                targetSelection = State(
+                    match = MatchType.ANY,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(
+                                CheckHitPoints(
+                                    expression = ExpressionType.PERCENTAGE,
+                                    operator = OperatorType.LESS_THAN,
+                                    value = 10,
+                                )
+                            ),
+                            match = MatchType.ANY,
+                            target = TargetType.ALLY,
+                        )
+                    )
+                )
+            ),
+        ),
+        hitPoints = 5,
+        hitPointsMaximum = 10,
         magicPointsMaximum = 20,
         turnsSleepMaximum = 3,
         turnsStopSpellMaximum = 3,
     )
 
-    val checker = CheckerBuilder.build(
-        CheckConfig(
-            "HIT_POINTS",
-            "EXACT",
-            "EQUAL",
-            "LOWEST",
-            1
-        )
-    )
-    println(checker)
-
-    val q = QualifierBuilder.build(
-        QualifierConfig(
-            checkers = listOf(
-                CheckConfig(
-                    attribute = "HIT_POINTS",
-                    expression = "EXACT",
-                    operator = "EQUAL",
-                    priority = "HIGHEST",
-                    value = 1
+    val actor2 = Actor(
+        actionPointsMaximum = 4,
+        agilityMaximum = 10,
+        allegiance = 1,
+        decisions = listOf(
+           Decision(
+                ability = Attack(
+                    condition = ConditionType.HIT_POINTS,
+                    // orderBy = OrderBy.MIN,
+                ),
+                priority = PriorityType.HIGHEST,
+                preCondition = State(
+                    match = MatchType.ALL,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(
+                                CheckHitPoints(
+                                    expression = ExpressionType.EXACT,
+                                    operator = OperatorType.GREATER_THAN,
+                                    value = 0,
+                                )
+                            ),
+                            match = MatchType.ANY,
+                            target = TargetType.ENEMY,
+                        )
+                    ),
+                ),
+                targetSelection = State(
+                    match = MatchType.ANY,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(),
+                            match = MatchType.ANY,
+                            target = TargetType.ENEMY,
+                        )
+                    )
                 )
             ),
-            match = "OR",
-            priority = "HIGHEST",
-            target = "SELF",
-        )
+        ),
+        hitPoints = 20,
+        hitPointsMaximum = 20,
+        magicPointsMaximum = 20,
+        turnsSleepMaximum = 3,
+        turnsStopSpellMaximum = 3,
     )
 
-    println(q)
-
-    ConsumableHerb().use(actor, actor)
+    val battleSystem = BattleSystem(mutableListOf(actor, actor1, actor2))
+    
+    battleSystem.run()
 }
