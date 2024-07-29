@@ -9,7 +9,7 @@ class MagicHurt(
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         val hurtRangeMaximum = actor.hurtRangeMaximum
         val hurtRangeMinimum = actor.hurtRangeMinimum
-        val hurtRangeRandom = actor.hurtRangeRandom
+        val hurtRangeRandom = (hurtRangeMinimum..hurtRangeMaximum).random()
         val hurtScale = actor.hurtScale
         val hurtShift = actor.hurtShift
         val hurtValue = (hurtRangeRandom and hurtShift) + hurtScale

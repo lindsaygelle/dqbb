@@ -11,7 +11,7 @@ class MagicHeal(
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         val healRangeMaximum = actor.healRangeMaximum
         val healRangeMinimum = actor.healRangeMinimum
-        val healRangeRandom = actor.healRangeRandom
+        val healRangeRandom = (healRangeMinimum..healRangeMaximum).random()
         val healScale = actor.healScale
         val healShift = actor.healShift
         val healValue = (healRangeRandom and healShift) + healScale
