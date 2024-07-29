@@ -9,9 +9,10 @@ class ConsumeHerb(
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         val healRangeMaximum = actor.healRangeMaximum
         val healRangeMinimum = actor.healRangeMinimum
+        val herbRangeRandom = (healRangeMinimum..healRangeMinimum).random()
         val herbScale = actor.herbScale
         val herbShift = actor.herbShift
-        val herbValue = actor.herbValue
+        val herbValue = (herbRangeRandom and herbShift) + herbScale
         val hitPoints = otherActor.hitPoints
         logger.debug(
             "$this: " +

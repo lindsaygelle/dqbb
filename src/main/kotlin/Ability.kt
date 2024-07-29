@@ -1,12 +1,14 @@
 package dqbb
 
-// import org.apache.logging.log4j.LogManager
-// import org.apache.logging.log4j.Logger
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 
 abstract class Ability(
     protected val condition: ConditionType,
 ) {
+
+    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     protected abstract fun apply(actor: Actor, otherActor: Actor): Boolean
 
@@ -23,9 +25,10 @@ abstract class Ability(
                 otherActor.hitPoints
             }
 
-            ConditionType.MAGIC_POINTS -> otherActors.minByOrNull {
-                otherActor -> otherActor.magicPoints
+            ConditionType.MAGIC_POINTS -> otherActors.minByOrNull { otherActor ->
+                otherActor.magicPoints
             }
+
             else -> otherActors.random()
         }
     }

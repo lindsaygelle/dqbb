@@ -1,7 +1,7 @@
 package dqbb
 
-// import org.apache.logging.log4j.LogManager
-// import org.apache.logging.log4j.Logger
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 
 class Actor(
@@ -11,7 +11,8 @@ class Actor(
     allegiance: Int,
     damageResistance: Int = -1,
     decisions: List<Decision>,
-    excellentMoveChance: Int = -1,
+    excellentMoveMaximum: Int = -1,
+    excellentMoveMinimum: Int = -1,
     healMoreScale: Int = -1,
     healScale: Int = -1,
     healShift: Int = -1,
@@ -69,7 +70,9 @@ class Actor(
 
     private val decisions: List<Decision> = decisions.sortedByDescending { decision -> decision.priority }
 
-    val excellentMoveChance: Int = maxOf(0, excellentMoveChance)
+    val excellentMoveMaximum: Int = maxOf(0, excellentMoveMaximum)
+
+    val excellentMoveMinimum: Int = maxOf(0, excellentMoveMinimum)
 
     private val hasActionPoints: Boolean
         get() = this.actionPoints > 0
@@ -78,17 +81,9 @@ class Actor(
 
     val healMoreShift: Int = 0x0F
 
-    val healMoreValue: Int
-        get() = (this.healRange.random() and this.healMoreShift) + this.healMoreScale
-
     val healRangeMaximum: Int = 7
 
     val healRangeMinimum: Int = 0
-
-    private val healRange: IntRange = (this.healRangeMinimum..this.healRangeMaximum)
-
-    val healRangeRandom: Int
-        get() = this.healRange.random()
 
     val healScale: Int = maxOf(0x0A, healScale)
 
@@ -97,9 +92,6 @@ class Actor(
     val herbScale: Int = maxOf(0x17, herbScale)
 
     val herbShift: Int = maxOf(0x0F, herbShift)
-
-    val herbValue: Int
-        get() = (this.healRange.random() and this.herbShift) + this.herbScale
 
     var hitPoints: Int = 0
         set(value) {

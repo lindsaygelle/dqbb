@@ -11,7 +11,7 @@ class MagicHealMore(
         val healMoreShift = actor.healMoreShift
         val healRangeMaximum = actor.healRangeMaximum
         val healRangeMinimum = actor.healRangeMinimum
-        val healRangeRandom = actor.healRangeRandom
+        val healRangeRandom = (healRangeMinimum..healRangeMaximum).random()
         val hitPoints = otherActor.hitPoints
         val healMoreValue = (healRangeRandom and healMoreShift) + healMoreScale
         logger.debug(
