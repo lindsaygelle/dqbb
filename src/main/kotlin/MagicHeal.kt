@@ -1,7 +1,5 @@
 package dqbb
 
-import kotlin.system.exitProcess
-
 
 class MagicHeal(
     condition: ConditionType,

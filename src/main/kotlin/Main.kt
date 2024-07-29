@@ -1,7 +1,5 @@
 package dqbb
 
-import kotlin.system.exitProcess
-
 fun main() {
     val actor = Actor(
         actionPointsMaximum = 2,

@@ -1,16 +1,15 @@
 package dqbb
 
-import kotlin.system.exitProcess
-
-// import org.apache.logging.log4j.LogManager
-// import org.apache.logging.log4j.Logger
-
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 class BattleSystem(
     actors: MutableSet<Actor>
 ) : Runnable {
 
     val actors: MutableList<Actor> = actors.toMutableList()
+
+    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     private var turns: Int = 0
 

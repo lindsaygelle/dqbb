@@ -1,7 +1,7 @@
 package dqbb
 
-// import org.apache.logging.log4j.LogManager
-// import org.apache.logging.log4j.Logger
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 
 class Qualify(
@@ -78,8 +78,7 @@ class Qualify(
             }
         }
         logger.debug(
-            "$this: " +
-                    "actors.size=${actors.size}"
+            "$this: " + "actors.size=${actors.size}"
         )
         return actors
     }
