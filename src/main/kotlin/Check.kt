@@ -1,7 +1,7 @@
 package dqbb
 
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+// import org.apache.logging.log4j.LogManager
+// import org.apache.logging.log4j.Logger
 
 
 abstract class Check(
@@ -10,7 +10,7 @@ abstract class Check(
     private val value: Int,
 ) {
 
-    // protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     fun check(actor: Actor): Boolean {
         val valueOther = when (this.expression) {

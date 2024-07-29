@@ -1,7 +1,7 @@
 package dqbb
 
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+// import org.apache.logging.log4j.LogManager
+// import org.apache.logging.log4j.Logger
 
 
 class Qualify(
@@ -11,7 +11,7 @@ class Qualify(
     private val target: TargetType,
 ) {
 
-    // protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     private fun checkMatch(actor: Actor): Boolean {
         if (checkers.isEmpty()) {

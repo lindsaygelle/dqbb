@@ -1,16 +1,11 @@
 package dqbb
 
-// import org.apache.logging.log4j.LogManager
-// import org.apache.logging.log4j.Logger
-
-
-abstract class Magic(
+abstract class Consume(
     condition: ConditionType,
-    magicPoints: Int,
+    private val item: ItemType
 ) : Ability(
-    condition = condition,
+    condition = condition
 ) {
-    private val magicPoints: Int = maxOf(0, magicPoints)
 
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
         val checkResistanceValue = checkResistance(actor, otherActor)
@@ -30,33 +25,24 @@ abstract class Magic(
                     "applyEffect=$applyEffectValue " +
                     "otherActor.id=$otherActor"
         )
+        actor.items[item]?.minus(1)
         return applyEffectValue
     }
 
     protected abstract fun applyEffect(actor: Actor, otherActor: Actor): Boolean
 
     override fun check(actor: Actor, otherActor: Actor): Boolean {
-        val statusStopSpell = actor.statusStopSpell
-        logger.debug(
+        val itemCount = actor.items.getOrDefault(this.item, 0)
+        println(//logger.debug
             "$this: " +
+                    "actor.items.$item=$itemCount " +
                     "actor.id=$actor " +
-                    "actor.statusStopSpell=$statusStopSpell"
+                    "item=$item " +
+                    "otherActor.id=$otherActor"
         )
-        if (statusStopSpell) {
-            return false
-        }
-        val magicPointsValue = actor.magicPoints - magicPoints
-        logger.debug(
-            "$this: " +
-                    "actor.id=$actor " +
-                    "magicPointsValue=$magicPointsValue"
-        )
-        if (magicPointsValue < 0) {
-            return false
-        }
-        actor.magicPoints = magicPointsValue
-        return actor.magicPoints > 0
+        return itemCount > 0
     }
 
     protected abstract fun checkResistance(actor: Actor, otherActor: Actor): Boolean
 }
+
