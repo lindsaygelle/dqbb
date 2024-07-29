@@ -1,37 +1,30 @@
 package dqbb
 
-import kotlin.system.exitProcess
-
-
-class MagicHeal(
+class ConsumeHerb(
     condition: ConditionType,
-) : Magic(
+) : Consume(
     condition = condition,
-    magicPoints = 2,
+    item = ItemType.HERB,
 ) {
-
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         val healRangeMaximum = actor.healRangeMaximum
         val healRangeMinimum = actor.healRangeMinimum
-        val healRangeRandom = actor.healRangeRandom
-        val healScale = actor.healScale
-        val healShift = actor.healShift
-        val healValue = (healRangeRandom and healShift) + healScale
-
+        val herbScale = actor.herbScale
+        val herbShift = actor.herbShift
+        val herbValue = actor.herbValue
         val hitPoints = otherActor.hitPoints
         logger.debug(
             "$this: " +
                     "actor.healRangeMaximum=$healRangeMaximum " +
                     "actor.healRangeMinimum=$healRangeMinimum " +
-                    "actor.healRangeRandom=$healRangeRandom " +
-                    "actor.healScale=$healScale " +
-                    "actor.healShift=$healShift " +
-                    "actor.healValue=$healValue " +
+                    "actor.herbScale=$herbScale " +
+                    "actor.herbShift=$herbShift " +
+                    "actor.herbValue=$herbValue " +
                     "actor.id=$actor " +
                     "otherActor.hitPoints=$hitPoints " +
                     "otherActor.id=$otherActor"
         )
-        otherActor.hitPoints += healValue
+        otherActor.hitPoints += herbValue
         logger.debug(
             "$this: " +
                     "actor.id=$actor " +

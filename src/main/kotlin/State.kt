@@ -1,7 +1,7 @@
 package dqbb
 
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+// import org.apache.logging.log4j.LogManager
+// import org.apache.logging.log4j.Logger
 
 
 class State(
@@ -11,11 +11,12 @@ class State(
 
     val actors: MutableSet<Actor> = mutableSetOf()
 
-    // protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     private val qualifiers: List<Qualify> = qualifiers.sortedByDescending { it.priority.ordinal }
 
     fun check(actor: Actor, otherActors: List<Actor>): Boolean {
+        this.actors.clear() // Make sure to clear this, otherwise it is possible to reuse? Could be a method?
         logger.debug(
             "$this: " +
                     "actor.id=$actor " +
@@ -59,7 +60,7 @@ class State(
     private fun performMatch(actor: Actor, index: Int, otherActors: List<Actor>, qualify: Qualify): Set<Actor> {
         logger.debug(
             "$this: " +
-                    "actor.id=$actor" +
+                    "actor.id=$actor " +
                     "index=$index " +
                     "otherActors.size=${otherActors.size} " +
                     "qualify.id=$qualify"

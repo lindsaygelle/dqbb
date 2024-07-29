@@ -1,37 +1,32 @@
 package dqbb
 
-import kotlin.system.exitProcess
-
-
-class MagicHeal(
+class MagicHealMore(
     condition: ConditionType,
 ) : Magic(
     condition = condition,
-    magicPoints = 2,
+    magicPoints = 10,
 ) {
-
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
+        val healMoreScale = actor.healMoreScale
+        val healMoreShift = actor.healMoreShift
         val healRangeMaximum = actor.healRangeMaximum
         val healRangeMinimum = actor.healRangeMinimum
         val healRangeRandom = actor.healRangeRandom
-        val healScale = actor.healScale
-        val healShift = actor.healShift
-        val healValue = (healRangeRandom and healShift) + healScale
-
         val hitPoints = otherActor.hitPoints
+        val healMoreValue = (healRangeRandom and healMoreShift) + healMoreScale
         logger.debug(
             "$this: " +
+                    "actor.healMoreScale=$healMoreScale " +
+                    "actor.healMoreShift=$healMoreShift " +
+                    "actor.healMoreValue=$healMoreValue " +
                     "actor.healRangeMaximum=$healRangeMaximum " +
                     "actor.healRangeMinimum=$healRangeMinimum " +
                     "actor.healRangeRandom=$healRangeRandom " +
-                    "actor.healScale=$healScale " +
-                    "actor.healShift=$healShift " +
-                    "actor.healValue=$healValue " +
                     "actor.id=$actor " +
                     "otherActor.hitPoints=$hitPoints " +
                     "otherActor.id=$otherActor"
         )
-        otherActor.hitPoints += healValue
+        otherActor.hitPoints += healMoreValue
         logger.debug(
             "$this: " +
                     "actor.id=$actor " +

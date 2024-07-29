@@ -1,29 +1,37 @@
 package dqbb
 
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+// import org.apache.logging.log4j.LogManager
+// import org.apache.logging.log4j.Logger
 
 
 class Actor(
-    actionPoints: Int = Int.MAX_VALUE,
-    actionPointsMaximum: Int = 1,
-    agilityMaximum: Int,
+    actionPoints: Int = -1,
+    actionPointsMaximum: Int = -1,
+    agilityMaximum: Int = -1,
     allegiance: Int,
+    damageResistance: Int = -1,
     decisions: List<Decision>,
-    excellentMoveChance: Int = 32,
-    healMoreScale: Int = 0x55,
-    healScale: Int = 0x0A,
-    herbScale: Int = 0x17,
-    hitPoints: Int = Int.MAX_VALUE,
-    hitPointsMaximum: Int,
-    statusResistance: Int = 0x0F,
-    strengthMaximum: Int = 1,
-    magicPoints: Int = Int.MAX_VALUE,
-    magicPointsMaximum: Int,
-    turnsSleep: Int = 0,
-    turnsSleepMaximum: Int,
-    turnsStopSpell: Int = 0,
-    turnsStopSpellMaximum: Int,
+    excellentMoveChance: Int = -1,
+    healMoreScale: Int = -1,
+    healScale: Int = -1,
+    healShift: Int = -1,
+    herbScale: Int = -1,
+    herbShift: Int = -1,
+    hitPoints: Int = -1,
+    hitPointsMaximum: Int = -1,
+    hurtMoreScale: Int = -1,
+    hurtMoreShift: Int = -1,
+    hurtScale: Int = -1,
+    hurtShift: Int = -1,
+    val items: MutableMap<ItemType, Int> = mutableMapOf(),
+    statusResistance: Int = -1,
+    strengthMaximum: Int = -1,
+    magicPoints: Int = -1,
+    magicPointsMaximum: Int = -1,
+    turnsSleep: Int = -1,
+    turnsSleepMaximum: Int = -1,
+    turnsStopSpell: Int = -1,
+    turnsStopSpellMaximum: Int = -1,
 ) {
 
     var actionPoints: Int = 0
@@ -57,6 +65,8 @@ class Actor(
     val attackValue: Int
         get() = 0
 
+    val damageResistance: Int = maxOf(0x0F, damageResistance)
+
     private val decisions: List<Decision> = decisions.sortedByDescending { decision -> decision.priority }
 
     val excellentMoveChance: Int = maxOf(0, excellentMoveChance)
@@ -64,26 +74,32 @@ class Actor(
     private val hasActionPoints: Boolean
         get() = this.actionPoints > 0
 
-    private val healMoreScale: Int = maxOf(0x55, healMoreScale)
+    val healMoreScale: Int = maxOf(0x55, healMoreScale)
+
+    val healMoreShift: Int = 0x0F
 
     val healMoreValue: Int
-        get() = (0..7).random() and 0x0F + this.healMoreScale
+        get() = (this.healRange.random() and this.healMoreShift) + this.healMoreScale
 
-    private val healScale: Int = maxOf(0x0A, healScale)
+    val healRangeMaximum: Int = 7
 
-    val healValue: Int
-        get() = (0..7).random() and 0x07 + this.healScale
+    val healRangeMinimum: Int = 0
 
-    private val herbScale: Int = maxOf(0x0A, herbScale)
+    private val healRange: IntRange = (this.healRangeMinimum..this.healRangeMaximum)
 
-    val herbCount: Int
-        get() = 0
+    val healRangeRandom: Int
+        get() = this.healRange.random()
 
-    val herbCountPercentage: Int
-        get() = 0
+    val healScale: Int = maxOf(0x0A, healScale)
+
+    val healShift: Int = maxOf(0x07, healShift)
+
+    val herbScale: Int = maxOf(0x17, herbScale)
+
+    val herbShift: Int = maxOf(0x0F, herbShift)
 
     val herbValue: Int
-        get() = (0..7).random() and 0x0F + this.healScale
+        get() = (this.healRange.random() and this.herbShift) + this.herbScale
 
     var hitPoints: Int = 0
         set(value) {
@@ -94,15 +110,43 @@ class Actor(
             )
         }
 
-    val hitPointsMaximum: Int = maxOf(1, hitPointsMaximum)
+    val hitPointsMaximum: Int = maxOf(0x03, hitPointsMaximum)
 
     val hitPointsPercentage: Int
         get() = getPercentage(this.hitPoints, this.hitPointsMaximum)
 
+    val hurtMoreScale: Int = maxOf(0x1E, hurtMoreScale)
+
+    val hurtMoreShift: Int = maxOf(0x0F, hurtMoreShift)
+
+    val hurtRangeMaximum: Int = 255
+
+    val hurtRangeMinimum: Int = 0
+
+    private val hurtRange: IntRange = (this.hurtRangeMinimum..hurtRangeMaximum)
+
+    val hurtRangeRandom: Int
+        get() = this.hurtRange.random()
+
+    val hurtRequirementMaximum: Int = 16
+
+    val hurtRequirementMinimum: Int = 0
+
+    private val hurtRequirementRange: IntRange = (this.hurtRequirementMinimum..hurtRequirementMaximum)
+
+    val hurtRequirement: Int
+        get() = this.hurtRequirementRange.random()
+
+    val hurtResistance: Int = this.damageResistance shr 4
+
+    val hurtScale: Int = maxOf(0x03, hurtScale)
+
+    val hurtShift: Int = maxOf(0x07, hurtShift)
+
     val isAlive: Boolean
         get() = this.hitPoints > 0
 
-    // protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     var magicPoints: Int = 0
         set(value) {
@@ -132,7 +176,7 @@ class Actor(
     val strength: Int
         get() = this.strengthMaximum
 
-    val strengthMaximum: Int = maxOf(0, strengthMaximum)
+    val strengthMaximum: Int = maxOf(0x05, strengthMaximum)
 
     var turnsSleep: Int = 0
         set(value) {
@@ -192,14 +236,22 @@ class Actor(
 
     fun takeTurn(otherActors: List<Actor>): Boolean {
         val decision = getDecision(otherActors)
+        var decisionValue = false
         logger.debug(
             "$this: " +
-                    "decision.id=$decision"
+                    "decision.id=$decision " +
+                    "otherActors.size=${otherActors.size}"
         )
         if (decision != null) {
-            return decision.ability.use(this, decision.targetSelection.actors)
+            decisionValue = decision.ability.use(this, decision.targetSelection.actors)
+            logger.debug(
+                "$this: " +
+                        "decision.ability.id=${decision.ability} " +
+                        "decision.ability.use=$decisionValue " +
+                        "decision.id=$decision"
+            )
         }
-        return false
+        return decisionValue
     }
 
     init {

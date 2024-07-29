@@ -1,7 +1,7 @@
 package dqbb
 
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+// import org.apache.logging.log4j.LogManager
+// import org.apache.logging.log4j.Logger
 
 
 abstract class Ability(
@@ -12,7 +12,23 @@ abstract class Ability(
 
     protected abstract fun check(actor: Actor, otherActor: Actor): Boolean
 
-    protected abstract fun getActor(otherActors: Set<Actor>): Actor
+    private fun getActor(otherActors: Set<Actor>): Actor? {
+        logger.debug(
+            "$this: " +
+                    "condition=$condition " +
+                    "otherActors.size=${otherActors.size}"
+        )
+        return when (condition) {
+            ConditionType.HIT_POINTS -> otherActors.minByOrNull { otherActor ->
+                otherActor.hitPoints
+            }
+
+            ConditionType.MAGIC_POINTS -> otherActors.minByOrNull {
+                otherActor -> otherActor.magicPoints
+            }
+            else -> otherActors.random()
+        }
+    }
 
     fun use(actor: Actor, otherActors: Set<Actor>): Boolean {
         val actorStatusSleep = actor.statusSleep
@@ -25,11 +41,19 @@ abstract class Ability(
             return false
         }
         val otherActor = getActor(otherActors)
+        val isNotNull = otherActor != null
+        logger.debug(
+            "$this: " +
+                    "otherActor.isNotNull=$isNotNull"
+        )
+        if (!isNotNull) {
+            return false
+        }
         logger.debug(
             "$this: " +
                     "otherActor.id=$otherActor"
         )
-        val checkValue = check(actor, otherActor)
+        val checkValue = check(actor, otherActor!!)
         logger.debug(
             "$this: " +
                     "check=$checkValue"
