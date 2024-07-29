@@ -1,91 +1,62 @@
 package dqbb
 
-abstract class Magic(
-    magicPoints: Int,
-) : Ability() {
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
+
+abstract class Magic(
+    condition: ConditionType,
+    magicPoints: Int,
+) : Ability(
+    condition = condition,
+) {
     private val magicPoints: Int = maxOf(0, magicPoints)
+
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
         val checkResistanceValue = checkResistance(actor, otherActor)
-        logger.info("checkResistance=$checkResistanceValue")
-        if (!checkResistanceValue) {
+        logger.debug(
+            "$this: " +
+                    "actor.id=$actor " +
+                    "checkResistance=$checkResistanceValue " +
+                    "otherActor.id=$otherActor"
+        )
+        if (checkResistanceValue) {
             return false
         }
-        return applyEffect(actor, otherActor)
+        val applyEffectValue = applyEffect(actor, otherActor)
+        logger.debug(
+            "$this: " +
+                    "actor.id=$actor " +
+                    "applyEffect=$applyEffectValue " +
+                    "otherActor.id=$otherActor"
+        )
+        return applyEffectValue
     }
 
     protected abstract fun applyEffect(actor: Actor, otherActor: Actor): Boolean
+
     override fun check(actor: Actor, otherActor: Actor): Boolean {
         val statusStopSpell = actor.statusStopSpell
-        logger.debug("$actor.statusStopSpell=$statusStopSpell")
-        if (actor.statusStopSpell) {
+        logger.debug(
+            "$this: " +
+                    "actor.id=$actor " +
+                    "actor.statusStopSpell=$statusStopSpell"
+        )
+        if (statusStopSpell) {
             return false
         }
         val magicPointsValue = actor.magicPoints - magicPoints
-        logger.debug("$actor.magicPoints=${actor.magicPoints} magicPoints=$magicPoints")
+        logger.debug(
+            "$this: " +
+                    "actor.id=$actor " +
+                    "magicPointsValue=$magicPointsValue"
+        )
         if (magicPointsValue < 0) {
             return false
         }
         actor.magicPoints = magicPointsValue
-        return true
+        return actor.magicPoints > 0
     }
 
     protected abstract fun checkResistance(actor: Actor, otherActor: Actor): Boolean
-
-    init {
-        logger.info("magicPoints=${this.magicPoints}")
-    }
 }
-
-class MagicHeal(
-    magicPoints: Int,
-) : Magic(
-    magicPoints = magicPoints,
-) {
-    override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
-        val hitPointsPrevious = otherActor.hitPoints
-        val healValue = actor.healValue
-        val hitPoints = otherActor.hitPoints + healValue
-        logger.debug("healValue=$healValue hitPointsPrevious=$hitPointsPrevious hitPoints=$hitPoints")
-        otherActor.hitPoints = hitPoints
-        return otherActor.hitPoints > hitPointsPrevious
-    }
-
-    override fun checkResistance(actor: Actor, otherActor: Actor): Boolean {
-        val hasResistance = false
-        logger.debug("hasResistance=$hasResistance")
-        return hasResistance
-    }
-}
-
-class MagicHealMore(
-    magicPoints: Int
-) : Magic(
-    magicPoints = magicPoints,
-) {
-    override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
-        val hitPointsPrevious = otherActor.hitPoints
-        val healMoreValue = actor.healMoreValue
-        val hitPoints = otherActor.hitPoints + healMoreValue
-        logger.debug("healMoreValue=$healMoreValue hitPointsPrevious=$hitPointsPrevious hitPoints=$hitPoints")
-        otherActor.hitPoints = hitPoints
-        return otherActor.hitPoints > hitPointsPrevious
-    }
-
-    override fun checkResistance(actor: Actor, otherActor: Actor): Boolean {
-        return false
-    }
-}
-
-/*
-class MagicSleep(
-    magicPoints: Int,
-) : Magic(
-    magicPoints = magicPoints,
-) {
-    override fun use(actor: Actor, otherActor: Actor): Boolean {
-        return true
-    }
-}
-
- */

@@ -4,31 +4,44 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 
-abstract class Ability {
+abstract class Ability(
+    protected val condition: ConditionType,
+) {
 
-    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
     protected abstract fun apply(actor: Actor, otherActor: Actor): Boolean
+
     protected abstract fun check(actor: Actor, otherActor: Actor): Boolean
 
-    fun use(actor: Actor, otherActor: Actor): Boolean {
-        logger.info("actor=$actor otherActor=$otherActor")
-        val isAlive = actor.isAlive
-        logger.debug("$actor.isAlive=$isAlive")
-        if (!isAlive) {
+    protected abstract fun getActor(otherActors: Set<Actor>): Actor
+
+    fun use(actor: Actor, otherActors: Set<Actor>): Boolean {
+        val actorStatusSleep = actor.statusSleep
+        logger.debug(
+            "$this: " +
+                    "actor.id=$actor " +
+                    "$actor.statusSleep=$actorStatusSleep"
+        )
+        if (actorStatusSleep) {
             return false
         }
-        val statusSleep = actor.statusSleep
-        logger.debug("$actor.statusSleep=$statusSleep")
-        if (statusSleep) {
-            return false
-        }
+        val otherActor = getActor(otherActors)
+        logger.debug(
+            "$this: " +
+                    "otherActor.id=$otherActor"
+        )
         val checkValue = check(actor, otherActor)
-        logger.info("check=$checkValue")
+        logger.debug(
+            "$this: " +
+                    "check=$checkValue"
+        )
         if (!checkValue) {
             return false
         }
         val applyValue = apply(actor, otherActor)
-        logger.info("apply=$applyValue")
+        logger.debug(
+            "$this: " +
+                    "apply=$applyValue"
+        )
         return applyValue
     }
 }
