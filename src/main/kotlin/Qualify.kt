@@ -78,7 +78,8 @@ class Qualify(
             }
         }
         logger.debug(
-            "$this: " + "actors.size=${actors.size}"
+            "$this: " + 
+                    "actors.size=${actors.size}"
         )
         return actors
     }

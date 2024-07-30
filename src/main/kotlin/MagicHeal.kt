@@ -1,12 +1,13 @@
 package dqbb
 
 
-class MagicHeal(
+open class MagicHeal(
     condition: ConditionType,
 ) : Magic(
     condition = condition,
-    magicPoints = 2,
 ) {
+
+    override val magicPoints: Int = 2
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         val healRangeMaximum = actor.healRangeMaximum
