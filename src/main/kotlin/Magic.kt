@@ -2,12 +2,11 @@ package dqbb
 
 
 abstract class Magic(
-    condition: ConditionType,
-    magicPoints: Int,
+    conditionType: ConditionType,
 ) : Ability(
-    condition = condition,
+    conditionType = conditionType,
 ) {
-    private val magicPoints: Int = maxOf(0, magicPoints)
+    protected abstract val magicPoints: Int
 
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
         val checkResistanceValue = checkResistance(actor, otherActor)

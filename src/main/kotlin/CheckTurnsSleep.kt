@@ -1,6 +1,6 @@
 package dqbb
 
-class CheckMagicPoints(
+class CheckTurnsSleep(
     expressionType: ExpressionType,
     operatorType: OperatorType,
     value: Int,
@@ -10,22 +10,22 @@ class CheckMagicPoints(
     value = value,
 ) {
     override fun getExactValue(actor: Actor): Int {
-        val magicPoints = actor.magicPoints
+        val turnsSleep = actor.turnsSleep
         logger.debug(
             "$this: " +
                     "actor.id=$actor " +
-                    "actor.magicPoints=$magicPoints"
+                    "actor.turnsSleep=$turnsSleep"
         )
-        return magicPoints
+        return turnsSleep
     }
 
     override fun getPercentageValue(actor: Actor): Int {
-        val magicPointsPercentage = actor.magicPointsPercentage
+        val turnsSleepPercentage = actor.turnsSleepPercentage
         logger.debug(
             "$this: " +
                     "actor.id=$actor " +
-                    "actor.magicPointsPercentage=$magicPointsPercentage"
+                    "actor.turnsSleepPercentage=$turnsSleepPercentage"
         )
-        return magicPointsPercentage
+        return turnsSleepPercentage
     }
 }

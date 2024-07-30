@@ -1,11 +1,12 @@
 package dqbb
 
-class MagicHurt(
-    condition: ConditionType
+open class MagicHurt(
+    conditionType: ConditionType
 ) : Magic(
-    condition = condition,
-    magicPoints = 5,
+    conditionType = conditionType,
 ) {
+    override val magicPoints: Int = 2
+
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         val hurtRangeMaximum = actor.hurtRangeMaximum
         val hurtRangeMinimum = actor.hurtRangeMinimum
@@ -38,16 +39,20 @@ class MagicHurt(
     }
 
     override fun checkResistance(actor: Actor, otherActor: Actor): Boolean {
-        val hurtRequirement = actor.hurtRequirement
-        val hurtResistance = otherActor.hurtResistance
+        val hurtRequirementMaximum = actor.hurtRequirementMaximum
+        val hurtRequirementMinimum = actor.hurtRequirementMinimum
+        val hurtRequirement = (hurtRequirementMinimum..hurtRequirementMaximum).random()
+        val damageResistanceMaximum = otherActor.damageResistanceMaximum
+        val hurtResistance = (damageResistanceMaximum shr 28) and 0xF // First nibble: TODO check
         println(//logger.debug
             "$this: " +
-                    "actor.hurtRequirementMaximum=${actor.hurtRequirementMaximum} " +
-                    "actor.hurtRequirementMinimum=${actor.hurtRequirementMinimum} " +
+                    "actor.hurtRequirementMaximum=$hurtRequirementMaximum " +
+                    "actor.hurtRequirementMinimum=$hurtRequirementMinimum " +
                     "actor.hurtRequirement=$hurtRequirement " +
-                    "actor.id=$actor " + "otherActor.hurtResistance=$hurtResistance " +
+                    "actor.id=$actor " +
+                    "otherActor.hurtResistance=$hurtResistance " +
+                    "otherActor.damageResistanceMaximum=$damageResistanceMaximum " +
                     "otherActor.id=$otherActor"
-
         )
         return hurtRequirement < hurtResistance
     }

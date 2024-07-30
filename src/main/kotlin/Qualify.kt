@@ -6,9 +6,9 @@ import org.apache.logging.log4j.Logger
 
 class Qualify(
     private val checkers: List<Check>,
-    private val match: MatchType,
-    val priority: PriorityType = PriorityType.LOWEST,
-    private val target: TargetType,
+    private val matchType: MatchType,
+    val priorityType: PriorityType = PriorityType.LOWEST,
+    private val targetType: TargetType,
 ) {
 
     protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
@@ -17,14 +17,14 @@ class Qualify(
         if (checkers.isEmpty()) {
             return true
         }
-        return when (match) {
+        return when (matchType) {
             MatchType.ALL -> matchAll(actor)
             MatchType.ANY -> matchAny(actor)
         }
     }
 
     private fun checkTarget(actor: Actor, otherActor: Actor): Boolean {
-        return when (this.target) {
+        return when (this.targetType) {
             TargetType.ALLY -> actor.allegiance == otherActor.allegiance
             TargetType.ANY -> true
             TargetType.ENEMY -> actor.allegiance != otherActor.allegiance
@@ -46,9 +46,9 @@ class Qualify(
                     "actor.allegiance=${actor.allegiance} " +
                     "actor.id=$actor " +
                     "checkers.size=${checkers.size} " +
-                    "match=$match " +
-                    "priority=$priority " +
-                    "target=$target"
+                    "matchType=$matchType " +
+                    "priorityType=$priorityType " +
+                    "targetType=$targetType"
         )
         val actors = mutableSetOf<Actor>()
         otherActors.forEachIndexed { index, otherActor ->
@@ -78,7 +78,8 @@ class Qualify(
             }
         }
         logger.debug(
-            "$this: " + "actors.size=${actors.size}"
+            "$this: " +
+                    "actors.size=${actors.size}"
         )
         return actors
     }

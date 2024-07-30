@@ -1,10 +1,10 @@
 package dqbb
 
 abstract class Consume(
-    condition: ConditionType,
+    conditionType: ConditionType,
     private val item: ItemType
 ) : Ability(
-    condition = condition
+    conditionType = conditionType
 ) {
 
     override fun apply(actor: Actor, otherActor: Actor): Boolean {

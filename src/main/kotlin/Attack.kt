@@ -1,9 +1,9 @@
 package dqbb
 
 class Attack(
-    condition: ConditionType
+    conditionType: ConditionType
 ) : Ability(
-    condition = condition,
+    conditionType = conditionType,
 ) {
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
         val attackPower = actor.getAttackPower(otherActor)
@@ -23,8 +23,8 @@ class Attack(
                     "otherActor.id=$otherActor"
         )
         val excellentMoveMaximum = actor.excellentMoveMaximum
-        val excellentMoveMinimum = actor.excellentMoveMaximum
-        val excellentMoveRandomRange = (excellentMoveMinimum..excellentMoveMinimum).random()
+        val excellentMoveMinimum = actor.excellentMoveMinimum
+        val excellentMoveRandomRange = (excellentMoveMinimum..excellentMoveMaximum).random()
         logger.debug(
             "$this: " +
                     "actor.excellentMoveMaximum=$excellentMoveMaximum " +
