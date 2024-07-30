@@ -57,12 +57,15 @@ class BattleSystem(
                             "actor.actionPointsMaximum=${actor.actionPointsMaximum} " +
                             "actor.agility=${actor.agility} " +
                             "actor.allegiance=${actor.allegiance} " +
+                            "actor.damageResistanceMaximum=${actor.damageResistanceMaximum} " +
                             "actor.hitPoints=${actor.hitPoints} " +
                             "actor.hitPointsMaximum=${actor.hitPointsMaximum} " +
                             "actor.id=$actor " +
                             "actor.magicPoints=${actor.magicPoints} " +
                             "actor.magicPointsMaximum=${actor.magicPointsMaximum} " +
-                            "actor.statusResistance=${actor.statusResistance} " +
+                            "actor.statusResistanceMaximum=${actor.statusResistanceMaximum} " +
+                            "actor.statusSleep=${actor.statusSleep} " +
+                            "actor.statusStopSpell=${actor.statusStopSpell} " +
                             "actor.strength=${actor.strength} " +
                             "actor.strengthMaximum=${actor.strengthMaximum} " +
                             "actor.turnsSleep=${actor.turnsSleep} " +
@@ -82,6 +85,31 @@ class BattleSystem(
                                 "actor.id=$actor " +
                                 "actor.takeTurn=$actorTurnResult"
                     )
+
+                    if (actor.statusSleep) {
+
+                        val wakeUpMaximum = actor.wakeUpMaximum
+                        val wakeUpMinimum = actor.wakeUpMinimum
+                        val wakeUpValue = (wakeUpMinimum..wakeUpMaximum).random()
+                        val wakeUpRequirement = 0
+                        logger.debug(
+                            "$this: " +
+                                    "actor.id=$actor " +
+                                    "actor.wakeUpMaximum=$wakeUpMaximum " +
+                                    "actor.wakeUpMinimum=$wakeUpMinimum " +
+                                    "actor.wakeUpRequirement=$wakeUpRequirement " +
+                                    "actor.wakeUpValue=$wakeUpValue"
+                        )
+                        if (wakeUpRequirement == wakeUpValue) {
+                            actor.turnsSleep = 0
+                        } else {
+                            actor.turnsSleep += 1
+                        }
+                    }
+
+                    if (actor.statusStopSpell) {
+                        actor.turnsStopSpell
+                    }
                 }
             }
 

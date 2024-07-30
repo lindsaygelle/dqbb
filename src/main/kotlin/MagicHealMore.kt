@@ -2,10 +2,11 @@ package dqbb
 
 class MagicHealMore(
     condition: ConditionType,
-) : Magic(
+) : MagicHeal(
     condition = condition,
-    magicPoints = 10,
 ) {
+    override val magicPoints: Int = 10
+
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         val healMoreScale = actor.healMoreScale
         val healMoreShift = actor.healMoreShift
@@ -34,9 +35,5 @@ class MagicHealMore(
                     "otherActor.id=$otherActor"
         )
         return otherActor.hitPoints > hitPoints
-    }
-
-    override fun checkResistance(actor: Actor, otherActor: Actor): Boolean {
-        return otherActor.isAlive
     }
 }

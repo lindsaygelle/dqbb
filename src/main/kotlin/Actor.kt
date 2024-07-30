@@ -9,7 +9,7 @@ class Actor(
     actionPointsMaximum: Int = -1,
     agilityMaximum: Int = -1,
     allegiance: Int,
-    damageResistance: Int = -1,
+    damageResistanceMaximum: Int = -1,
     decisions: List<Decision>,
     excellentMoveMaximum: Int = -1,
     excellentMoveMinimum: Int = -1,
@@ -25,7 +25,7 @@ class Actor(
     hurtScale: Int = -1,
     hurtShift: Int = -1,
     val items: MutableMap<ItemType, Int> = mutableMapOf(),
-    statusResistance: Int = -1,
+    statusResistanceMaximum: Int = -1,
     strengthMaximum: Int = -1,
     magicPoints: Int = -1,
     magicPointsMaximum: Int = -1,
@@ -66,16 +66,13 @@ class Actor(
     val attackValue: Int
         get() = 0
 
-    val damageResistance: Int = maxOf(0x0F, damageResistance)
+    val damageResistanceMaximum: Int = maxOf(0x0F, damageResistanceMaximum)
 
     private val decisions: List<Decision> = decisions.sortedByDescending { decision -> decision.priority }
 
     val excellentMoveMaximum: Int = maxOf(0, excellentMoveMaximum)
 
     val excellentMoveMinimum: Int = maxOf(0, excellentMoveMinimum)
-
-    private val hasActionPoints: Boolean
-        get() = this.actionPoints > 0
 
     val healMoreScale: Int = maxOf(0x55, healMoreScale)
 
@@ -115,21 +112,9 @@ class Actor(
 
     val hurtRangeMinimum: Int = 0
 
-    private val hurtRange: IntRange = (this.hurtRangeMinimum..hurtRangeMaximum)
-
-    val hurtRangeRandom: Int
-        get() = this.hurtRange.random()
-
     val hurtRequirementMaximum: Int = 16
 
     val hurtRequirementMinimum: Int = 0
-
-    private val hurtRequirementRange: IntRange = (this.hurtRequirementMinimum..hurtRequirementMaximum)
-
-    val hurtRequirement: Int
-        get() = this.hurtRequirementRange.random()
-
-    val hurtResistance: Int = this.damageResistance shr 4
 
     val hurtScale: Int = maxOf(0x03, hurtScale)
 
@@ -154,10 +139,11 @@ class Actor(
     val magicPointsPercentage: Int
         get() = getPercentage(this.magicPoints, this.magicPointsMaximum)
 
-    val statusResistance: Int
-        get() = this.statusResistanceMaximum
+    val sleepRequirementMaximum: Int = 16
 
-    private val statusResistanceMaximum: Int = maxOf(0x0F, statusResistance)
+    val sleepRequirementMinimum: Int = 0
+
+    val statusResistanceMaximum: Int = maxOf(0x0F, statusResistanceMaximum)
 
     val statusSleep: Boolean
         get() = this.turnsSleep > 0
@@ -197,6 +183,10 @@ class Actor(
 
     val turnsStopSpellPercentage: Int
         get() = getPercentage(this.turnsStopSpell, this.turnsStopSpellMaximum)
+
+    val wakeUpMaximum: Int = 3
+
+    val wakeUpMinimum: Int = 0
 
     fun getAttackPower(actor: Actor): Int {
         return this.strength
