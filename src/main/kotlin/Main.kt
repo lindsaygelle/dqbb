@@ -319,7 +319,64 @@ fun main() {
         turnsStopSpellMaximum = 3,
     )
 
-    val battleSystem = BattleSystem(mutableSetOf(actor0, actor1, actor2))
+    val actor3 = Actor(
+        allegiance = (0..1).random(),
+        decisions = listOf(
+            Decision(
+                ability = Attack(
+                    conditionType = ConditionType.HIT_POINTS,
+                    orderType = OrderType.MAX,
+                ),
+                priorityType = PriorityType.HIGHEST,
+                preCondition = State(
+                    matchType = MatchType.ALL,
+                    qualifiers = listOf(),
+                ),
+                targetSelection = State(
+                    matchType = MatchType.ANY,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(),
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ENEMY,
+                        )
+                    )
+                ),
+            )
+        )
+    )
+
+    val actor4 = Actor(
+        allegiance = (0..1).random(),
+        decisions = listOf(
+            Decision(
+                ability = ConsumeHerb(
+                    conditionType = ConditionType.HIT_POINTS,
+                    orderType = OrderType.MIN,
+                ),
+                priorityType = PriorityType.HIGHEST,
+                preCondition = State(
+                    matchType = MatchType.ALL,
+                    qualifiers = listOf(),
+                ),
+                targetSelection = State(
+                    matchType = MatchType.ANY,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(),
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ALLY,
+                        )
+                    )
+                ),
+            )
+        )
+    )
+
+    val battleSystem = BattleSystem(
+        actors = mutableSetOf(
+            actor0, actor1, actor2, actor3, actor4)
+    )
 
     while (battleSystem.isActive) {
         battleSystem.run()
