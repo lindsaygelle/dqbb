@@ -5,6 +5,7 @@ fun main() {
         actionPointsMaximum = 2,
         agilityMaximum = 0,
         allegiance = 0,
+        armor = ArmorErdrick,
         decisions = listOf(
             Decision(
                 ability = MagicHeal(
@@ -115,6 +116,7 @@ fun main() {
         actionPointsMaximum = 4,
         agilityMaximum = 10,
         allegiance = 1,
+        armor = ArmorMagic,
         decisions = listOf(
             Decision(
                 ability = Attack(

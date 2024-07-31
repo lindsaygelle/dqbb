@@ -9,13 +9,22 @@ open class MagicHurt(
     override val magicPoints: Int = 2
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
+        /* Actor */
         val hurtRangeMaximum = actor.hurtRangeMaximum
         val hurtRangeMinimum = actor.hurtRangeMinimum
         val hurtRangeRandom = (hurtRangeMinimum..hurtRangeMaximum).random()
         val hurtScale = actor.hurtScale
         val hurtShift = actor.hurtShift
         val hurtValue = (hurtRangeRandom and hurtShift) + hurtScale
+        /* Other Actor */
+        val armor = actor.armor
         val hitPoints = otherActor.hitPoints
+        val hurtReduction = when (armor) {
+            ArmorErdrick,
+            ArmorMagic -> 3
+
+            else -> 1
+        }
         logger.debug(
             "$this: " +
                     "actor.hurtRangeMaximum=$hurtRangeMaximum " +
@@ -25,11 +34,12 @@ open class MagicHurt(
                     "actor.hurtShift=$hurtShift " +
                     "actor.hurtValue=$hurtValue " +
                     "actor.id=$actor " +
+                    "otherActor.armor=$armor " +
                     "otherActor.hitPoints=$hitPoints " +
+                    "otherActor.hurtReduction=$hurtReduction " +
                     "otherActor.id=$otherActor"
         )
-        // TODO: Armor reductions
-        otherActor.hitPoints -= hurtValue
+        otherActor.hitPoints -= hurtValue / hurtReduction
         logger.debug(
             "$this: " +
                     "actor.id=$actor " +
@@ -40,12 +50,14 @@ open class MagicHurt(
     }
 
     override fun checkResistance(actor: Actor, otherActor: Actor): Boolean {
+        /* Actor */
         val hurtRequirementMaximum = actor.hurtRequirementMaximum
         val hurtRequirementMinimum = actor.hurtRequirementMinimum
         val hurtRequirement = (hurtRequirementMinimum..hurtRequirementMaximum).random()
+        /* Other Actor */
         val damageResistanceMaximum = otherActor.damageResistanceMaximum
         val hurtResistance = (damageResistanceMaximum shr 28) and 0xF // First nibble: TODO check
-        println(//logger.debug
+        logger.debug(
             "$this: " +
                     "actor.hurtRequirementMaximum=$hurtRequirementMaximum " +
                     "actor.hurtRequirementMinimum=$hurtRequirementMinimum " +

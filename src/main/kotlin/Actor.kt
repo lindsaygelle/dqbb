@@ -4,11 +4,12 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 
-class Actor(
+open class Actor(
     actionPoints: Int = -1,
     actionPointsMaximum: Int = -1,
     agilityMaximum: Int = -1,
     allegiance: Int,
+    var armor: Armor? = null,
     damageResistanceMaximum: Int = -1,
     decisions: List<Decision>,
     excellentMoveMaximum: Int = -1,

@@ -9,11 +9,13 @@ class MagicHealMore(
     override val magicPoints: Int = 10
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
+        /* Actor */
         val healMoreScale = actor.healMoreScale
         val healMoreShift = actor.healMoreShift
         val healRangeMaximum = actor.healRangeMaximum
         val healRangeMinimum = actor.healRangeMinimum
         val healRangeRandom = (healRangeMinimum..healRangeMaximum).random()
+        /* Other Actor */
         val hitPoints = otherActor.hitPoints
         val healMoreValue = (healRangeRandom and healMoreShift) + healMoreScale
         logger.debug(
