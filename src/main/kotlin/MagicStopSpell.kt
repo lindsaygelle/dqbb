@@ -2,8 +2,10 @@ package dqbb
 
 class MagicStopSpell(
     conditionType: ConditionType,
+    orderType: OrderType? = null,
 ) : Magic(
     conditionType,
+    orderType = orderType,
 ) {
 
     override val magicPoints: Int = 2
@@ -21,7 +23,7 @@ class MagicStopSpell(
         if ((armor != ArmorErdrick) && !otherActor.statusStopSpell) {
             otherActor.turnsStopSpell = 1
         }
-        return actor.turnsStopSpell == 1
+        return true
     }
 
     override fun checkResistance(actor: Actor, otherActor: Actor): Boolean {
@@ -38,7 +40,7 @@ class MagicStopSpell(
                     "actor.stopSpellRequirementMaximum=$stopSpellRequirementMaximum " +
                     "actor.stopSpellRequirementMinimum=$stopSpellRequirementMinimum " +
                     "actor.stopSpellRequirement=$stopSpellRequirement " +
-                    "otherActor.id=$this " +
+                    "otherActor.id=$otherActor " +
                     "otherActor.stopSpellResistance=$stopSpellResistance"
         )
         return stopSpellRequirement > stopSpellResistance

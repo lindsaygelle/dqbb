@@ -1,9 +1,11 @@
 package dqbb
 
 class MagicSleep(
-    conditionType: ConditionType
+    conditionType: ConditionType,
+    orderType: OrderType? = null,
 ) : Magic(
-    conditionType = conditionType
+    conditionType = conditionType,
+    orderType = orderType,
 ) {
 
     override val magicPoints: Int = 2
@@ -22,7 +24,7 @@ class MagicSleep(
         if ((armor != ArmorErdrick) && !otherActor.statusSleep) {
             otherActor.turnsSleep = 1
         }
-        return actor.turnsSleep == 1
+        return true
     }
 
     override fun checkResistance(actor: Actor, otherActor: Actor): Boolean {

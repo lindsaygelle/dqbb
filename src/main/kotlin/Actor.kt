@@ -5,35 +5,38 @@ import org.apache.logging.log4j.Logger
 
 
 open class Actor(
-    actionPoints: Int = -1,
-    actionPointsMaximum: Int = -1,
-    agilityMaximum: Int = -1,
+    actionPoints: Int? = null,
+    actionPointsMaximum: Int? = null,
+    agilityMaximum: Int? = null,
     allegiance: Int,
     var armor: Armor? = null,
-    damageResistanceMaximum: Int = -1,
+    damageResistanceMaximum: Int? = null,
     decisions: List<Decision>,
-    excellentMoveMaximum: Int = -1,
-    excellentMoveMinimum: Int = -1,
-    healMoreScale: Int = -1,
-    healScale: Int = -1,
-    healShift: Int = -1,
-    herbScale: Int = -1,
-    herbShift: Int = -1,
-    hitPoints: Int = -1,
-    hitPointsMaximum: Int = -1,
-    hurtMoreScale: Int = -1,
-    hurtMoreShift: Int = -1,
-    hurtScale: Int = -1,
-    hurtShift: Int = -1,
+    excellentMoveMaximum: Int? = null,
+    excellentMoveMinimum: Int? = null,
+    healMoreScale: Int? = null,
+    healScale: Int? = null,
+    healShift: Int? = null,
+    herbScale: Int? = null,
+    herbShift: Int? = null,
+    hitPoints: Int? = null,
+    hitPointsMaximum: Int? = null,
+    hurtMoreScale: Int? = null,
+    hurtMoreShift: Int? = null,
+    hurtScale: Int? = null,
+    hurtShift: Int? = null,
     val items: MutableMap<ItemType, Int> = mutableMapOf(),
-    statusResistanceMaximum: Int = -1,
-    strengthMaximum: Int = -1,
-    magicPoints: Int = -1,
-    magicPointsMaximum: Int = -1,
-    turnsSleep: Int = -1,
-    turnsSleepMaximum: Int = -1,
-    turnsStopSpell: Int = -1,
-    turnsStopSpellMaximum: Int = -1,
+    magicPoints: Int? = null,
+    magicPointsMaximum: Int? = null,
+    var shield: Shield? = null,
+    statusResistanceMaximum: Int? = null,
+    strengthMaximum: Int? = null,
+    turnsSleep: Int? = null,
+    turnsSleepMaximum: Int? = null,
+    turnsStopSpell: Int? = null,
+    turnsStopSpellMaximum: Int? = null,
+    wakeUpChanceMaximum: Int? = null,
+    wakeUpChanceMinimum: Int? = null,
 ) {
 
     var actionPoints: Int = 0
@@ -45,7 +48,7 @@ open class Actor(
             )
         }
 
-    val actionPointsMaximum: Int = maxOf(0, actionPointsMaximum)
+    val actionPointsMaximum: Int = maxOf(0, actionPointsMaximum ?: 1)
 
     val actionPointsPercentage: Int
         get() = this.getPercentage(this.actionPoints, this.actionPointsMaximum)
@@ -53,7 +56,7 @@ open class Actor(
     val agility: Int
         get() = this.agilityMaximum
 
-    private val agilityMaximum: Int = maxOf(0, agilityMaximum)
+    private val agilityMaximum: Int = maxOf(0, agilityMaximum ?: 1)
 
     var allegiance: Int = 0
         set(value) {
@@ -67,17 +70,17 @@ open class Actor(
     val attackValue: Int
         get() = 0
 
-    val damageResistanceMaximum: Int = maxOf(0x0F, damageResistanceMaximum)
+    val damageResistanceMaximum: Int = maxOf(0x0F, damageResistanceMaximum ?: 0)
 
     private val decisions: List<Decision> = decisions.sortedByDescending { decision ->
         decision.priorityType.ordinal
     }
 
-    val excellentMoveMaximum: Int = maxOf(0, excellentMoveMaximum)
+    val excellentMoveMaximum: Int = maxOf(0, excellentMoveMaximum ?: 0)
 
-    val excellentMoveMinimum: Int = maxOf(0, excellentMoveMinimum)
+    val excellentMoveMinimum: Int = maxOf(0, excellentMoveMinimum ?: 0)
 
-    val healMoreScale: Int = maxOf(0x55, healMoreScale)
+    val healMoreScale: Int = maxOf(0x55, healMoreScale ?: 0)
 
     val healMoreShift: Int = 0x0F
 
@@ -85,13 +88,13 @@ open class Actor(
 
     val healRangeMinimum: Int = 0
 
-    val healScale: Int = maxOf(0x0A, healScale)
+    val healScale: Int = maxOf(0x0A, healScale ?: 0)
 
-    val healShift: Int = maxOf(0x07, healShift)
+    val healShift: Int = maxOf(0x07, healShift ?: 0)
 
-    val herbScale: Int = maxOf(0x17, herbScale)
+    val herbScale: Int = maxOf(0x17, herbScale ?: 0)
 
-    val herbShift: Int = maxOf(0x0F, herbShift)
+    val herbShift: Int = maxOf(0x0F, herbShift ?: 0)
 
     var hitPoints: Int = 0
         set(value) {
@@ -102,14 +105,14 @@ open class Actor(
             )
         }
 
-    val hitPointsMaximum: Int = maxOf(0x03, hitPointsMaximum)
+    val hitPointsMaximum: Int = maxOf(0x03, hitPointsMaximum ?: 0)
 
     val hitPointsPercentage: Int
         get() = getPercentage(this.hitPoints, this.hitPointsMaximum)
 
-    val hurtMoreScale: Int = maxOf(0x1E, hurtMoreScale)
+    val hurtMoreScale: Int = maxOf(0x1E, hurtMoreScale ?: 0)
 
-    val hurtMoreShift: Int = maxOf(0x0F, hurtMoreShift)
+    val hurtMoreShift: Int = maxOf(0x0F, hurtMoreShift ?: 0)
 
     val hurtRangeMaximum: Int = 255
 
@@ -119,9 +122,9 @@ open class Actor(
 
     val hurtRequirementMinimum: Int = 0
 
-    val hurtScale: Int = maxOf(0x03, hurtScale)
+    val hurtScale: Int = maxOf(0x03, hurtScale ?: 0)
 
-    val hurtShift: Int = maxOf(0x07, hurtShift)
+    val hurtShift: Int = maxOf(0x07, hurtShift ?: 0)
 
     val isAlive: Boolean
         get() = this.hitPoints > 0
@@ -137,7 +140,7 @@ open class Actor(
             )
         }
 
-    val magicPointsMaximum: Int = maxOf(0, magicPointsMaximum)
+    val magicPointsMaximum: Int = maxOf(0, magicPointsMaximum ?: 0)
 
     val magicPointsPercentage: Int
         get() = getPercentage(this.magicPoints, this.magicPointsMaximum)
@@ -146,7 +149,7 @@ open class Actor(
 
     val sleepRequirementMinimum: Int = 0
 
-    val statusResistanceMaximum: Int = maxOf(0x0F, statusResistanceMaximum)
+    val statusResistanceMaximum: Int = maxOf(0x0F, statusResistanceMaximum ?: 0)
 
     val stopSpellRequirementMaximum: Int = 16
 
@@ -161,7 +164,7 @@ open class Actor(
     val strength: Int
         get() = this.strengthMaximum
 
-    val strengthMaximum: Int = maxOf(0x05, strengthMaximum)
+    val strengthMaximum: Int = maxOf(0x05, strengthMaximum ?: 0)
 
     var turnsSleep: Int = 0
         set(value) {
@@ -172,7 +175,7 @@ open class Actor(
             )
         }
 
-    val turnsSleepMaximum: Int = maxOf(0, turnsSleepMaximum)
+    val turnsSleepMaximum: Int = maxOf(0, turnsSleepMaximum ?: 0)
 
     val turnsSleepPercentage: Int
         get() = getPercentage(this.turnsSleep, this.turnsSleepMaximum)
@@ -186,27 +189,40 @@ open class Actor(
             )
         }
 
-    val turnsStopSpellMaximum: Int = maxOf(0, turnsStopSpellMaximum)
+    val turnsStopSpellMaximum: Int = maxOf(0, turnsStopSpellMaximum ?: 0)
 
     val turnsStopSpellPercentage: Int
         get() = getPercentage(this.turnsStopSpell, this.turnsStopSpellMaximum)
 
-    val wakeUpMaximum: Int = 3
+    val wakeUpChanceMaximum: Int = maxOf(1, wakeUpChanceMaximum ?: 3)
 
-    val wakeUpMinimum: Int = 0
+    val wakeUpChanceMinimum: Int = maxOf(0, minOf(this.wakeUpChanceMaximum, wakeUpChanceMinimum ?: 0))
 
     fun getAttackPower(actor: Actor): Int {
         return this.strength
     }
 
+    fun getConditionType(conditionType: ConditionType): Int {
+        return when (conditionType) {
+            ConditionType.AGILITY -> this.agility
+            ConditionType.HIT_POINTS -> this.hitPoints
+            ConditionType.MAGIC_POINTS -> this.magicPoints
+            ConditionType.STATUS_RESISTANCE -> this.statusResistanceMaximum
+            ConditionType.TURNS_SLEEP -> this.turnsSleep
+            ConditionType.TURNS_STOP_SPELL -> this.turnsStopSpell
+        }
+    }
+
     private fun getDecision(otherActors: List<Actor>): Decision? {
-        for (decision in decisions) {
+        this.decisions.forEachIndexed { index, decision ->
             val isValid = decision.isValid(this, otherActors)
             logger.debug(
                 "$this: " +
                         "decision.ability=${decision.ability} " +
                         "decision.id=$decision " +
-                        "decision.isValid=$isValid"
+                        "decision.priorityType=${decision.priorityType} " +
+                        "decision.isValid=$isValid " +
+                        "index=$index"
             )
             if (isValid) {
                 return decision
@@ -244,11 +260,11 @@ open class Actor(
     }
 
     init {
-        this.actionPoints = actionPoints
+        this.actionPoints = actionPoints ?: 1
         this.allegiance = allegiance
-        this.hitPoints = hitPoints
-        this.magicPoints = magicPoints
-        this.turnsSleep = turnsSleep
-        this.turnsStopSpell = turnsStopSpell
+        this.hitPoints = hitPoints ?: this.hitPointsMaximum
+        this.magicPoints = magicPoints ?: this.hitPointsMaximum
+        this.turnsSleep = turnsSleep ?: 0
+        this.turnsStopSpell = turnsStopSpell ?: 0
     }
 }

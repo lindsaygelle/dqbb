@@ -2,8 +2,10 @@ package dqbb
 
 class MagicHealMore(
     conditionType: ConditionType,
+    orderType: OrderType? = null,
 ) : MagicHeal(
     conditionType = conditionType,
+    orderType = orderType,
 ) {
 
     override val magicPoints: Int = 10
@@ -37,6 +39,6 @@ class MagicHealMore(
                     "otherActor.hitPoints=${otherActor.hitPoints} " +
                     "otherActor.id=$otherActor"
         )
-        return otherActor.hitPoints > hitPoints
+        return true
     }
 }

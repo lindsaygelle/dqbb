@@ -1,9 +1,11 @@
 package dqbb
 
 class MagicHurtMore(
-    conditionType: ConditionType
+    conditionType: ConditionType,
+    orderType: OrderType? = null,
 ) : MagicHurt(
     conditionType = conditionType,
+    orderType = orderType,
 ) {
 
     override val magicPoints: Int = 5
@@ -45,6 +47,6 @@ class MagicHurtMore(
                     "otherActor.hitPoints=${otherActor.hitPoints} " +
                     "otherActor.id=$otherActor"
         )
-        return otherActor.hitPoints < hitPoints // This could just be true to indicate the action was performed.
+        return true
     }
 }

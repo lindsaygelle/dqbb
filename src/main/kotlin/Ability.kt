@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger
 
 abstract class Ability(
     protected val conditionType: ConditionType,
+    private val orderType: OrderType?,
 ) {
 
     protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
@@ -18,18 +19,29 @@ abstract class Ability(
         logger.debug(
             "$this: " +
                     "conditionType=$conditionType " +
+                    "orderType=$orderType " +
                     "otherActors.size=${otherActors.size}"
         )
-        return when (conditionType) {
-            ConditionType.HIT_POINTS -> otherActors.minByOrNull { otherActor ->
-                otherActor.hitPoints
+        val orderedActors = orderActors(otherActors)
+        logger.debug(
+            "$this: " +
+                    "orderedActors.size=${orderedActors.size}"
+        )
+        val otherActor = orderedActors.firstOrNull()
+        return otherActor
+    }
+
+    private fun orderActors(otherActors: Set<Actor>): Collection<Actor> {
+        return when (orderType) {
+            OrderType.MAX -> otherActors.sortedByDescending { actor ->
+                actor.getConditionType(conditionType)
             }
 
-            ConditionType.MAGIC_POINTS -> otherActors.minByOrNull { otherActor ->
-                otherActor.magicPoints
+            OrderType.MIN -> otherActors.sortedBy { actor ->
+                actor.getConditionType(conditionType)
             }
 
-            else -> otherActors.random()
+            else -> otherActors
         }
     }
 
@@ -38,7 +50,7 @@ abstract class Ability(
         logger.debug(
             "$this: " +
                     "actor.id=$actor " +
-                    "$actor.statusSleep=$actorStatusSleep"
+                    "actor.statusSleep=$actorStatusSleep"
         )
         if (actorStatusSleep) {
             return false

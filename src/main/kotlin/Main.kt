@@ -1,16 +1,17 @@
 package dqbb
 
 fun main() {
-    val actor = Actor(
+
+    val actor0 = Actor(
         actionPointsMaximum = 2,
         agilityMaximum = 0,
-        allegiance = 0,
+        allegiance = (0..1).random(),
         armor = ArmorErdrick,
         decisions = listOf(
             Decision(
                 ability = MagicHeal(
                     conditionType = ConditionType.HIT_POINTS,
-                    // orderBy = OrderBy.MIN,
+                    orderType = OrderType.MIN,
                 ),
                 priorityType = PriorityType.HIGHEST,
                 preCondition = State(
@@ -57,9 +58,63 @@ fun main() {
                     )
                 )
             ),
+            Decision(
+                ability = ConsumeMagicPotion(
+                    conditionType = ConditionType.MAGIC_POINTS,
+                    orderType = OrderType.MIN,
+                ),
+                priorityType = PriorityType.LOWEST,
+                preCondition = State(
+                    matchType = MatchType.ALL,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(
+                                CheckMagicPoints(
+                                    expressionType = ExpressionType.EXACT,
+                                    operatorType = OperatorType.LESS_THAN,
+                                    value = 3,
+                                )
+                            ),
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ALLY,
+                        ),
+                        Qualify(
+                            checkers = listOf(
+                                CheckMagicPotions(
+                                    expressionType = ExpressionType.EXACT,
+                                    operatorType = OperatorType.GREATER_THAN,
+                                    value = 0
+                                )
+                            ),
+                            matchType = MatchType.ALL,
+                            targetType = TargetType.SELF,
+                        )
+                    ),
+                ),
+                targetSelection = State(
+                    matchType = MatchType.ANY,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(
+                                CheckMagicPoints(
+                                    expressionType = ExpressionType.PERCENTAGE,
+                                    operatorType = OperatorType.LESS_THAN,
+                                    value = 3,
+                                )
+                            ),
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ALLY,
+                        )
+                    )
+                )
+            ),
         ),
         hitPoints = 20,
         hitPointsMaximum = 20,
+        items = mutableMapOf(
+            ItemType.HERB to 10,
+            ItemType.MAGIC_POTION to 4,
+        ),
         magicPointsMaximum = 10,
         turnsSleepMaximum = 3,
         turnsStopSpellMaximum = 3,
@@ -68,12 +123,12 @@ fun main() {
     val actor1 = Actor(
         actionPointsMaximum = 2,
         agilityMaximum = 1,
-        allegiance = 0,
+        allegiance = (0..1).random(),
         decisions = listOf(
             Decision(
                 ability = MagicHurt(
                     conditionType = ConditionType.HIT_POINTS,
-                    // orderBy = OrderBy.MIN,
+                    orderType = OrderType.MAX,
                 ),
                 priorityType = PriorityType.HIGHEST,
                 preCondition = State(
@@ -115,13 +170,13 @@ fun main() {
     val actor2 = Actor(
         actionPointsMaximum = 4,
         agilityMaximum = 10,
-        allegiance = 1,
+        allegiance = (0..1).random(),
         armor = ArmorMagic,
         decisions = listOf(
             Decision(
                 ability = Attack(
                     conditionType = ConditionType.HIT_POINTS,
-                    // orderBy = OrderBy.MIN,
+                    orderType = OrderType.MIN,
                 ),
                 priorityType = PriorityType.LOWEST,
                 preCondition = State(
@@ -206,7 +261,7 @@ fun main() {
             Decision(
                 ability = MagicSleep(
                     conditionType = ConditionType.HIT_POINTS,
-                    // orderBy = OrderBy.MIN,
+                    orderType = OrderType.MAX,
                 ),
                 priorityType = PriorityType.HIGHEST,
                 preCondition = State(
@@ -264,9 +319,78 @@ fun main() {
         turnsStopSpellMaximum = 3,
     )
 
-    val battleSystem = BattleSystem(mutableSetOf(actor, actor1, actor2))
+    val actor3 = Actor(
+        allegiance = (0..1).random(),
+        decisions = listOf(
+            Decision(
+                ability = Attack(
+                    conditionType = ConditionType.HIT_POINTS,
+                    orderType = OrderType.MAX,
+                ),
+                priorityType = PriorityType.HIGHEST,
+                preCondition = State(
+                    matchType = MatchType.ALL,
+                    qualifiers = listOf(),
+                ),
+                targetSelection = State(
+                    matchType = MatchType.ANY,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(),
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ENEMY,
+                        )
+                    )
+                ),
+            )
+        )
+    )
 
-    battleSystem.run()
+    val actor4 = Actor(
+        allegiance = (0..1).random(),
+        decisions = listOf(
+            Decision(
+                ability = ConsumeHerb(
+                    conditionType = ConditionType.HIT_POINTS,
+                    orderType = OrderType.MIN,
+                ),
+                priorityType = PriorityType.HIGHEST,
+                preCondition = State(
+                    matchType = MatchType.ALL,
+                    qualifiers = listOf(),
+                ),
+                targetSelection = State(
+                    matchType = MatchType.ANY,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(),
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ALLY,
+                        )
+                    )
+                ),
+            )
+        ),
+        items = mutableMapOf(
+            ItemType.HERB to (0..20).random(),
+        )
+    )
+
+    val battleSystem = BattleSystem(
+        actors = mutableSetOf(
+            actor0, actor1, actor2, actor3, actor4
+        )
+    )
+
+    while (battleSystem.isActive) {
+        battleSystem.run()
+    }
+
+    println("Battle finished in ${battleSystem.turns} turns")
+
+    battleSystem.actorsDefeated.forEachIndexed { index, actor ->
+        println("defeated: index=$index actor.allegiance=${actor.allegiance} actor.id=$actor")
+    }
 
     println(battleSystem.actors)
 }

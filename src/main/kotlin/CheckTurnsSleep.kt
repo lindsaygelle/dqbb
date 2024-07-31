@@ -3,10 +3,12 @@ package dqbb
 class CheckTurnsSleep(
     expressionType: ExpressionType,
     operatorType: OperatorType,
+    priorityType: PriorityType = PriorityType.HIGHEST,
     value: Int,
 ) : Check(
     expressionType = expressionType,
     operatorType = operatorType,
+    priorityType = priorityType,
     value = value,
 ) {
 

@@ -7,11 +7,11 @@ import org.apache.logging.log4j.Logger
 class Decision(
     val ability: Ability,
     private val preCondition: State,
-    val priorityType: PriorityType,
+    override val priorityType: PriorityType,
     val targetSelection: State,
-) {
+) : Prioritized {
 
-    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     fun isValid(actor: Actor, otherActors: List<Actor>): Boolean {
         logger.debug(

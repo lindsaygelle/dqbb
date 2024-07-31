@@ -1,9 +1,11 @@
 package dqbb
 
 class Attack(
-    conditionType: ConditionType
+    conditionType: ConditionType,
+    orderType: OrderType? = null,
 ) : Ability(
     conditionType = conditionType,
+    orderType = orderType,
 ) {
 
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
@@ -37,14 +39,15 @@ class Attack(
             val attackValue = actor.attackValue
             attackScore = attackValue
         }
+        otherActor.hitPoints -= attackScore
         logger.debug(
             "$this: " +
                     "actor.attackScore=$attackScore " +
                     "actor.id=$actor " +
+                    "otherActor.hitPoints=${otherActor.hitPoints} " +
                     "otherActor.id=$otherActor"
         )
-        otherActor.hitPoints -= attackScore
-        return otherActor.hitPoints < hitPoints
+        return true
     }
 
     override fun check(actor: Actor, otherActor: Actor): Boolean {

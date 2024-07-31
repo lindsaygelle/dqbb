@@ -1,13 +1,15 @@
 package dqbb
 
-class CheckConsumable(
+open class CheckConsumable(
     expressionType: ExpressionType,
-    operatorType: OperatorType,
     private val item: ItemType,
+    operatorType: OperatorType,
+    priorityType: PriorityType,
     value: Int,
 ) : Check(
     expressionType = expressionType,
     operatorType = operatorType,
+    priorityType = priorityType,
     value = value,
 ) {
 

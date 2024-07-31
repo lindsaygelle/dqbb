@@ -3,8 +3,10 @@ package dqbb
 
 abstract class Magic(
     conditionType: ConditionType,
+    orderType: OrderType? = null,
 ) : Ability(
     conditionType = conditionType,
+    orderType = orderType,
 ) {
 
     protected abstract val magicPoints: Int

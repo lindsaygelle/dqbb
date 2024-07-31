@@ -2,10 +2,13 @@ package dqbb
 
 abstract class Consume(
     conditionType: ConditionType,
-    private val item: ItemType
+    orderType: OrderType? = null,
 ) : Ability(
-    conditionType = conditionType
+    conditionType = conditionType,
+    orderType = orderType,
 ) {
+
+    protected abstract val itemType: ItemType
 
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
         val checkResistanceValue = checkResistance(actor, otherActor)
@@ -25,19 +28,19 @@ abstract class Consume(
                     "applyEffect=$applyEffectValue " +
                     "otherActor.id=$otherActor"
         )
-        actor.items[item]?.minus(1)
+        actor.items[itemType]?.minus(1)
         return applyEffectValue
     }
 
     protected abstract fun applyEffect(actor: Actor, otherActor: Actor): Boolean
 
     override fun check(actor: Actor, otherActor: Actor): Boolean {
-        val itemCount = actor.items.getOrDefault(this.item, 0)
-        println(//logger.debug
+        val itemCount = actor.items.getOrDefault(this.itemType, 0)
+        logger.debug(
             "$this: " +
-                    "actor.items.$item=$itemCount " +
+                    "actor.items.$itemType=$itemCount " +
                     "actor.id=$actor " +
-                    "item=$item " +
+                    "itemType=$itemType " +
                     "otherActor.id=$otherActor"
         )
         return itemCount > 0
