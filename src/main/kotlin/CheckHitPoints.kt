@@ -9,6 +9,7 @@ class CheckHitPoints(
     operatorType = operatorType,
     value = value,
 ) {
+
     override fun getExactValue(actor: Actor): Int {
         val hitPoints = actor.hitPoints
         logger.debug(

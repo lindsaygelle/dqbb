@@ -5,6 +5,7 @@ class Attack(
 ) : Ability(
     conditionType = conditionType,
 ) {
+
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
         val attackPower = actor.getAttackPower(otherActor)
         var attackScore = attackPower

@@ -6,6 +6,7 @@ class ConsumeHerb(
     conditionType = conditionType,
     item = ItemType.HERB,
 ) {
+
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         val healRangeMaximum = actor.healRangeMaximum
         val healRangeMinimum = actor.healRangeMinimum

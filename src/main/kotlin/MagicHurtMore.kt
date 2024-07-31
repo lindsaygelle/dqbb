@@ -5,7 +5,9 @@ class MagicHurtMore(
 ) : MagicHurt(
     conditionType = conditionType,
 ) {
+
     override val magicPoints: Int = 5
+
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         val hurtRangeMaximum = actor.hurtRangeMaximum
         val hurtRangeMinimum = actor.hurtRangeMinimum

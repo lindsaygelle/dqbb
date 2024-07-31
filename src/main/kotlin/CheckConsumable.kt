@@ -10,6 +10,7 @@ class CheckConsumable(
     operatorType = operatorType,
     value = value,
 ) {
+
     override fun getExactValue(actor: Actor): Int {
         return actor.items.getOrDefault(item, 0)
     }

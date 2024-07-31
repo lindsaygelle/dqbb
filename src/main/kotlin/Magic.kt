@@ -6,6 +6,7 @@ abstract class Magic(
 ) : Ability(
     conditionType = conditionType,
 ) {
+
     protected abstract val magicPoints: Int
 
     override fun apply(actor: Actor, otherActor: Actor): Boolean {

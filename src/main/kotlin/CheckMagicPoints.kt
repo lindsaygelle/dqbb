@@ -9,6 +9,7 @@ class CheckMagicPoints(
     operatorType = operatorType,
     value = value,
 ) {
+
     override fun getExactValue(actor: Actor): Int {
         val magicPoints = actor.magicPoints
         logger.debug(

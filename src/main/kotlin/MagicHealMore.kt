@@ -5,6 +5,7 @@ class MagicHealMore(
 ) : MagicHeal(
     conditionType = conditionType,
 ) {
+
     override val magicPoints: Int = 10
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {

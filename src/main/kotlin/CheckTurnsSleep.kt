@@ -9,6 +9,7 @@ class CheckTurnsSleep(
     operatorType = operatorType,
     value = value,
 ) {
+
     override fun getExactValue(actor: Actor): Int {
         val turnsSleep = actor.turnsSleep
         logger.debug(
