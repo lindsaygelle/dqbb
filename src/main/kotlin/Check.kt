@@ -7,8 +7,9 @@ import org.apache.logging.log4j.Logger
 abstract class Check(
     private val expressionType: ExpressionType,
     private val operatorType: OperatorType,
+    override val priorityType: PriorityType,
     private val value: Int,
-) {
+) : Prioritized {
 
     protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
@@ -24,6 +25,7 @@ abstract class Check(
                     "checkValue=$checkValueResult " +
                     "expressionType=$expressionType " +
                     "operatorType=$operatorType " +
+                    "priorityType=$priorityType " +
                     "value=$value " +
                     "valueOther=$valueOther"
         )

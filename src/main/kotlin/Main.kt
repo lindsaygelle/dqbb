@@ -5,7 +5,7 @@ fun main() {
     val actor0 = Actor(
         actionPointsMaximum = 2,
         agilityMaximum = 0,
-        allegiance = 0,
+        allegiance = (0..1).random(),
         armor = ArmorErdrick,
         decisions = listOf(
             Decision(
@@ -123,7 +123,7 @@ fun main() {
     val actor1 = Actor(
         actionPointsMaximum = 2,
         agilityMaximum = 1,
-        allegiance = 0,
+        allegiance = (0..1).random(),
         decisions = listOf(
             Decision(
                 ability = MagicHurt(
@@ -170,7 +170,7 @@ fun main() {
     val actor2 = Actor(
         actionPointsMaximum = 4,
         agilityMaximum = 10,
-        allegiance = 1,
+        allegiance = (0..1).random(),
         armor = ArmorMagic,
         decisions = listOf(
             Decision(
@@ -370,12 +370,16 @@ fun main() {
                     )
                 ),
             )
+        ),
+        items = mutableMapOf(
+            ItemType.HERB to (0..20).random(),
         )
     )
 
     val battleSystem = BattleSystem(
         actors = mutableSetOf(
-            actor0, actor1, actor2, actor3, actor4)
+            actor0, actor1, actor2, actor3, actor4
+        )
     )
 
     while (battleSystem.isActive) {

@@ -7,11 +7,11 @@ import org.apache.logging.log4j.Logger
 class Qualify(
     private val checkers: List<Check>,
     private val matchType: MatchType,
-    val priorityType: PriorityType = PriorityType.LOWEST,
+    override val priorityType: PriorityType = PriorityType.LOWEST,
     private val targetType: TargetType,
-) {
+) : Prioritized {
 
-    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     private fun checkMatch(actor: Actor): Boolean {
         if (checkers.isEmpty()) {

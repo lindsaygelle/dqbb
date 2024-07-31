@@ -26,14 +26,17 @@ open class Actor(
     hurtScale: Int? = null,
     hurtShift: Int? = null,
     val items: MutableMap<ItemType, Int> = mutableMapOf(),
-    statusResistanceMaximum: Int? = null,
-    strengthMaximum: Int? = null,
     magicPoints: Int? = null,
     magicPointsMaximum: Int? = null,
+    var shield: Shield? = null,
+    statusResistanceMaximum: Int? = null,
+    strengthMaximum: Int? = null,
     turnsSleep: Int? = null,
     turnsSleepMaximum: Int? = null,
     turnsStopSpell: Int? = null,
     turnsStopSpellMaximum: Int? = null,
+    wakeUpChanceMaximum: Int? = null,
+    wakeUpChanceMinimum: Int? = null,
 ) {
 
     var actionPoints: Int = 0
@@ -191,9 +194,9 @@ open class Actor(
     val turnsStopSpellPercentage: Int
         get() = getPercentage(this.turnsStopSpell, this.turnsStopSpellMaximum)
 
-    val wakeUpMaximum: Int = 3
+    val wakeUpChanceMaximum: Int = maxOf(1, wakeUpChanceMaximum ?: 3)
 
-    val wakeUpMinimum: Int = 0
+    val wakeUpChanceMinimum: Int = maxOf(0, minOf(this.wakeUpChanceMaximum, wakeUpChanceMinimum ?: 0))
 
     fun getAttackPower(actor: Actor): Int {
         return this.strength
@@ -211,13 +214,15 @@ open class Actor(
     }
 
     private fun getDecision(otherActors: List<Actor>): Decision? {
-        for (decision in decisions) {
+        this.decisions.forEachIndexed { index, decision ->
             val isValid = decision.isValid(this, otherActors)
             logger.debug(
                 "$this: " +
                         "decision.ability=${decision.ability} " +
                         "decision.id=$decision " +
-                        "decision.isValid=$isValid"
+                        "decision.priorityType=${decision.priorityType} " +
+                        "decision.isValid=$isValid " +
+                        "index=$index"
             )
             if (isValid) {
                 return decision

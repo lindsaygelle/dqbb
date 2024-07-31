@@ -12,7 +12,7 @@ class BattleSystem(
 
     var isActive: Boolean = true
 
-    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     var turns: Int = 0
 
@@ -91,15 +91,16 @@ class BattleSystem(
 
                 if (actor.statusSleep) {
 
-                    val wakeUpMaximum = actor.wakeUpMaximum
-                    val wakeUpMinimum = actor.wakeUpMinimum
-                    val wakeUpValue = (wakeUpMinimum..wakeUpMaximum).random()
+                    val wakeUpChanceMaximum = actor.wakeUpChanceMaximum
+                    val wakeUpChanceMinimum = actor.wakeUpChanceMinimum
                     val wakeUpRequirement = 0
+                    val wakeUpValue = (wakeUpChanceMaximum..wakeUpChanceMinimum).random()
+
                     logger.debug(
                         "$this: " +
                                 "actor.id=$actor " +
-                                "actor.wakeUpMaximum=$wakeUpMaximum " +
-                                "actor.wakeUpMinimum=$wakeUpMinimum " +
+                                "actor.wakeUpChanceMaximum=$wakeUpChanceMaximum " +
+                                "actor.wakeUpChanceMinimum=$wakeUpChanceMinimum " +
                                 "actor.wakeUpRequirement=$wakeUpRequirement " +
                                 "actor.wakeUpValue=$wakeUpValue"
                     )
