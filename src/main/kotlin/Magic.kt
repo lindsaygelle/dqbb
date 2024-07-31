@@ -2,11 +2,7 @@ package dqbb
 
 
 abstract class Magic(
-<<<<<<< HEAD
     conditionType: ConditionType,
-=======
-    condition: ConditionType,
->>>>>>> 62c97b8d57ae4c9ba761fad9cf044e10d3b47127
 ) : Ability(
     conditionType = conditionType,
 ) {

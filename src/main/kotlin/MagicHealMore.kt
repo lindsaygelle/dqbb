@@ -1,15 +1,9 @@
 package dqbb
 
 class MagicHealMore(
-<<<<<<< HEAD
     conditionType: ConditionType,
 ) : MagicHeal(
     conditionType = conditionType,
-=======
-    condition: ConditionType,
-) : MagicHeal(
-    condition = condition,
->>>>>>> 62c97b8d57ae4c9ba761fad9cf044e10d3b47127
 ) {
     override val magicPoints: Int = 10
 
