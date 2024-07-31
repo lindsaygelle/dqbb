@@ -22,7 +22,7 @@ class MagicSleep(
         if ((armor != ArmorErdrick) && !otherActor.statusSleep) {
             otherActor.turnsSleep = 1
         }
-        return actor.turnsSleep == 1
+        return true
     }
 
     override fun checkResistance(actor: Actor, otherActor: Actor): Boolean {

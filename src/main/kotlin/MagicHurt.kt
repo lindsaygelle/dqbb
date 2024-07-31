@@ -46,7 +46,7 @@ open class MagicHurt(
                     "otherActor.hitPoints=${otherActor.hitPoints} " +
                     "otherActor.id=$otherActor"
         )
-        return otherActor.hitPoints < hitPoints // This could just be true to indicate the action was performed.
+        return true
     }
 
     override fun checkResistance(actor: Actor, otherActor: Actor): Boolean {

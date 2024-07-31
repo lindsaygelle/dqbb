@@ -37,6 +37,6 @@ class MagicHealMore(
                     "otherActor.hitPoints=${otherActor.hitPoints} " +
                     "otherActor.id=$otherActor"
         )
-        return otherActor.hitPoints > hitPoints
+        return true
     }
 }

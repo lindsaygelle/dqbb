@@ -38,7 +38,7 @@ abstract class Ability(
         logger.debug(
             "$this: " +
                     "actor.id=$actor " +
-                    "$actor.statusSleep=$actorStatusSleep"
+                    "actor.statusSleep=$actorStatusSleep"
         )
         if (actorStatusSleep) {
             return false

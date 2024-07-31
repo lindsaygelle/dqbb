@@ -38,10 +38,10 @@ open class MagicHeal(
                     "otherActor.hitPoints=${otherActor.hitPoints} " +
                     "otherActor.id=$otherActor"
         )
-        return otherActor.hitPoints > hitPoints
+        return true
     }
 
     override fun checkResistance(actor: Actor, otherActor: Actor): Boolean {
-        return otherActor.isAlive
+        return !otherActor.isAlive
     }
 }

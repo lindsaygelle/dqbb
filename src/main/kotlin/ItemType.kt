@@ -1,5 +1,5 @@
 package dqbb
 
 enum class ItemType {
-    HERB
+    HERB, MAGIC_POTION
 }

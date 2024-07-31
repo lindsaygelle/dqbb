@@ -57,9 +57,63 @@ fun main() {
                     )
                 )
             ),
+            Decision(
+                ability = ConsumeMagicPotion(
+                    conditionType = ConditionType.MAGIC_POINTS,
+                    // orderBy = OrderBy.MIN,
+                ),
+                priorityType = PriorityType.LOWEST,
+                preCondition = State(
+                    matchType = MatchType.ALL,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(
+                                CheckMagicPoints(
+                                    expressionType = ExpressionType.EXACT,
+                                    operatorType = OperatorType.LESS_THAN,
+                                    value = 3,
+                                )
+                            ),
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ALLY,
+                        ),
+                        Qualify(
+                            checkers = listOf(
+                                CheckMagicPotions(
+                                    expressionType = ExpressionType.EXACT,
+                                    operatorType = OperatorType.GREATER_THAN,
+                                    value = 0
+                                )
+                            ),
+                            matchType = MatchType.ALL,
+                            targetType = TargetType.SELF,
+                        )
+                    ),
+                ),
+                targetSelection = State(
+                    matchType = MatchType.ANY,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(
+                                CheckMagicPoints(
+                                    expressionType = ExpressionType.PERCENTAGE,
+                                    operatorType = OperatorType.LESS_THAN,
+                                    value = 3,
+                                )
+                            ),
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ALLY,
+                        )
+                    )
+                )
+            ),
         ),
         hitPoints = 20,
         hitPointsMaximum = 20,
+        items = mutableMapOf(
+            ItemType.HERB to 10,
+            ItemType.MAGIC_POTION to 4,
+        ),
         magicPointsMaximum = 10,
         turnsSleepMaximum = 3,
         turnsStopSpellMaximum = 3,
@@ -266,7 +320,9 @@ fun main() {
 
     val battleSystem = BattleSystem(mutableSetOf(actor, actor1, actor2))
 
-    battleSystem.run()
+    while (battleSystem.isActive) {
+        battleSystem.run()
+    }
 
     println(battleSystem.actors)
 }

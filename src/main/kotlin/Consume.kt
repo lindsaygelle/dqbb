@@ -2,7 +2,7 @@ package dqbb
 
 abstract class Consume(
     conditionType: ConditionType,
-    private val item: ItemType
+    val item: ItemType
 ) : Ability(
     conditionType = conditionType
 ) {
@@ -33,7 +33,7 @@ abstract class Consume(
 
     override fun check(actor: Actor, otherActor: Actor): Boolean {
         val itemCount = actor.items.getOrDefault(this.item, 0)
-        println(//logger.debug
+        logger.debug(
             "$this: " +
                     "actor.items.$item=$itemCount " +
                     "actor.id=$actor " +

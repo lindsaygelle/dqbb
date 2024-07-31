@@ -8,12 +8,14 @@ class ConsumeHerb(
 ) {
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
+        /* Actor */
         val healRangeMaximum = actor.healRangeMaximum
         val healRangeMinimum = actor.healRangeMinimum
         val herbRangeRandom = (healRangeMinimum..healRangeMinimum).random()
         val herbScale = actor.herbScale
         val herbShift = actor.herbShift
         val herbValue = (herbRangeRandom and herbShift) + herbScale
+        /* Other Actor */
         val hitPoints = otherActor.hitPoints
         logger.debug(
             "$this: " +
@@ -33,10 +35,10 @@ class ConsumeHerb(
                     "otherActor.hitPoints=${otherActor.hitPoints} " +
                     "otherActor.id=$otherActor"
         )
-        return otherActor.hitPoints > hitPoints
+        return true
     }
 
     override fun checkResistance(actor: Actor, otherActor: Actor): Boolean {
-        return otherActor.isAlive
+        return !otherActor.isAlive
     }
 }
