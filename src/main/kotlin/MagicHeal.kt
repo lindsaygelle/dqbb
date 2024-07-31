@@ -2,21 +2,22 @@ package dqbb
 
 
 open class MagicHeal(
-    condition: ConditionType,
+    conditionType: ConditionType,
 ) : Magic(
-    condition = condition,
+    conditionType = conditionType,
 ) {
 
-    override val magicPoints: Int = 2
+    override val magicPoints: Int = 4
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
+        /* Actor */
         val healRangeMaximum = actor.healRangeMaximum
         val healRangeMinimum = actor.healRangeMinimum
         val healRangeRandom = (healRangeMinimum..healRangeMaximum).random()
         val healScale = actor.healScale
         val healShift = actor.healShift
         val healValue = (healRangeRandom and healShift) + healScale
-
+        /* Other Actor */
         val hitPoints = otherActor.hitPoints
         logger.debug(
             "$this: " +

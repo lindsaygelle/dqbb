@@ -5,26 +5,26 @@ import org.apache.logging.log4j.Logger
 
 
 class State(
-    private val match: MatchType,
+    private val matchType: MatchType,
     qualifiers: List<Qualify>,
 ) {
 
     val actors: MutableSet<Actor> = mutableSetOf()
 
-    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
-    private val qualifiers: List<Qualify> = qualifiers.sortedByDescending { it.priority.ordinal }
+    private val qualifiers: List<Qualify> = qualifiers.sortedByDescending { it.priorityType.ordinal }
 
     fun check(actor: Actor, otherActors: List<Actor>): Boolean {
         this.actors.clear() // Make sure to clear this, otherwise it is possible to reuse? Could be a method?
         logger.debug(
             "$this: " +
                     "actor.id=$actor " +
-                    "match=$match " +
+                    "matchType=$matchType " +
                     "otherActors.size=${otherActors.size} " +
                     "qualifiers.size=${qualifiers.size}"
         )
-        val matchValue = when (this.match) {
+        val matchValue = when (matchType) {
             MatchType.ALL -> matchAll(actor, otherActors)
             MatchType.ANY -> matchAny(actor, otherActors)
         }

@@ -4,11 +4,12 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 
-class Actor(
+open class Actor(
     actionPoints: Int = -1,
     actionPointsMaximum: Int = -1,
     agilityMaximum: Int = -1,
     allegiance: Int,
+    var armor: Armor? = null,
     damageResistanceMaximum: Int = -1,
     decisions: List<Decision>,
     excellentMoveMaximum: Int = -1,
@@ -68,7 +69,9 @@ class Actor(
 
     val damageResistanceMaximum: Int = maxOf(0x0F, damageResistanceMaximum)
 
-    private val decisions: List<Decision> = decisions.sortedByDescending { decision -> decision.priority }
+    private val decisions: List<Decision> = decisions.sortedByDescending { decision ->
+        decision.priorityType.ordinal
+    }
 
     val excellentMoveMaximum: Int = maxOf(0, excellentMoveMaximum)
 
@@ -144,6 +147,10 @@ class Actor(
     val sleepRequirementMinimum: Int = 0
 
     val statusResistanceMaximum: Int = maxOf(0x0F, statusResistanceMaximum)
+
+    val stopSpellRequirementMaximum: Int = 16
+
+    val stopSpellRequirementMinimum: Int = 0
 
     val statusSleep: Boolean
         get() = this.turnsSleep > 0

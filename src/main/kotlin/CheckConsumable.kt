@@ -1,15 +1,16 @@
 package dqbb
 
 class CheckConsumable(
-    expression: ExpressionType,
-    operator: OperatorType,
+    expressionType: ExpressionType,
+    operatorType: OperatorType,
     private val item: ItemType,
     value: Int,
 ) : Check(
-    expression = expression,
-    operator = operator,
+    expressionType = expressionType,
+    operatorType = operatorType,
     value = value,
 ) {
+
     override fun getExactValue(actor: Actor): Int {
         return actor.items.getOrDefault(item, 0)
     }

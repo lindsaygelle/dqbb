@@ -1,10 +1,11 @@
 package dqbb
 
 class Attack(
-    condition: ConditionType
+    conditionType: ConditionType
 ) : Ability(
-    condition = condition,
+    conditionType = conditionType,
 ) {
+
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
         val attackPower = actor.getAttackPower(otherActor)
         var attackScore = attackPower

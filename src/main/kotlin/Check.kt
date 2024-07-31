@@ -5,15 +5,15 @@ import org.apache.logging.log4j.Logger
 
 
 abstract class Check(
-    private val expression: ExpressionType,
-    private val operator: OperatorType,
+    private val expressionType: ExpressionType,
+    private val operatorType: OperatorType,
     private val value: Int,
 ) {
 
     protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     fun check(actor: Actor): Boolean {
-        val valueOther = when (this.expression) {
+        val valueOther = when (this.expressionType) {
             ExpressionType.EXACT -> getExactValue(actor)
             ExpressionType.PERCENTAGE -> getPercentageValue(actor)
         }
@@ -22,8 +22,8 @@ abstract class Check(
             "$this: " +
                     "actor.id=$actor " +
                     "checkValue=$checkValueResult " +
-                    "expression=$expression " +
-                    "operator=$operator " +
+                    "expressionType=$expressionType " +
+                    "operatorType=$operatorType " +
                     "value=$value " +
                     "valueOther=$valueOther"
         )
@@ -31,7 +31,7 @@ abstract class Check(
     }
 
     private fun checkValue(valueOther: Int): Boolean {
-        return when (this.operator) {
+        return when (this.operatorType) {
             OperatorType.EQUAL -> valueOther == this.value
             OperatorType.GREATER_THAN -> valueOther > this.value
             OperatorType.LESS_THAN -> valueOther < this.value

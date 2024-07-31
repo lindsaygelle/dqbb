@@ -1,14 +1,15 @@
 package dqbb
 
 class CheckTurnsSleep(
-    expression: ExpressionType,
-    operator: OperatorType,
+    expressionType: ExpressionType,
+    operatorType: OperatorType,
     value: Int,
 ) : Check(
-    expression = expression,
-    operator = operator,
+    expressionType = expressionType,
+    operatorType = operatorType,
     value = value,
 ) {
+
     override fun getExactValue(actor: Actor): Int {
         val turnsSleep = actor.turnsSleep
         logger.debug(

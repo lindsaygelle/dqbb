@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger
 
 
 abstract class Ability(
-    protected val condition: ConditionType,
+    protected val conditionType: ConditionType,
 ) {
 
     protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
@@ -17,10 +17,10 @@ abstract class Ability(
     private fun getActor(otherActors: Set<Actor>): Actor? {
         logger.debug(
             "$this: " +
-                    "condition=$condition " +
+                    "conditionType=$conditionType " +
                     "otherActors.size=${otherActors.size}"
         )
-        return when (condition) {
+        return when (conditionType) {
             ConditionType.HIT_POINTS -> otherActors.minByOrNull { otherActor ->
                 otherActor.hitPoints
             }

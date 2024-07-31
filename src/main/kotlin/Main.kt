@@ -5,53 +5,54 @@ fun main() {
         actionPointsMaximum = 2,
         agilityMaximum = 0,
         allegiance = 0,
+        armor = ArmorErdrick,
         decisions = listOf(
             Decision(
                 ability = MagicHeal(
-                    condition = ConditionType.HIT_POINTS,
+                    conditionType = ConditionType.HIT_POINTS,
                     // orderBy = OrderBy.MIN,
                 ),
-                priority = PriorityType.HIGHEST,
+                priorityType = PriorityType.HIGHEST,
                 preCondition = State(
-                    match = MatchType.ALL,
+                    matchType = MatchType.ALL,
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
                                 CheckHitPoints(
-                                    expression = ExpressionType.PERCENTAGE,
-                                    operator = OperatorType.LESS_THAN,
+                                    expressionType = ExpressionType.PERCENTAGE,
+                                    operatorType = OperatorType.LESS_THAN,
                                     value = 10,
                                 )
                             ),
-                            match = MatchType.ANY,
-                            target = TargetType.ALLY,
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ALLY,
                         ),
                         Qualify(
                             checkers = listOf(
                                 CheckMagicPoints(
-                                    expression = ExpressionType.EXACT,
-                                    operator = OperatorType.GREATER_THAN,
+                                    expressionType = ExpressionType.EXACT,
+                                    operatorType = OperatorType.GREATER_THAN,
                                     value = 1
                                 )
                             ),
-                            match = MatchType.ALL,
-                            target = TargetType.SELF,
+                            matchType = MatchType.ALL,
+                            targetType = TargetType.SELF,
                         )
                     ),
                 ),
                 targetSelection = State(
-                    match = MatchType.ANY,
+                    matchType = MatchType.ANY,
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
                                 CheckHitPoints(
-                                    expression = ExpressionType.PERCENTAGE,
-                                    operator = OperatorType.LESS_THAN,
+                                    expressionType = ExpressionType.PERCENTAGE,
+                                    operatorType = OperatorType.LESS_THAN,
                                     value = 10,
                                 )
                             ),
-                            match = MatchType.ANY,
-                            target = TargetType.ALLY,
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ALLY,
                         )
                     )
                 )
@@ -71,33 +72,33 @@ fun main() {
         decisions = listOf(
             Decision(
                 ability = MagicHurt(
-                    condition = ConditionType.HIT_POINTS,
+                    conditionType = ConditionType.HIT_POINTS,
                     // orderBy = OrderBy.MIN,
                 ),
-                priority = PriorityType.HIGHEST,
+                priorityType = PriorityType.HIGHEST,
                 preCondition = State(
-                    match = MatchType.ALL,
+                    matchType = MatchType.ALL,
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
                                 CheckHitPoints(
-                                    expression = ExpressionType.EXACT,
-                                    operator = OperatorType.GREATER_THAN,
+                                    expressionType = ExpressionType.EXACT,
+                                    operatorType = OperatorType.GREATER_THAN,
                                     value = 0,
                                 )
                             ),
-                            match = MatchType.ANY,
-                            target = TargetType.ENEMY,
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ENEMY,
                         )
                     ),
                 ),
                 targetSelection = State(
-                    match = MatchType.ANY,
+                    matchType = MatchType.ANY,
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(),
-                            match = MatchType.ANY,
-                            target = TargetType.ENEMY,
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ENEMY,
                         )
                     )
                 )
@@ -115,88 +116,141 @@ fun main() {
         actionPointsMaximum = 4,
         agilityMaximum = 10,
         allegiance = 1,
+        armor = ArmorMagic,
         decisions = listOf(
             Decision(
                 ability = Attack(
-                    condition = ConditionType.HIT_POINTS,
+                    conditionType = ConditionType.HIT_POINTS,
                     // orderBy = OrderBy.MIN,
                 ),
-                priority = PriorityType.LOWEST,
+                priorityType = PriorityType.LOWEST,
                 preCondition = State(
-                    match = MatchType.ALL,
+                    matchType = MatchType.ALL,
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
                                 CheckHitPoints(
-                                    expression = ExpressionType.EXACT,
-                                    operator = OperatorType.GREATER_THAN,
+                                    expressionType = ExpressionType.EXACT,
+                                    operatorType = OperatorType.GREATER_THAN,
                                     value = 0,
                                 )
                             ),
-                            match = MatchType.ANY,
-                            target = TargetType.ENEMY,
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ENEMY,
                         )
                     ),
                 ),
                 targetSelection = State(
-                    match = MatchType.ANY,
+                    matchType = MatchType.ANY,
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(),
-                            match = MatchType.ANY,
-                            target = TargetType.ENEMY,
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ENEMY,
                         )
                     )
                 )
             ),
             Decision(
                 ability = MagicSleep(
-                    condition = ConditionType.HIT_POINTS,
+                    conditionType = ConditionType.HIT_POINTS,
                     // orderBy = OrderBy.MIN,
                 ),
-                priority = PriorityType.HIGHEST,
+                priorityType = PriorityType.HIGHEST,
                 preCondition = State(
-                    match = MatchType.ALL,
+                    matchType = MatchType.ALL,
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
                                 CheckTurnsSleep(
-                                    expression = ExpressionType.EXACT,
-                                    operator = OperatorType.EQUAL,
+                                    expressionType = ExpressionType.EXACT,
+                                    operatorType = OperatorType.EQUAL,
                                     value = 0,
                                 )
                             ),
-                            match = MatchType.ANY,
-                            priority = PriorityType.HIGH,
-                            target = TargetType.ENEMY,
+                            matchType = MatchType.ANY,
+                            priorityType = PriorityType.HIGH,
+                            targetType = TargetType.ENEMY,
                         ),
                         Qualify(
                             checkers = listOf(
                                 CheckMagicPoints(
-                                    expression = ExpressionType.EXACT,
-                                    operator = OperatorType.GREATER_THAN,
+                                    expressionType = ExpressionType.EXACT,
+                                    operatorType = OperatorType.GREATER_THAN,
                                     value = 9,
                                 )
                             ),
-                            match = MatchType.ANY,
-                            priority = PriorityType.HIGHEST,
-                            target = TargetType.SELF,
+                            matchType = MatchType.ANY,
+                            priorityType = PriorityType.HIGHEST,
+                            targetType = TargetType.SELF,
                         )
                     ),
                 ),
                 targetSelection = State(
-                    match = MatchType.ANY,
+                    matchType = MatchType.ANY,
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
                                 CheckTurnsSleep(
-                                    expression = ExpressionType.EXACT,
-                                    operator = OperatorType.EQUAL,
+                                    expressionType = ExpressionType.EXACT,
+                                    operatorType = OperatorType.EQUAL,
                                     value = 0,
                                 ),
                             ),
-                            match = MatchType.ANY,
-                            target = TargetType.ENEMY,
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ENEMY,
+                        )
+                    )
+                )
+            ),
+            Decision(
+                ability = MagicSleep(
+                    conditionType = ConditionType.HIT_POINTS,
+                    // orderBy = OrderBy.MIN,
+                ),
+                priorityType = PriorityType.HIGHEST,
+                preCondition = State(
+                    matchType = MatchType.ALL,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(
+                                CheckTurnsSleep(
+                                    expressionType = ExpressionType.EXACT,
+                                    operatorType = OperatorType.EQUAL,
+                                    value = 0,
+                                )
+                            ),
+                            matchType = MatchType.ANY,
+                            priorityType = PriorityType.HIGH,
+                            targetType = TargetType.ENEMY,
+                        ),
+                        Qualify(
+                            checkers = listOf(
+                                CheckMagicPoints(
+                                    expressionType = ExpressionType.EXACT,
+                                    operatorType = OperatorType.GREATER_THAN,
+                                    value = 9,
+                                )
+                            ),
+                            matchType = MatchType.ANY,
+                            priorityType = PriorityType.HIGHEST,
+                            targetType = TargetType.SELF,
+                        )
+                    ),
+                ),
+                targetSelection = State(
+                    matchType = MatchType.ANY,
+                    qualifiers = listOf(
+                        Qualify(
+                            checkers = listOf(
+                                CheckTurnsSleep(
+                                    expressionType = ExpressionType.EXACT,
+                                    operatorType = OperatorType.EQUAL,
+                                    value = 0,
+                                ),
+                            ),
+                            matchType = MatchType.ANY,
+                            targetType = TargetType.ENEMY,
                         )
                     )
                 )

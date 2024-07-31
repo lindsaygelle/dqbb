@@ -1,18 +1,30 @@
 package dqbb
 
 class MagicHurtMore(
-    condition: ConditionType
+    conditionType: ConditionType
 ) : MagicHurt(
-    condition = condition,
+    conditionType = conditionType,
 ) {
+
+    override val magicPoints: Int = 5
+
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
+        /* Actor */
         val hurtRangeMaximum = actor.hurtRangeMaximum
         val hurtRangeMinimum = actor.hurtRangeMinimum
         val hurtRangeRandom = (hurtRangeMinimum..hurtRangeMaximum).random()
         val hurtMoreScale = actor.hurtMoreScale
         val hurtMoreShift = actor.hurtMoreShift
         val hurtMoreValue = (hurtRangeRandom and hurtMoreShift) + hurtMoreScale
+        /* Other Actor */
+        val armor = actor.armor
         val hitPoints = otherActor.hitPoints
+        val hurtReduction = when (armor) {
+            ArmorErdrick,
+            ArmorMagic -> 3
+
+            else -> 1
+        }
         logger.debug(
             "$this: " +
                     "actor.hurtMoreScale=$hurtMoreScale " +
@@ -23,10 +35,10 @@ class MagicHurtMore(
                     "actor.hurtRangeRandom=$hurtRangeRandom " +
                     "actor.id=$actor " +
                     "otherActor.hitPoints=$hitPoints " +
+                    "otherActor.hurtReduction=$hurtReduction " +
                     "otherActor.id=$otherActor"
         )
-        // TODO: Armor reductions
-        otherActor.hitPoints -= hurtMoreValue
+        otherActor.hitPoints -= hurtMoreValue / hurtReduction
         logger.debug(
             "$this: " +
                     "actor.id=$actor " +

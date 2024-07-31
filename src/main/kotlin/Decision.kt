@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger
 class Decision(
     val ability: Ability,
     private val preCondition: State,
-    val priority: PriorityType,
+    val priorityType: PriorityType,
     val targetSelection: State,
 ) {
 
@@ -18,7 +18,7 @@ class Decision(
             "$this: " +
                     "ability.id=$ability " +
                     "actor.id=$actor " +
-                    "priority=$priority"
+                    "priorityType=$priorityType"
         )
         val preConditionCheck = this.preCondition.check(actor, otherActors)
         logger.debug(

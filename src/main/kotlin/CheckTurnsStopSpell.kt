@@ -1,6 +1,6 @@
 package dqbb
 
-class CheckMagicPoints(
+class CheckTurnsStopSpell(
     expressionType: ExpressionType,
     operatorType: OperatorType,
     value: Int,
@@ -11,22 +11,22 @@ class CheckMagicPoints(
 ) {
 
     override fun getExactValue(actor: Actor): Int {
-        val magicPoints = actor.magicPoints
+        val turnsStopSpell = actor.turnsStopSpell
         logger.debug(
             "$this: " +
                     "actor.id=$actor " +
-                    "actor.magicPoints=$magicPoints"
+                    "actor.turnsStopSpell=$turnsStopSpell"
         )
-        return magicPoints
+        return turnsStopSpell
     }
 
     override fun getPercentageValue(actor: Actor): Int {
-        val magicPointsPercentage = actor.magicPointsPercentage
+        val turnsStopSpellPercentage = actor.turnsStopSpellPercentage
         logger.debug(
             "$this: " +
                     "actor.id=$actor " +
-                    "actor.magicPointsPercentage=$magicPointsPercentage"
+                    "actor.turnsStopSpellPercentage=$turnsStopSpellPercentage"
         )
-        return magicPointsPercentage
+        return turnsStopSpellPercentage
     }
 }
