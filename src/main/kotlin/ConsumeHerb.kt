@@ -2,10 +2,13 @@ package dqbb
 
 class ConsumeHerb(
     conditionType: ConditionType,
+    orderType: OrderType? = null,
 ) : Consume(
     conditionType = conditionType,
-    item = ItemType.HERB,
+    orderType = orderType,
 ) {
+
+    override val itemType: ItemType = ItemType.HERB
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         /* Actor */

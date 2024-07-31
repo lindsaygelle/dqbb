@@ -2,10 +2,14 @@ package dqbb
 
 class ConsumeMagicPotion(
     conditionType: ConditionType,
+    orderType: OrderType? = null,
 ) : Consume(
     conditionType = conditionType,
-    item = ItemType.MAGIC_POTION
+    orderType = orderType,
 ) {
+
+    override val itemType: ItemType = ItemType.MAGIC_POTION
+
     val magicPoints: Int = 2
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
@@ -13,7 +17,6 @@ class ConsumeMagicPotion(
         val magicPoints = otherActor.magicPoints
         logger.debug(
             "$this: " +
-                    "actor.items.${item}=${actor.items.getOrDefault(item, 0)} " +
                     "actor.id=$actor " +
                     "magicPoints=${this.magicPoints} " +
                     "otherActor.magicPoints=$magicPoints " +

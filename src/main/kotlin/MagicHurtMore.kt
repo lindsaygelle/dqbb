@@ -1,9 +1,11 @@
 package dqbb
 
 class MagicHurtMore(
-    conditionType: ConditionType
+    conditionType: ConditionType,
+    orderType: OrderType? = null,
 ) : MagicHurt(
     conditionType = conditionType,
+    orderType = orderType,
 ) {
 
     override val magicPoints: Int = 5

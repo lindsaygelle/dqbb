@@ -1,9 +1,11 @@
 package dqbb
 
 class MagicSleep(
-    conditionType: ConditionType
+    conditionType: ConditionType,
+    orderType: OrderType? = null,
 ) : Magic(
-    conditionType = conditionType
+    conditionType = conditionType,
+    orderType = orderType,
 ) {
 
     override val magicPoints: Int = 2

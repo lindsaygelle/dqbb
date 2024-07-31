@@ -1,6 +1,7 @@
 package dqbb
 
 fun main() {
+
     val actor = Actor(
         actionPointsMaximum = 2,
         agilityMaximum = 0,
@@ -10,7 +11,7 @@ fun main() {
             Decision(
                 ability = MagicHeal(
                     conditionType = ConditionType.HIT_POINTS,
-                    // orderBy = OrderBy.MIN,
+                    orderType = OrderType.MIN,
                 ),
                 priorityType = PriorityType.HIGHEST,
                 preCondition = State(
@@ -60,7 +61,7 @@ fun main() {
             Decision(
                 ability = ConsumeMagicPotion(
                     conditionType = ConditionType.MAGIC_POINTS,
-                    // orderBy = OrderBy.MIN,
+                    orderType = OrderType.MIN,
                 ),
                 priorityType = PriorityType.LOWEST,
                 preCondition = State(
@@ -127,7 +128,7 @@ fun main() {
             Decision(
                 ability = MagicHurt(
                     conditionType = ConditionType.HIT_POINTS,
-                    // orderBy = OrderBy.MIN,
+                    orderType = OrderType.MAX,
                 ),
                 priorityType = PriorityType.HIGHEST,
                 preCondition = State(
@@ -175,7 +176,7 @@ fun main() {
             Decision(
                 ability = Attack(
                     conditionType = ConditionType.HIT_POINTS,
-                    // orderBy = OrderBy.MIN,
+                    orderType = OrderType.MIN,
                 ),
                 priorityType = PriorityType.LOWEST,
                 preCondition = State(
@@ -260,7 +261,7 @@ fun main() {
             Decision(
                 ability = MagicSleep(
                     conditionType = ConditionType.HIT_POINTS,
-                    // orderBy = OrderBy.MIN,
+                    orderType = OrderType.MAX,
                 ),
                 priorityType = PriorityType.HIGHEST,
                 preCondition = State(
@@ -322,6 +323,12 @@ fun main() {
 
     while (battleSystem.isActive) {
         battleSystem.run()
+    }
+
+    println("Battle finished in ${battleSystem.turns} turns")
+
+    battleSystem.actorsDefeated.forEachIndexed { index, actor ->
+        println("defeated: index=$index actor.allegiance=${actor.allegiance} actor.id=$actor")
     }
 
     println(battleSystem.actors)

@@ -199,6 +199,14 @@ open class Actor(
         return this.strength
     }
 
+    fun getConditionType(conditionType: ConditionType): Int {
+        return when (conditionType) {
+            ConditionType.HIT_POINTS -> this.hitPoints
+            ConditionType.MAGIC_POINTS -> this.magicPoints
+            else -> 0
+        }
+    }
+
     private fun getDecision(otherActors: List<Actor>): Decision? {
         for (decision in decisions) {
             val isValid = decision.isValid(this, otherActors)

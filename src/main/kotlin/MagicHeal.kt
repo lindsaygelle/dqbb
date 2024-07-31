@@ -3,8 +3,10 @@ package dqbb
 
 open class MagicHeal(
     conditionType: ConditionType,
+    orderType: OrderType? = null,
 ) : Magic(
     conditionType = conditionType,
+    orderType = orderType
 ) {
 
     override val magicPoints: Int = 4

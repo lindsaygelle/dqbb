@@ -1,9 +1,11 @@
 package dqbb
 
 class Attack(
-    conditionType: ConditionType
+    conditionType: ConditionType,
+    orderType: OrderType? = null,
 ) : Ability(
     conditionType = conditionType,
+    orderType = orderType,
 ) {
 
     override fun apply(actor: Actor, otherActor: Actor): Boolean {

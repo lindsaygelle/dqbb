@@ -8,12 +8,13 @@ class BattleSystem(
 ) : Runnable {
 
     val actors: MutableList<Actor> = actors.toMutableList()
+    val actorsDefeated: MutableList<Actor> = mutableListOf()
 
     var isActive: Boolean = true
 
     protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
-    private var turns: Int = 0
+    var turns: Int = 0
 
     override fun run() {
         val removeAllValue = this.actors.removeAll { actor ->
@@ -25,6 +26,9 @@ class BattleSystem(
                         "actor.id=$actor " +
                         "actor.isAlive=$isAlive"
             )
+            if (!isAlive) {
+                this.actorsDefeated.add(actor)
+            }
             !isAlive
         }
 

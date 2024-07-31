@@ -2,8 +2,10 @@ package dqbb
 
 class MagicStopSpell(
     conditionType: ConditionType,
+    orderType: OrderType? = null,
 ) : Magic(
     conditionType,
+    orderType = orderType,
 ) {
 
     override val magicPoints: Int = 2
