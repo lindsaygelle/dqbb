@@ -2,7 +2,7 @@ package dqbb
 
 fun main() {
 
-    val actor = Actor(
+    val actor0 = Actor(
         actionPointsMaximum = 2,
         agilityMaximum = 0,
         allegiance = 0,
@@ -319,7 +319,7 @@ fun main() {
         turnsStopSpellMaximum = 3,
     )
 
-    val battleSystem = BattleSystem(mutableSetOf(actor, actor1, actor2))
+    val battleSystem = BattleSystem(mutableSetOf(actor0, actor1, actor2))
 
     while (battleSystem.isActive) {
         battleSystem.run()

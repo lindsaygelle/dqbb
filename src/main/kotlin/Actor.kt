@@ -201,9 +201,12 @@ open class Actor(
 
     fun getConditionType(conditionType: ConditionType): Int {
         return when (conditionType) {
+            ConditionType.AGILITY -> this.agility
             ConditionType.HIT_POINTS -> this.hitPoints
             ConditionType.MAGIC_POINTS -> this.magicPoints
-            else -> 0
+            ConditionType.STATUS_RESISTANCE -> this.statusResistanceMaximum
+            ConditionType.TURNS_SLEEP -> this.turnsSleep
+            ConditionType.TURNS_STOP_SPELL -> this.turnsStopSpell
         }
     }
 
