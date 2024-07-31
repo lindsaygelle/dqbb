@@ -1,11 +1,18 @@
 package dqbb
 
 class MagicHurtMore(
+<<<<<<< HEAD
     conditionType: ConditionType
 ) : MagicHurt(
     conditionType = conditionType,
 ) {
     override val magicPoints: Int = 5
+=======
+    condition: ConditionType
+) : MagicHurt(
+    condition = condition,
+) {
+>>>>>>> 62c97b8d57ae4c9ba761fad9cf044e10d3b47127
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         val hurtRangeMaximum = actor.hurtRangeMaximum
         val hurtRangeMinimum = actor.hurtRangeMinimum

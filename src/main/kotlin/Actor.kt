@@ -146,10 +146,13 @@ class Actor(
     val sleepRequirementMinimum: Int = 0
 
     val statusResistanceMaximum: Int = maxOf(0x0F, statusResistanceMaximum)
+<<<<<<< HEAD
 
     val stopSpellRequirementMaximum: Int = 16
 
     val stopSpellRequirementMinimum: Int = 0
+=======
+>>>>>>> 62c97b8d57ae4c9ba761fad9cf044e10d3b47127
 
     val statusSleep: Boolean
         get() = this.turnsSleep > 0

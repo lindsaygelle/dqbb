@@ -2,12 +2,21 @@ package dqbb
 
 
 open class MagicHeal(
+<<<<<<< HEAD
     conditionType: ConditionType,
 ) : Magic(
     conditionType = conditionType,
 ) {
 
     override val magicPoints: Int = 4
+=======
+    condition: ConditionType,
+) : Magic(
+    condition = condition,
+) {
+
+    override val magicPoints: Int = 2
+>>>>>>> 62c97b8d57ae4c9ba761fad9cf044e10d3b47127
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         val healRangeMaximum = actor.healRangeMaximum
