@@ -14,20 +14,20 @@ class CheckHitPoints(
 
     override fun getExactValue(actor: Actor): Int {
         val hitPoints = actor.hitPoints
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
                     "actor.hitPoints=$hitPoints " +
-                    "actor.id=$actor"
+                    "actor.id=${actor.id}"
         )
         return hitPoints
     }
 
     override fun getPercentageValue(actor: Actor): Int {
         val hitPointsPercentage = actor.hitPointsPercentage
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
                     "actor.hitPointsPercentage=$hitPointsPercentage " +
-                    "actor.id=$actor"
+                    "actor.id=${actor.id}"
         )
         return hitPointsPercentage
     }

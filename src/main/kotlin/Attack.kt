@@ -8,7 +8,14 @@ class Attack(
     orderType = orderType,
 ) {
 
+    override val name: String = "ATTACK"
+
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
+        actor.trail.add(
+            Trail(
+                "$actor ATTACKS $otherActor"
+            )
+        )
         val attackPower = actor.getAttackPower(otherActor)
         var attackScore = attackPower
         val defensePower = otherActor.getDefensePower(actor)
@@ -16,36 +23,48 @@ class Attack(
         if (attackPower < 1) {
             attackScore = (0..1).random()
         }
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
                     "actor.attackPower=$attackPower " +
                     "actor.attackScore=$attackScore " +
-                    "actor.id=$actor " +
-                    "otherActor.defensePower=$defensePower " +
+                    "actor.id=${actor.id} " +
+                    "otherActor.armor.id=${otherActor.armor?.id} " +
+                    "otherActor.armor.name=${otherActor.armor?.name} " +
                     "otherActor.hitPoints=$hitPoints " +
-                    "otherActor.id=$otherActor"
+                    "otherActor.id=${otherActor.id}"
         )
-        val excellentMoveMaximum = actor.excellentMoveMaximum
-        val excellentMoveMinimum = actor.excellentMoveMinimum
-        val excellentMoveRandomRange = (excellentMoveMinimum..excellentMoveMaximum).random()
-        logger.debug(
+        val excellentMoveChanceMaximum = actor.excellentMoveChanceMaximum
+        val excellentMoveChanceMinimum = actor.excellentMoveChanceMinimum
+        val excellentMoveChanceRange = (excellentMoveChanceMinimum..excellentMoveChanceMaximum)
+        val excellentMoveScore = excellentMoveChanceRange.random()
+        println(//logger.debug(
             "$this: " +
-                    "actor.excellentMoveMaximum=$excellentMoveMaximum " +
-                    "actor.excellentMoveMinimum=$excellentMoveMinimum " +
-                    "actor.id=$actor " +
-                    "otherActor.id=$otherActor"
+                    "actor.excellentMoveChanceMaximum=$excellentMoveChanceMaximum " +
+                    "actor.excellentMoveChanceMinimum=$excellentMoveChanceMinimum " +
+                    "actor.excellentMoveScore=$excellentMoveScore " +
+                    "actor.id=${actor.id}"
         )
-        if (excellentMoveRandomRange > 31) {
+        if (excellentMoveScore > 31) {
+            actor.trail.add(
+                Trail(
+                    "$actor PERFORMED AN EXCELLENT ATTACK!"
+                )
+            )
             val attackValue = actor.attackValue
             attackScore = attackValue
         }
+        actor.trail.add(
+            Trail(
+                "$actor does $attackScore damage to $otherActor"
+            )
+        )
         otherActor.hitPoints -= attackScore
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
                     "actor.attackScore=$attackScore " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "otherActor.hitPoints=${otherActor.hitPoints} " +
-                    "otherActor.id=$otherActor"
+                    "otherActor.id=${otherActor.id}"
         )
         return true
     }

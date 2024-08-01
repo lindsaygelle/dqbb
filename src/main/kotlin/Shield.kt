@@ -1,3 +1,9 @@
 package dqbb
 
-abstract class Shield : DefenseEquipment
+open class Shield(
+    defense: Int,
+    name: String,
+) : DefenseEquipment(
+    defense = defense,
+    name = name
+)

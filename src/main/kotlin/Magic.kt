@@ -13,21 +13,26 @@ abstract class Magic(
 
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
         val checkResistanceValue = checkResistance(actor, otherActor)
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "checkResistance=$checkResistanceValue " +
-                    "otherActor.id=$otherActor"
+                    "otherActor.id=${otherActor.id}"
         )
         if (checkResistanceValue) {
+            actor.trail.add(
+                Trail(
+                    "$actor's SPELL ${this.name} was RESISTED!"
+                )
+            )
             return false
         }
         val applyEffectValue = applyEffect(actor, otherActor)
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "applyEffect=$applyEffectValue " +
-                    "otherActor.id=$otherActor"
+                    "otherActor.id=${otherActor.id}"
         )
         return applyEffectValue
     }
@@ -36,25 +41,37 @@ abstract class Magic(
 
     override fun check(actor: Actor, otherActor: Actor): Boolean {
         val statusStopSpell = actor.statusStopSpell
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "actor.statusStopSpell=$statusStopSpell"
         )
         if (statusStopSpell) {
+            actor.trail.add(
+                Trail(
+                    "$actor's MAGIC is blocked!"
+                )
+            )
             return false
         }
         val magicPointsValue = actor.magicPoints - magicPoints
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
+                    "actor.magicPoints=${actor.magicPoints} " +
+                    "magicPoints=${this.magicPoints} " +
                     "magicPointsValue=$magicPointsValue"
         )
         if (magicPointsValue < 0) {
+            actor.trail.add(
+                Trail(
+                    "$actor has INSUFFICIENT magic points!"
+                )
+            )
             return false
         }
         actor.magicPoints = magicPointsValue
-        return actor.magicPoints > 0
+        return true
     }
 
     protected abstract fun checkResistance(actor: Actor, otherActor: Actor): Boolean

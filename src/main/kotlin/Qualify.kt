@@ -1,7 +1,7 @@
 package dqbb
 
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+//import org.apache.logging.log4j.LogManager
+//import org.apache.logging.log4j.Logger
 
 
 class Qualify(
@@ -9,9 +9,21 @@ class Qualify(
     private val matchType: MatchType,
     override val priorityType: PriorityType = PriorityType.LOWEST,
     private val targetType: TargetType,
-) : Prioritized {
+) : Identifier, Prioritized {
 
-    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    override val id: String = Integer.toHexString(System.identityHashCode(this))
+
+    private val logger: String? = null //: Logger = LogManager.getLogger(this::class.simpleName)
+
+    private fun check(actor: Actor, check: Check): Boolean {
+        val checkValue = check.check(actor)
+        println(//logger.debug(
+            "$this: " +
+                    "actor.id=${actor.id} " +
+                    "check.id=${check.id}"
+        )
+        return checkValue
+    }
 
     private fun checkMatch(actor: Actor): Boolean {
         if (checkers.isEmpty()) {
@@ -33,18 +45,18 @@ class Qualify(
     }
 
     private fun matchAll(actor: Actor): Boolean {
-        return checkers.all { checker -> checker.check(actor) }
+        return checkers.all { checker -> check(actor, checker) }
     }
 
     private fun matchAny(actor: Actor): Boolean {
-        return checkers.any { checker -> checker.check(actor) }
+        return checkers.any { checker -> check(actor, checker) }
     }
 
-    fun qualify(actor: Actor, otherActors: List<Actor>): MutableSet<Actor> {
-        logger.debug(
+    fun qualify(actor: Actor, otherActors: Collection<Actor>): MutableSet<Actor> {
+        println(//logger.debug(
             "$this: " +
                     "actor.allegiance=${actor.allegiance} " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "checkers.size=${checkers.size} " +
                     "matchType=$matchType " +
                     "priorityType=$priorityType " +
@@ -53,31 +65,31 @@ class Qualify(
         val actors = mutableSetOf<Actor>()
         otherActors.forEachIndexed { index, otherActor ->
             val checkTargetValue = this.checkTarget(actor, otherActor)
-            logger.debug(
+            println(//logger.debug(
                 "$this: " +
                         "actor.allegiance=${actor.allegiance} " +
-                        "actor.id=$actor " +
+                        "actor.id=${actor.id} " +
                         "checkTarget=$checkTargetValue " +
                         "index=$index " +
                         "otherActor.allegiance=${otherActor.allegiance} " +
-                        "otherActor.id=$otherActor"
+                        "otherActor.id=${otherActor.id}"
             )
             if (checkTargetValue) {
                 val checkMatchValue = this.checkMatch(otherActor)
-                logger.debug(
+                println(//logger.debug(
                     "$this: " +
                             "actor.allegiance=${actor.allegiance} " +
-                            "actor.id=$actor " +
+                            "actor.id=${actor.id} " +
                             "checkMatch=$checkMatchValue " +
                             "otherActor.allegiance=${otherActor.allegiance} " +
-                            "otherActor.id=$otherActor"
+                            "otherActor.id=${otherActor.id}"
                 )
                 if (checkMatchValue) {
                     actors.add(otherActor)
                 }
             }
         }
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
                     "actors.size=${actors.size}"
         )

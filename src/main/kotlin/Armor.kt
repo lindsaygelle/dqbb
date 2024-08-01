@@ -1,8 +1,10 @@
 package dqbb
 
 
-abstract class Armor(
+open class Armor(
     defense: Int,
-) : DefenseEquipment {
-    final override val defense: Int = maxOf(0, defense)
-}
+    name: String,
+) : DefenseEquipment(
+    defense = defense,
+    name = name,
+)

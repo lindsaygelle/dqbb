@@ -14,9 +14,9 @@ class CheckMagicPoints(
 
     override fun getExactValue(actor: Actor): Int {
         val magicPoints = actor.magicPoints
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "actor.magicPoints=$magicPoints"
         )
         return magicPoints
@@ -24,9 +24,9 @@ class CheckMagicPoints(
 
     override fun getPercentageValue(actor: Actor): Int {
         val magicPointsPercentage = actor.magicPointsPercentage
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "actor.magicPointsPercentage=$magicPointsPercentage"
         )
         return magicPointsPercentage

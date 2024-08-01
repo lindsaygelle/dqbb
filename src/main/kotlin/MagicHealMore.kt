@@ -10,34 +10,37 @@ class MagicHealMore(
 
     override val magicPoints: Int = 10
 
+    override val name: String = "${super.name} MORE"
+
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         /* Actor */
-        val healMoreScale = actor.healMoreScale
-        val healMoreShift = actor.healMoreShift
         val healRangeMaximum = actor.healRangeMaximum
         val healRangeMinimum = actor.healRangeMinimum
-        val healRangeRandom = (healRangeMinimum..healRangeMaximum).random()
+        val healRange = (healRangeMinimum..healRangeMaximum)
+        val healRangeValue = healRange.random()
+        val healMoreScale = actor.healMoreScale
+        val healMoreShift = actor.healMoreShift
+        val healMoreValue = (healRangeValue and healMoreShift) + healMoreScale
         /* Other Actor */
         val hitPoints = otherActor.hitPoints
-        val healMoreValue = (healRangeRandom and healMoreShift) + healMoreScale
-        logger.debug(
+        otherActor.hitPoints += healMoreValue
+        println(//logger.debug(
             "$this: " +
                     "actor.healMoreScale=$healMoreScale " +
                     "actor.healMoreShift=$healMoreShift " +
                     "actor.healMoreValue=$healMoreValue " +
                     "actor.healRangeMaximum=$healRangeMaximum " +
                     "actor.healRangeMinimum=$healRangeMinimum " +
-                    "actor.healRangeRandom=$healRangeRandom " +
-                    "actor.id=$actor " +
-                    "otherActor.hitPoints=$hitPoints " +
-                    "otherActor.id=$otherActor"
-        )
-        otherActor.hitPoints += healMoreValue
-        logger.debug(
-            "$this: " +
-                    "actor.id=$actor " +
+                    "actor.healRangeValue=$healRangeValue " +
+                    "actor.id=${actor.id} " +
                     "otherActor.hitPoints=${otherActor.hitPoints} " +
-                    "otherActor.id=$otherActor"
+                    "otherActor.hitPointsPrevious=$hitPoints " +
+                    "otherActor.id=${otherActor.id}"
+        )
+        actor.trail.add(
+            Trail(
+                "$actor HEALED $otherActor for $healMoreValue HIT POINTS"
+            )
         )
         return true
     }

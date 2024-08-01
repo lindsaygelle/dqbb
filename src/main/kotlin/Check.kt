@@ -1,7 +1,7 @@
 package dqbb
 
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+//import org.apache.logging.log4j.LogManager
+//import org.apache.logging.log4j.Logger
 
 
 abstract class Check(
@@ -9,9 +9,11 @@ abstract class Check(
     private val operatorType: OperatorType,
     override val priorityType: PriorityType,
     private val value: Int,
-) : Prioritized {
+) : Identifier, Prioritized {
 
-    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    override val id: String = Integer.toHexString(System.identityHashCode(this))
+
+    protected val logger: String? = null //: Logger = LogManager.getLogger(this::class.simpleName)
 
     fun check(actor: Actor): Boolean {
         val valueOther = when (this.expressionType) {
@@ -19,14 +21,14 @@ abstract class Check(
             ExpressionType.PERCENTAGE -> getPercentageValue(actor)
         }
         val checkValueResult = checkValue(valueOther)
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "checkValue=$checkValueResult " +
-                    "expressionType=$expressionType " +
-                    "operatorType=$operatorType " +
-                    "priorityType=$priorityType " +
-                    "value=$value " +
+                    "expressionType=${this.expressionType} " +
+                    "operatorType=${this.operatorType} " +
+                    "priorityType=${this.priorityType} " +
+                    "vale=${this.value} " +
                     "valueOther=$valueOther"
         )
         return checkValueResult

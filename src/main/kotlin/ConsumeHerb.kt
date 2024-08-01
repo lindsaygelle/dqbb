@@ -10,6 +10,8 @@ class ConsumeHerb(
 
     override val itemType: ItemType = ItemType.HERB
 
+    override val name: String = "HERB"
+
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         /* Actor */
         val healRangeMaximum = actor.healRangeMaximum
@@ -20,23 +22,28 @@ class ConsumeHerb(
         val herbValue = (herbRangeRandom and herbShift) + herbScale
         /* Other Actor */
         val hitPoints = otherActor.hitPoints
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
                     "actor.healRangeMaximum=$healRangeMaximum " +
                     "actor.healRangeMinimum=$healRangeMinimum " +
                     "actor.herbScale=$herbScale " +
                     "actor.herbShift=$herbShift " +
                     "actor.herbValue=$herbValue " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "otherActor.hitPoints=$hitPoints " +
-                    "otherActor.id=$otherActor"
+                    "otherActor.id=${otherActor.id}"
         )
         otherActor.hitPoints += herbValue
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "otherActor.hitPoints=${otherActor.hitPoints} " +
-                    "otherActor.id=$otherActor"
+                    "otherActor.id=${otherActor.id}"
+        )
+        actor.trail.add(
+            Trail(
+                "$actor HEALED $otherActor for $herbValue HIT POINTS"
+            )
         )
         return true
     }

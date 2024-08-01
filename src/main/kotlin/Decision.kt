@@ -1,7 +1,7 @@
 package dqbb
 
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+//import org.apache.logging.log4j.LogManager
+//import org.apache.logging.log4j.Logger
 
 
 class Decision(
@@ -9,34 +9,41 @@ class Decision(
     private val preCondition: State,
     override val priorityType: PriorityType,
     val targetSelection: State,
-) : Prioritized {
+) : Identifier, Prioritized {
 
-    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    override val id: String = Integer.toHexString(System.identityHashCode(this))
 
-    fun isValid(actor: Actor, otherActors: List<Actor>): Boolean {
-        logger.debug(
+    private val logger: String? = null //: Logger = LogManager.getLogger(this::class.simpleName)
+
+    fun isValid(actor: Actor, otherActors: Collection<Actor>): Boolean {
+        println(//logger.debug(
             "$this: " +
-                    "ability.id=$ability " +
-                    "actor.id=$actor " +
-                    "priorityType=$priorityType"
+                    "ability.id=${this.ability.id} " +
+                    "ability.name=${this.ability.name} " +
+                    "actor.id=${actor.id} " +
+                    "priorityType=${this.priorityType}"
         )
         val preConditionCheck = this.preCondition.check(actor, otherActors)
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
-                    "ability.id=$ability " +
-                    "actor.id=$actor " +
+                    "ability.id=${this.ability.id} " +
+                    "ability.name=${this.ability.name} " +
+                    "actor.id=${actor.id} " +
                     "preCondition.actors.size=${preCondition.actors.size} " +
+                    "preCondition.id=${preCondition.id} " +
                     "preCondition.check=$preConditionCheck"
         )
         if (!preConditionCheck) {
             return false
         }
         val targetSelectionCheck = this.targetSelection.check(actor, otherActors)
-        logger.debug(
+        println(//logger.debug(
             "$this: " +
-                    "ability.id=$ability " +
-                    "actor.id=$actor " +
+                    "ability.id=${this.ability.id} " +
+                    "ability.name=${this.ability.name} " +
+                    "actor.id=${actor.id} " +
                     "targetSelection.actors.size=${targetSelection.actors.size} " +
+                    "targetSelection.id=${targetSelection.id} " +
                     "targetSelection.check=$targetSelectionCheck"
         )
         return targetSelectionCheck

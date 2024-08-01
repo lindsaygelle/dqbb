@@ -11,34 +11,37 @@ open class MagicHeal(
 
     override val magicPoints: Int = 4
 
+    override val name: String = "HEAL"
+
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         /* Actor */
         val healRangeMaximum = actor.healRangeMaximum
         val healRangeMinimum = actor.healRangeMinimum
-        val healRangeRandom = (healRangeMinimum..healRangeMaximum).random()
+        val healRange = (healRangeMinimum..healRangeMaximum)
+        val healRangeValue = healRange.random()
         val healScale = actor.healScale
         val healShift = actor.healShift
-        val healValue = (healRangeRandom and healShift) + healScale
+        val healValue = (healRangeValue and healShift) + healScale
         /* Other Actor */
         val hitPoints = otherActor.hitPoints
-        logger.debug(
+        otherActor.hitPoints += healValue
+        println(//logger.debug(
             "$this: " +
                     "actor.healRangeMaximum=$healRangeMaximum " +
                     "actor.healRangeMinimum=$healRangeMinimum " +
-                    "actor.healRangeRandom=$healRangeRandom " +
+                    "actor.healRangeValue=$healRangeValue " +
                     "actor.healScale=$healScale " +
                     "actor.healShift=$healShift " +
                     "actor.healValue=$healValue " +
-                    "actor.id=$actor " +
-                    "otherActor.hitPoints=$hitPoints " +
-                    "otherActor.id=$otherActor"
-        )
-        otherActor.hitPoints += healValue
-        logger.debug(
-            "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "otherActor.hitPoints=${otherActor.hitPoints} " +
-                    "otherActor.id=$otherActor"
+                    "otherActor.hitPointsPrevious=$hitPoints " +
+                    "otherActor.id=${otherActor.id}"
+        )
+        actor.trail.add(
+            Trail(
+                "$actor HEALED $otherActor for $healValue HIT POINTS"
+            )
         )
         return true
     }

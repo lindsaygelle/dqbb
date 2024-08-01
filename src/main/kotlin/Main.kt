@@ -5,7 +5,7 @@ fun main() {
     val actor0 = Actor(
         actionPointsMaximum = 2,
         agilityMaximum = 0,
-        allegiance = (0..1).random(),
+        allegiance = (0..2).random(),
         armor = ArmorErdrick,
         decisions = listOf(
             Decision(
@@ -123,7 +123,7 @@ fun main() {
     val actor1 = Actor(
         actionPointsMaximum = 2,
         agilityMaximum = 1,
-        allegiance = (0..1).random(),
+        allegiance = (0..2).random(),
         decisions = listOf(
             Decision(
                 ability = MagicHurt(
@@ -170,7 +170,7 @@ fun main() {
     val actor2 = Actor(
         actionPointsMaximum = 4,
         agilityMaximum = 10,
-        allegiance = (0..1).random(),
+        allegiance = (0..2).random(),
         armor = ArmorMagic,
         decisions = listOf(
             Decision(
@@ -320,7 +320,7 @@ fun main() {
     )
 
     val actor3 = Actor(
-        allegiance = (0..1).random(),
+        allegiance = (0..2).random(),
         decisions = listOf(
             Decision(
                 ability = Attack(
@@ -347,7 +347,7 @@ fun main() {
     )
 
     val actor4 = Actor(
-        allegiance = (0..1).random(),
+        allegiance = (0..2).random(),
         decisions = listOf(
             Decision(
                 ability = ConsumeHerb(
@@ -386,11 +386,9 @@ fun main() {
         battleSystem.run()
     }
 
-    println("Battle finished in ${battleSystem.turns} turns")
-
-    battleSystem.actorsDefeated.forEachIndexed { index, actor ->
-        println("defeated: index=$index actor.allegiance=${actor.allegiance} actor.id=$actor")
+    println("Battle log:")
+    battleSystem.trail.forEach {
+        println(it.message)
     }
-
-    println(battleSystem.actors)
+    println("Battle finished in ${battleSystem.turns} turns")
 }
