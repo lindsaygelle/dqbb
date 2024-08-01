@@ -16,7 +16,7 @@ class CheckTurnsStopSpell(
         val turnsStopSpell = actor.turnsStopSpell
         logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "actor.turnsStopSpell=$turnsStopSpell"
         )
         return turnsStopSpell
@@ -26,7 +26,7 @@ class CheckTurnsStopSpell(
         val turnsStopSpellPercentage = actor.turnsStopSpellPercentage
         logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "actor.turnsStopSpellPercentage=$turnsStopSpellPercentage"
         )
         return turnsStopSpellPercentage

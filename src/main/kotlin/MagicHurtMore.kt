@@ -10,42 +10,45 @@ class MagicHurtMore(
 
     override val magicPoints: Int = 5
 
+    override val name: String = "${super.name} MORE"
+
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         /* Actor */
         val hurtRangeMaximum = actor.hurtRangeMaximum
         val hurtRangeMinimum = actor.hurtRangeMinimum
-        val hurtRangeRandom = (hurtRangeMinimum..hurtRangeMaximum).random()
+        val hurtRange = (hurtRangeMinimum..hurtRangeMaximum)
+        val hurtRangeValue = hurtRange.random()
         val hurtMoreScale = actor.hurtMoreScale
         val hurtMoreShift = actor.hurtMoreShift
-        val hurtMoreValue = (hurtRangeRandom and hurtMoreShift) + hurtMoreScale
+        val hurtMoreValue = (hurtRangeValue and hurtMoreShift) + hurtMoreScale
         /* Other Actor */
         val armor = actor.armor
         val hitPoints = otherActor.hitPoints
-        val hurtReduction = when (armor) {
-            ArmorErdrick,
-            ArmorMagic -> 3
-
-            else -> 1
-        }
+        val hurtReduction = this.getHurtReduction(armor)
+        /* Done */
+        val hurtMoreValueReduced = hurtMoreValue / hurtReduction
+        otherActor.hitPoints -= hurtMoreValueReduced
         logger.debug(
             "$this: " +
                     "actor.hurtMoreScale=$hurtMoreScale " +
                     "actor.hurtMoreShift=$hurtMoreShift " +
                     "actor.hurtMoreValue=$hurtMoreValue " +
+                    "actor.hurtMoreValueReduced=$hurtMoreValueReduced " +
                     "actor.hurtRangeMaximum=$hurtRangeMaximum " +
                     "actor.hurtRangeMinimum=$hurtRangeMinimum " +
-                    "actor.hurtRangeRandom=$hurtRangeRandom " +
-                    "actor.id=$actor " +
-                    "otherActor.hitPoints=$hitPoints " +
-                    "otherActor.hurtReduction=$hurtReduction " +
-                    "otherActor.id=$otherActor"
-        )
-        otherActor.hitPoints -= hurtMoreValue / hurtReduction
-        logger.debug(
-            "$this: " +
-                    "actor.id=$actor " +
+                    "actor.hurtRangeValue=$hurtRangeValue " +
+                    "actor.id=${actor.id} " +
+                    "otherActor.armor.id=${armor?.id} " +
+                    "otherActor.armor.name=${armor?.name} " +
                     "otherActor.hitPoints=${otherActor.hitPoints} " +
-                    "otherActor.id=$otherActor"
+                    "otherActor.hitPointsPrevious=$hitPoints " +
+                    "otherActor.hurtReduction=$hurtReduction " +
+                    "otherActor.id=${otherActor.id}"
+        )
+        actor.trail.add(
+            Trail(
+                "$actor HURT $otherActor for $hurtReduction HIT POINTS"
+            )
         )
         return true
     }

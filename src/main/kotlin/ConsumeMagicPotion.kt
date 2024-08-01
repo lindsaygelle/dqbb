@@ -12,22 +12,29 @@ class ConsumeMagicPotion(
 
     val magicPoints: Int = 2
 
+    override val name: String = "MAGIC POTION"
+
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         /* Other Actor */
         val magicPoints = otherActor.magicPoints
         logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "magicPoints=${this.magicPoints} " +
                     "otherActor.magicPoints=$magicPoints " +
-                    "otherActor.id=$otherActor"
+                    "otherActor.id=${otherActor.id}"
         )
         otherActor.magicPoints += this.magicPoints
         logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
-                    "otherActor.id=$otherActor " +
+                    "actor.id=${actor.id} " +
+                    "otherActor.id=${otherActor.id} " +
                     "otherActor.magicPoints=${otherActor.magicPoints}"
+        )
+        actor.trail.add(
+            Trail(
+                "$actor RESTORED $otherActor for ${this.magicPoints} magic points"
+            )
         )
         return true
     }

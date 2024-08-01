@@ -16,7 +16,7 @@ class CheckTurnsSleep(
         val turnsSleep = actor.turnsSleep
         logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "actor.turnsSleep=$turnsSleep"
         )
         return turnsSleep
@@ -26,7 +26,7 @@ class CheckTurnsSleep(
         val turnsSleepPercentage = actor.turnsSleepPercentage
         logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "actor.turnsSleepPercentage=$turnsSleepPercentage"
         )
         return turnsSleepPercentage

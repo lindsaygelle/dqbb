@@ -12,8 +12,8 @@ open class Actor(
     var armor: Armor? = null,
     damageResistanceMaximum: Int? = null,
     decisions: List<Decision>,
-    excellentMoveMaximum: Int? = null,
-    excellentMoveMinimum: Int? = null,
+    excellentMoveChanceMaximum: Int? = null,
+    excellentMoveChanceMinimum: Int? = null,
     healMoreScale: Int? = null,
     healScale: Int? = null,
     healShift: Int? = null,
@@ -37,7 +37,8 @@ open class Actor(
     turnsStopSpellMaximum: Int? = null,
     wakeUpChanceMaximum: Int? = null,
     wakeUpChanceMinimum: Int? = null,
-) {
+    var weapon: Weapon? = null,
+) : Identifier {
 
     var actionPoints: Int = 0
         set(value) {
@@ -76,9 +77,9 @@ open class Actor(
         decision.priorityType.ordinal
     }
 
-    val excellentMoveMaximum: Int = maxOf(0, excellentMoveMaximum ?: 0)
+    val excellentMoveChanceMaximum: Int = maxOf(0, excellentMoveChanceMaximum ?: 0)
 
-    val excellentMoveMinimum: Int = maxOf(0, excellentMoveMinimum ?: 0)
+    val excellentMoveChanceMinimum: Int = maxOf(0, excellentMoveChanceMinimum ?: 0)
 
     val healMoreScale: Int = maxOf(0x55, healMoreScale ?: 0)
 
@@ -126,6 +127,8 @@ open class Actor(
 
     val hurtShift: Int = maxOf(0x07, hurtShift ?: 0)
 
+    override val id: String = Integer.toHexString(System.identityHashCode(this))
+
     val isAlive: Boolean
         get() = this.hitPoints > 0
 
@@ -165,6 +168,10 @@ open class Actor(
         get() = this.strengthMaximum
 
     val strengthMaximum: Int = maxOf(0x05, strengthMaximum ?: 0)
+
+    val trail: MutableList<Trail> = mutableListOf()
+
+    var turnsAlive: Int = 0
 
     var turnsSleep: Int = 0
         set(value) {
@@ -213,13 +220,14 @@ open class Actor(
         }
     }
 
-    private fun getDecision(otherActors: List<Actor>): Decision? {
+    private fun getDecision(otherActors: Collection<Actor>): Decision? {
         this.decisions.forEachIndexed { index, decision ->
             val isValid = decision.isValid(this, otherActors)
             logger.debug(
                 "$this: " +
-                        "decision.ability=${decision.ability} " +
-                        "decision.id=$decision " +
+                        "decision.ability.id=${decision.ability.id} " +
+                        "decision.ability.name=${decision.ability.name} " +
+                        "decision.id=${decision.id} " +
                         "decision.priorityType=${decision.priorityType} " +
                         "decision.isValid=$isValid " +
                         "index=$index"
@@ -239,21 +247,22 @@ open class Actor(
         return ((value.toDouble() / valueMaximum) * 100).toInt()
     }
 
-    fun takeTurn(otherActors: List<Actor>): Boolean {
+    fun takeTurn(otherActors: Collection<Actor>): Boolean {
         val decision = getDecision(otherActors)
         var decisionValue = false
         logger.debug(
             "$this: " +
-                    "decision.id=$decision " +
+                    "decision.id=${decision?.id} " +
                     "otherActors.size=${otherActors.size}"
         )
         if (decision != null) {
             decisionValue = decision.ability.use(this, decision.targetSelection.actors)
             logger.debug(
                 "$this: " +
-                        "decision.ability.id=${decision.ability} " +
+                        "decision.ability.id=${decision.ability.id} " +
+                        "decision.ability.name=${decision.ability.name} " +
                         "decision.ability.use=$decisionValue " +
-                        "decision.id=$decision"
+                        "decision.id=${decision.id}"
             )
         }
         return decisionValue

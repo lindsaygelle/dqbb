@@ -9,7 +9,9 @@ abstract class Check(
     private val operatorType: OperatorType,
     override val priorityType: PriorityType,
     private val value: Int,
-) : Prioritized {
+) : Identifier, Prioritized {
+
+    override val id: String = Integer.toHexString(System.identityHashCode(this))
 
     protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
@@ -21,12 +23,12 @@ abstract class Check(
         val checkValueResult = checkValue(valueOther)
         logger.debug(
             "$this: " +
-                    "actor.id=$actor " +
+                    "actor.id=${actor.id} " +
                     "checkValue=$checkValueResult " +
-                    "expressionType=$expressionType " +
-                    "operatorType=$operatorType " +
-                    "priorityType=$priorityType " +
-                    "value=$value " +
+                    "expressionType=${this.expressionType} " +
+                    "operatorType=${this.operatorType} " +
+                    "priorityType=${this.priorityType} " +
+                    "vale=${this.value} " +
                     "valueOther=$valueOther"
         )
         return checkValueResult

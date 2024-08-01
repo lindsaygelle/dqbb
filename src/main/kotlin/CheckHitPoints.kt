@@ -17,7 +17,7 @@ class CheckHitPoints(
         logger.debug(
             "$this: " +
                     "actor.hitPoints=$hitPoints " +
-                    "actor.id=$actor"
+                    "actor.id=${actor.id}"
         )
         return hitPoints
     }
@@ -27,7 +27,7 @@ class CheckHitPoints(
         logger.debug(
             "$this: " +
                     "actor.hitPointsPercentage=$hitPointsPercentage " +
-                    "actor.id=$actor"
+                    "actor.id=${actor.id}"
         )
         return hitPointsPercentage
     }
