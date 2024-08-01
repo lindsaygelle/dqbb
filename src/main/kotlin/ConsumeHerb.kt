@@ -22,7 +22,7 @@ class ConsumeHerb(
         val herbValue = (herbRangeRandom and herbShift) + herbScale
         /* Other Actor */
         val hitPoints = otherActor.hitPoints
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.healRangeMaximum=$healRangeMaximum " +
                     "actor.healRangeMinimum=$healRangeMinimum " +
@@ -34,7 +34,7 @@ class ConsumeHerb(
                     "otherActor.id=${otherActor.id}"
         )
         otherActor.hitPoints += herbValue
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "otherActor.hitPoints=${otherActor.hitPoints} " +

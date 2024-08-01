@@ -14,7 +14,7 @@ class CheckTurnsStopSpell(
 
     override fun getExactValue(actor: Actor): Int {
         val turnsStopSpell = actor.turnsStopSpell
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "actor.turnsStopSpell=$turnsStopSpell"
@@ -24,7 +24,7 @@ class CheckTurnsStopSpell(
 
     override fun getPercentageValue(actor: Actor): Int {
         val turnsStopSpellPercentage = actor.turnsStopSpellPercentage
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "actor.turnsStopSpellPercentage=$turnsStopSpellPercentage"

@@ -12,7 +12,7 @@ abstract class Consume(
 
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
         val checkResistanceValue = checkResistance(actor, otherActor)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "checkResistance=$checkResistanceValue " +
@@ -22,7 +22,7 @@ abstract class Consume(
             return false
         }
         val applyEffectValue = applyEffect(actor, otherActor)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "applyEffect=$applyEffectValue " +
@@ -36,7 +36,7 @@ abstract class Consume(
 
     override fun check(actor: Actor, otherActor: Actor): Boolean {
         val itemCount = actor.items.getOrDefault(this.itemType, 0)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.items.$itemType=$itemCount " +
                     "actor.id=${actor.id} " +

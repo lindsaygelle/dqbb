@@ -14,7 +14,7 @@ class CheckTurnsSleep(
 
     override fun getExactValue(actor: Actor): Int {
         val turnsSleep = actor.turnsSleep
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "actor.turnsSleep=$turnsSleep"
@@ -24,7 +24,7 @@ class CheckTurnsSleep(
 
     override fun getPercentageValue(actor: Actor): Int {
         val turnsSleepPercentage = actor.turnsSleepPercentage
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "actor.turnsSleepPercentage=$turnsSleepPercentage"

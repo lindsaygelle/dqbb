@@ -16,7 +16,7 @@ class MagicSleep(
         /* Other Actor */
         val armor = otherActor.armor
         val turnSleep = otherActor.turnsSleep
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "otherActor.armor.id=${armor?.id} " +
@@ -46,7 +46,7 @@ class MagicSleep(
         val sleepResistanceShift = 28
         val sleepResistance =
             (statusResistanceMaximum shr sleepResistanceShift) and sleepResistanceScale // First nibble
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "actor.sleepRequirementMaximum=$sleepRequirementMaximum " +

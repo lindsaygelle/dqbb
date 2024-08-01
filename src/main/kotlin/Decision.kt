@@ -1,7 +1,7 @@
 package dqbb
 
-//import org.apache.logging.log4j.LogManager
-//import org.apache.logging.log4j.Logger
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 
 class Decision(
@@ -13,10 +13,10 @@ class Decision(
 
     override val id: String = Integer.toHexString(System.identityHashCode(this))
 
-    private val logger: String? = null //: Logger = LogManager.getLogger(this::class.simpleName)
+    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     fun isValid(actor: Actor, otherActors: Collection<Actor>): Boolean {
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "ability.id=${this.ability.id} " +
                     "ability.name=${this.ability.name} " +
@@ -24,7 +24,7 @@ class Decision(
                     "priorityType=${this.priorityType}"
         )
         val preConditionCheck = this.preCondition.check(actor, otherActors)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "ability.id=${this.ability.id} " +
                     "ability.name=${this.ability.name} " +
@@ -37,7 +37,7 @@ class Decision(
             return false
         }
         val targetSelectionCheck = this.targetSelection.check(actor, otherActors)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "ability.id=${this.ability.id} " +
                     "ability.name=${this.ability.name} " +

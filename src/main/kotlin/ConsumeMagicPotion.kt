@@ -17,7 +17,7 @@ class ConsumeMagicPotion(
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         /* Other Actor */
         val magicPoints = otherActor.magicPoints
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "magicPoints=${this.magicPoints} " +
@@ -25,7 +25,7 @@ class ConsumeMagicPotion(
                     "otherActor.id=${otherActor.id}"
         )
         otherActor.magicPoints += this.magicPoints
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "otherActor.id=${otherActor.id} " +

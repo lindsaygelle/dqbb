@@ -28,7 +28,7 @@ class MagicHurtMore(
         /* Done */
         val hurtMoreValueReduced = hurtMoreValue / hurtReduction
         otherActor.hitPoints -= hurtMoreValueReduced
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.hurtMoreScale=$hurtMoreScale " +
                     "actor.hurtMoreShift=$hurtMoreShift " +

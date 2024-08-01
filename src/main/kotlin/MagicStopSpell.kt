@@ -15,7 +15,7 @@ class MagicStopSpell(
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         val armor = otherActor.armor
         val turnsStopSpell = otherActor.turnsStopSpell
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "otherActor.armor.id=${armor?.id} " +
@@ -45,7 +45,7 @@ class MagicStopSpell(
         val stopSpellResistanceShift = 4
         val stopSpellResistance =
             (statusResistanceMaximum shr stopSpellResistanceShift) and stopSpellResistanceScale // Second nibble
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "actor.stopSpellRequirementMaximum=$stopSpellRequirementMaximum " +

@@ -1,7 +1,7 @@
 package dqbb
 
-//import org.apache.logging.log4j.LogManager
-//import org.apache.logging.log4j.Logger
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 
 open class Actor(
@@ -43,7 +43,7 @@ open class Actor(
     var actionPoints: Int = 0
         set(value) {
             field = maxOf(0, minOf(this.actionPointsMaximum, value))
-            println(//logger.debug(
+            logger.debug(
                 "$this: " +
                         "actionPoints=$field"
             )
@@ -62,7 +62,7 @@ open class Actor(
     var allegiance: Int = 0
         set(value) {
             field = maxOf(0, value)
-            println(//logger.debug(
+            logger.debug(
                 "$this: " +
                         "allegiance=$field"
             )
@@ -100,7 +100,7 @@ open class Actor(
     var hitPoints: Int = 0
         set(value) {
             field = maxOf(0, minOf(this.hitPointsMaximum, value))
-            println(//logger.debug(
+            logger.debug(
                 "$this: " +
                         "hitPoints=$field"
             )
@@ -132,12 +132,12 @@ open class Actor(
     val isAlive: Boolean
         get() = this.hitPoints > 0
 
-    protected val logger: String? = null //: Logger = LogManager.getLogger(this::class.simpleName)
+    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     var magicPoints: Int = 0
         set(value) {
             field = maxOf(0, minOf(this.magicPointsMaximum, value))
-            println(//logger.debug(
+            logger.debug(
                 "$this: " +
                         "magicPoints=$field"
             )
@@ -176,7 +176,7 @@ open class Actor(
     var turnsSleep: Int = 0
         set(value) {
             field = maxOf(0, minOf(this.turnsSleepMaximum, value))
-            println(//logger.debug(
+            logger.debug(
                 "$this: " +
                         "turnsSleep=$field"
             )
@@ -190,7 +190,7 @@ open class Actor(
     var turnsStopSpell: Int = 0
         set(value) {
             field = maxOf(0, minOf(this.turnsStopSpellMaximum, value))
-            println(//logger.debug(
+            logger.debug(
                 "$this: " +
                         "turnsStopSpell=$field"
             )
@@ -223,7 +223,7 @@ open class Actor(
     private fun getDecision(otherActors: Collection<Actor>): Decision? {
         this.decisions.forEachIndexed { index, decision ->
             val isValid = decision.isValid(this, otherActors)
-            println(//logger.debug(
+            logger.debug(
                 "$this: " +
                         "decision.ability.id=${decision.ability.id} " +
                         "decision.ability.name=${decision.ability.name} " +
@@ -250,14 +250,14 @@ open class Actor(
     fun takeTurn(otherActors: Collection<Actor>): Boolean {
         val decision = getDecision(otherActors)
         var decisionValue = false
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "decision.id=${decision?.id} " +
                     "otherActors.size=${otherActors.size}"
         )
         if (decision != null) {
             decisionValue = decision.ability.use(this, decision.targetSelection.actors)
-            println(//logger.debug(
+            logger.debug(
                 "$this: " +
                         "decision.ability.id=${decision.ability.id} " +
                         "decision.ability.name=${decision.ability.name} " +

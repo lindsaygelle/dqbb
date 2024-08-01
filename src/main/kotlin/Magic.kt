@@ -13,7 +13,7 @@ abstract class Magic(
 
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
         val checkResistanceValue = checkResistance(actor, otherActor)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "checkResistance=$checkResistanceValue " +
@@ -28,7 +28,7 @@ abstract class Magic(
             return false
         }
         val applyEffectValue = applyEffect(actor, otherActor)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "applyEffect=$applyEffectValue " +
@@ -41,7 +41,7 @@ abstract class Magic(
 
     override fun check(actor: Actor, otherActor: Actor): Boolean {
         val statusStopSpell = actor.statusStopSpell
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "actor.statusStopSpell=$statusStopSpell"
@@ -55,7 +55,7 @@ abstract class Magic(
             return false
         }
         val magicPointsValue = actor.magicPoints - magicPoints
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "actor.magicPoints=${actor.magicPoints} " +

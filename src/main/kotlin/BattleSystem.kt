@@ -1,7 +1,7 @@
 package dqbb
 
-//import org.apache.logging.log4j.LogManager
-//import org.apache.logging.log4j.Logger
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 class BattleSystem(
     actors: Set<Actor>
@@ -11,14 +11,14 @@ class BattleSystem(
 
     var isActive: Boolean = true
 
-    private val logger: String? = null //: Logger = LogManager.getLogger(this::class.simpleName)
+    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     val trail: MutableList<Trail> = mutableListOf()
 
     var turns: Int = 0
 
     private fun checkActor(actor: Actor, index: Int) {
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.actionPoints=${actor.actionPoints} " +
                     "actor.actionPointsMaximum=${actor.actionPointsMaximum} " +
@@ -52,7 +52,7 @@ class BattleSystem(
         }
         actor.turnsAlive = this.turns
         val takeTurnResult = actor.takeTurn(this.actors)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "actor.takeTurn=$takeTurnResult"
@@ -71,7 +71,7 @@ class BattleSystem(
         val wakeUpChanceMinimum = actor.wakeUpChanceMinimum
         val wakeUpRequirement = 0
         val wakeUpScore = (wakeUpChanceMinimum..wakeUpChanceMaximum).random()
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "actor.wakeUpChanceMaximum=$wakeUpChanceMaximum " +
@@ -80,7 +80,7 @@ class BattleSystem(
                     "actor.wakeUpScore=$wakeUpScore"
         )
         val turnsSleep = if (wakeUpScore != wakeUpRequirement) (actor.turnsSleep + 1) else 0
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "turnsSleep=$turnsSleep"
@@ -112,7 +112,7 @@ class BattleSystem(
     private fun clearActors() {
         val removeAllValue = this.actors.removeAll { actor ->
             val isAlive = actor.isAlive
-            println(//logger.debug(
+            logger.debug(
                 "$this: " +
                         "actor.allegiance=${actor.allegiance} " +
                         "actor.hitPoints=${actor.hitPoints} " +
@@ -122,7 +122,7 @@ class BattleSystem(
             !isAlive
         }
 
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actors.removeAll=$removeAllValue " +
                     "actors.size=${actors.size}"
@@ -151,7 +151,7 @@ class BattleSystem(
 
         this.isActive = allegiances.size > 1
 
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "allegiances.size=${allegiances.size} " +
                     "isActive=${this.isActive}"

@@ -28,7 +28,7 @@ open class MagicHurt(
         /* Done */
         val hurtValueReduced = hurtValue / hurtReduction
         otherActor.hitPoints -= hurtValueReduced
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.hurtRangeMaximum=$hurtRangeMaximum " +
                     "actor.hurtRangeMinimum=$hurtRangeMinimum " +
@@ -65,7 +65,7 @@ open class MagicHurt(
         val hurtResistanceShift = 28
         val hurtResistance =
             (damageResistanceMaximum shr hurtResistanceShift) and hurtResistanceScale // First nibble: TODO check
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.hurtRequirementMaximum=$hurtRequirementMaximum " +
                     "actor.hurtRequirementMinimum=$hurtRequirementMinimum " +
@@ -87,7 +87,7 @@ open class MagicHurt(
 
             else -> 1
         }
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "armor.id=${armor?.id}" +
                     "armor.name=${armor?.name} " +

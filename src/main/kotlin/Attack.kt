@@ -23,7 +23,7 @@ class Attack(
         if (attackPower < 1) {
             attackScore = (0..1).random()
         }
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.attackPower=$attackPower " +
                     "actor.attackScore=$attackScore " +
@@ -37,7 +37,7 @@ class Attack(
         val excellentMoveChanceMinimum = actor.excellentMoveChanceMinimum
         val excellentMoveChanceRange = (excellentMoveChanceMinimum..excellentMoveChanceMaximum)
         val excellentMoveScore = excellentMoveChanceRange.random()
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.excellentMoveChanceMaximum=$excellentMoveChanceMaximum " +
                     "actor.excellentMoveChanceMinimum=$excellentMoveChanceMinimum " +
@@ -59,7 +59,7 @@ class Attack(
             )
         )
         otherActor.hitPoints -= attackScore
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.attackScore=$attackScore " +
                     "actor.id=${actor.id} " +

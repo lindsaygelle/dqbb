@@ -24,7 +24,7 @@ class MagicHealMore(
         /* Other Actor */
         val hitPoints = otherActor.hitPoints
         otherActor.hitPoints += healMoreValue
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.healMoreScale=$healMoreScale " +
                     "actor.healMoreShift=$healMoreShift " +

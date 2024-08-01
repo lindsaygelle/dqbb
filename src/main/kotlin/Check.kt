@@ -1,7 +1,7 @@
 package dqbb
 
-//import org.apache.logging.log4j.LogManager
-//import org.apache.logging.log4j.Logger
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 
 abstract class Check(
@@ -13,7 +13,7 @@ abstract class Check(
 
     override val id: String = Integer.toHexString(System.identityHashCode(this))
 
-    protected val logger: String? = null //: Logger = LogManager.getLogger(this::class.simpleName)
+    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     fun check(actor: Actor): Boolean {
         val valueOther = when (this.expressionType) {
@@ -21,7 +21,7 @@ abstract class Check(
             ExpressionType.PERCENTAGE -> getPercentageValue(actor)
         }
         val checkValueResult = checkValue(valueOther)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "checkValue=$checkValueResult " +

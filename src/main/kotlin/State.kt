@@ -1,7 +1,7 @@
 package dqbb
 
-//import org.apache.logging.log4j.LogManager
-//import org.apache.logging.log4j.Logger
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 
 class State(
@@ -13,13 +13,13 @@ class State(
 
     override val id: String = Integer.toHexString(System.identityHashCode(this))
 
-    private val logger: String? = null //: Logger = LogManager.getLogger(this::class.simpleName)
+    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     private val qualifiers: List<Qualify> = qualifiers.sortedByDescending { it.priorityType.ordinal }
 
     fun check(actor: Actor, otherActors: Collection<Actor>): Boolean {
         this.actors.clear() // Make sure to clear this, otherwise it is possible to reuse? Could be a method?
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "matchType=$matchType " +
@@ -30,7 +30,7 @@ class State(
             MatchType.ALL -> matchAll(actor, otherActors)
             MatchType.ANY -> matchAny(actor, otherActors)
         }
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "matchValue=$matchValue"
         )
@@ -60,7 +60,7 @@ class State(
     }
 
     private fun performMatch(actor: Actor, index: Int, otherActors: Collection<Actor>, qualify: Qualify): Set<Actor> {
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "index=$index " +
@@ -68,7 +68,7 @@ class State(
                     "qualify.id=${qualify.id}"
         )
         val actors = qualify.qualify(actor, otherActors)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actors.size=${actors.size}"
         )

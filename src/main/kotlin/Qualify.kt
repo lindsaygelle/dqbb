@@ -1,7 +1,7 @@
 package dqbb
 
-//import org.apache.logging.log4j.LogManager
-//import org.apache.logging.log4j.Logger
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 
 class Qualify(
@@ -13,11 +13,11 @@ class Qualify(
 
     override val id: String = Integer.toHexString(System.identityHashCode(this))
 
-    private val logger: String? = null //: Logger = LogManager.getLogger(this::class.simpleName)
+    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     private fun check(actor: Actor, check: Check): Boolean {
         val checkValue = check.check(actor)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "check.id=${check.id}"
@@ -53,7 +53,7 @@ class Qualify(
     }
 
     fun qualify(actor: Actor, otherActors: Collection<Actor>): MutableSet<Actor> {
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.allegiance=${actor.allegiance} " +
                     "actor.id=${actor.id} " +
@@ -65,7 +65,7 @@ class Qualify(
         val actors = mutableSetOf<Actor>()
         otherActors.forEachIndexed { index, otherActor ->
             val checkTargetValue = this.checkTarget(actor, otherActor)
-            println(//logger.debug(
+            logger.debug(
                 "$this: " +
                         "actor.allegiance=${actor.allegiance} " +
                         "actor.id=${actor.id} " +
@@ -76,7 +76,7 @@ class Qualify(
             )
             if (checkTargetValue) {
                 val checkMatchValue = this.checkMatch(otherActor)
-                println(//logger.debug(
+                logger.debug(
                     "$this: " +
                             "actor.allegiance=${actor.allegiance} " +
                             "actor.id=${actor.id} " +
@@ -89,7 +89,7 @@ class Qualify(
                 }
             }
         }
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actors.size=${actors.size}"
         )

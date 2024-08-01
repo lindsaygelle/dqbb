@@ -1,7 +1,7 @@
 package dqbb
 
-//import org.apache.logging.log4j.LogManager
-//import org.apache.logging.log4j.Logger
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 
 abstract class Ability(
@@ -11,7 +11,7 @@ abstract class Ability(
 
     override val id: String = Integer.toHexString(System.identityHashCode(this))
 
-    protected val logger: String? = null //: Logger = LogManager.getLogger(this::class.simpleName)
+    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     abstract val name: String
 
@@ -20,19 +20,19 @@ abstract class Ability(
     protected abstract fun check(actor: Actor, otherActor: Actor): Boolean
 
     private fun getActor(otherActors: Collection<Actor>): Actor? {
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "conditionType=${this.conditionType} " +
                     "orderType=${this.orderType} " +
                     "otherActors.size=${otherActors.size}"
         )
         val sortedActors = sortActors(otherActors)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "sortedActors.size=${sortedActors.size}"
         )
         val otherActor = sortedActors.firstOrNull()
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "otherActor=${otherActor?.id}"
         )
@@ -60,7 +60,7 @@ abstract class Ability(
             )
         )
         val actorStatusSleep = actor.statusSleep
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "actor.statusSleep=$actorStatusSleep"
@@ -74,7 +74,7 @@ abstract class Ability(
             return false
         }
         val otherActor = getActor(otherActors)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "otherActor.id=${otherActor?.id}"
         )
@@ -92,7 +92,7 @@ abstract class Ability(
             )
         )
         val checkValue = check(actor, otherActor)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "check=$checkValue"
         )
@@ -100,7 +100,7 @@ abstract class Ability(
             return false
         }
         val applyValue = apply(actor, otherActor)
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "apply=$applyValue"
         )

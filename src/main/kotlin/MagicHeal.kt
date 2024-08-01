@@ -25,7 +25,7 @@ open class MagicHeal(
         /* Other Actor */
         val hitPoints = otherActor.hitPoints
         otherActor.hitPoints += healValue
-        println(//logger.debug(
+        logger.debug(
             "$this: " +
                     "actor.healRangeMaximum=$healRangeMaximum " +
                     "actor.healRangeMinimum=$healRangeMinimum " +
