@@ -8,9 +8,9 @@ class MagicSleep(
     orderType = orderType,
 ) {
 
-    override val magicPoints: Int = 2
+    override val actionType: ActionType = ActionType.SLEEP
 
-    override val name: String = "SLEEP"
+    override val magicPoints: Int = 2
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         /* Other Actor */

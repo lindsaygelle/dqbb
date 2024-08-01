@@ -18,6 +18,6 @@ open class CheckConsumable(
     }
 
     override fun getPercentageValue(actor: Actor): Int {
-        return 0 // TODO
+        return this.getExactValue(actor) // TODO
     }
 }

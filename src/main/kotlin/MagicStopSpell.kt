@@ -8,9 +8,9 @@ class MagicStopSpell(
     orderType = orderType,
 ) {
 
-    override val magicPoints: Int = 2
+    override val actionType: ActionType = ActionType.STOP_SPELL
 
-    override val name: String = "STOP SPELL"
+    override val magicPoints: Int = 2
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         val armor = otherActor.armor

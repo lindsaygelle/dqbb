@@ -8,9 +8,9 @@ class ConsumeHerb(
     orderType = orderType,
 ) {
 
-    override val itemType: ItemType = ItemType.HERB
+    override val actionType: ActionType = ActionType.HERB
 
-    override val name: String = "HERB"
+    override val itemType: ItemType = ItemType.HERB
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         /* Actor */

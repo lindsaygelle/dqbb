@@ -210,14 +210,22 @@ open class Actor(
     }
 
     fun getConditionType(conditionType: ConditionType): Int {
-        return when (conditionType) {
+        val conditionTypeValue = when (conditionType) {
             ConditionType.AGILITY -> this.agility
+            ConditionType.HERBS -> this.items.getOrDefault(ItemType.HERB, 0)
             ConditionType.HIT_POINTS -> this.hitPoints
             ConditionType.MAGIC_POINTS -> this.magicPoints
+            ConditionType.MAGIC_POTIONS -> this.items.getOrDefault(ItemType.MAGIC_POTION, 0)
             ConditionType.STATUS_RESISTANCE -> this.statusResistanceMaximum
             ConditionType.TURNS_SLEEP -> this.turnsSleep
             ConditionType.TURNS_STOP_SPELL -> this.turnsStopSpell
         }
+        logger.debug(
+            "$this: " +
+                    "conditionType=$conditionType " +
+                    "conditionTypeValue=$conditionTypeValue"
+        )
+        return conditionTypeValue
     }
 
     private fun getDecision(otherActors: Collection<Actor>): Decision? {

@@ -9,9 +9,9 @@ open class MagicHeal(
     orderType = orderType
 ) {
 
-    override val magicPoints: Int = 4
+    override val actionType: ActionType = ActionType.HEAL
 
-    override val name: String = "HEAL"
+    override val magicPoints: Int = 4
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         /* Actor */

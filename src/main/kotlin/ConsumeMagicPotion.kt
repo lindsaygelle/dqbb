@@ -8,11 +8,11 @@ class ConsumeMagicPotion(
     orderType = orderType,
 ) {
 
+    override val actionType: ActionType = ActionType.MAGIC_POTION
+
     override val itemType: ItemType = ItemType.MAGIC_POTION
 
     val magicPoints: Int = 2
-
-    override val name: String = "MAGIC POTION"
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         /* Other Actor */

@@ -8,7 +8,7 @@ class Attack(
     orderType = orderType,
 ) {
 
-    override val name: String = "ATTACK"
+    override val actionType: ActionType = ActionType.ATTACK
 
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
         actor.trail.add(
