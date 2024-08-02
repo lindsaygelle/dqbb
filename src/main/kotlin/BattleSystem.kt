@@ -20,8 +20,6 @@ class BattleSystem(
     private fun checkActor(actor: Actor, index: Int) {
         logger.debug(
             "$this: " +
-                    "actor.actionPoints=${actor.actionPoints} " +
-                    "actor.actionPointsMaximum=${actor.actionPointsMaximum} " +
                     "actor.agility=${actor.agility} " +
                     "actor.allegiance=${actor.allegiance} " +
                     "actor.armor.id=${actor.armor?.id} " +

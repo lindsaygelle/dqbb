@@ -1,9 +1,11 @@
 package dqbb
 
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+
 fun main() {
 
     val actor0 = Actor(
-        actionPointsMaximum = 2,
         agility = 0,
         allegiance = (0..2).random(),
         armor = ArmorErdrick,
@@ -127,7 +129,6 @@ fun main() {
     )
 
     val actor1 = Actor(
-        actionPointsMaximum = 2,
         agility = 1,
         allegiance = (0..2).random(),
         decisions = listOf(
@@ -175,7 +176,6 @@ fun main() {
     )
 
     val actor2 = Actor(
-        actionPointsMaximum = 4,
         agility = 10,
         allegiance = (0..2).random(),
         armor = ArmorMagic,
@@ -405,4 +405,60 @@ fun main() {
         println(it.message)
     }
     println("Battle finished in ${battleSystem.turns} turns")
+
+
+    val data = JSONDecision(
+        ability = JSONAbility(
+            actionType = ActionType.ATTACK,
+            conditionType = ConditionType.HIT_POINTS,
+            orderType = OrderType.MIN,
+        ),
+        preCondition = JSONState(
+            matchType = MatchType.ANY,
+            qualifiers = listOf(
+                JSONQualify(
+                    checkers = listOf(
+                        JSONCheckActor(
+                            conditionType = ConditionType.HIT_POINTS,
+                            expressionType = ExpressionType.EXACT,
+                            operatorType = OperatorType.EQUAL,
+                            priorityType = PriorityType.HIGHEST,
+                            value = 0
+                        )
+                    ),
+                    matchType = MatchType.ANY,
+                    priorityType = PriorityType.HIGHEST,
+                    targetType = TargetType.ENEMY
+                )
+            ),
+        ),
+        priorityType = PriorityType.HIGHEST,
+        targetSelection = JSONState(
+            matchType = MatchType.ANY,
+            qualifiers = listOf(
+                JSONQualify(
+                    checkers = listOf(
+                        JSONCheckActor(
+                            conditionType = ConditionType.HIT_POINTS,
+                            expressionType = ExpressionType.EXACT,
+                            operatorType = OperatorType.EQUAL,
+                            priorityType = PriorityType.HIGHEST,
+                            value = 0
+                        )
+                    ),
+                    matchType = MatchType.ANY,
+                    priorityType = PriorityType.HIGHEST,
+                    targetType = TargetType.ENEMY
+                )
+            ),
+        ),
+    )
+
+    val dataString = Json.encodeToString(data)
+
+    println("JSON: $dataString")
+
+    val decoded = Json.decodeFromString<JSONDecision>(dataString)
+
+    println(decoded)
 }

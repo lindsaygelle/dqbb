@@ -3,7 +3,7 @@ package dqbb
 import kotlinx.serialization.*
 
 @Serializable
-data class ConfigCheckActor(
+data class JSONCheckActor(
     val conditionType: ConditionType,
     val expressionType: ExpressionType,
     val operatorType: OperatorType,
@@ -12,7 +12,11 @@ data class ConfigCheckActor(
 ) {
     fun build(): CheckActor {
         return CheckActor(
-            conditionType, expressionType, operatorType, priorityType, value
+            conditionType = conditionType,
+            expressionType = expressionType,
+            operatorType = operatorType,
+            priorityType = priorityType,
+            value = value
         )
     }
 }

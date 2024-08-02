@@ -5,8 +5,6 @@ import org.apache.logging.log4j.Logger
 
 
 open class Actor(
-    actionPoints: Int? = null,
-    actionPointsMaximum: Int? = null,
     agility: Int? = null,
     val allegiance: Int,
     var armor: Armor? = null,
@@ -42,23 +40,13 @@ open class Actor(
     var weapon: Weapon? = null,
 ) : Identifier {
 
-    var actionPoints: Int = 0
-        set(value) {
-            field = maxOf(0, minOf(this.actionPointsMaximum, value))
-            logger.debug(
-                "$this: " +
-                        "actionPoints=$field"
-            )
-        }
-
-    val actionPointsMaximum: Int = maxOf(0, actionPointsMaximum ?: 1)
-
-    val actionPointsPercentage: Int
-        get() = this.getPercentage(this.actionPoints, this.actionPointsMaximum)
-
     var agility: Int = 0
         set(value) {
-            field = maxOf(this.agilityMinimum, minOf(this.agilityMaximum))
+            field = this.getClampedValue(value, this.agilityMaximum, this.agilityMinimum)
+            logger.debug(
+                "$this: " +
+                        "agility=$field"
+            )
         }
 
     private val agilityMaximum: Int = 0xFF
@@ -95,7 +83,7 @@ open class Actor(
 
     private val herbCountMaximum: Int = maxOf(1, herbCountMaximum ?: 0)
 
-    val herbCountPercentage: Int
+    private val herbCountPercentage: Int
         get() = this.getPercentage(this.items.getOrDefault(ItemType.HERB, 0), this.herbCountMaximum)
 
     val herbScale: Int = maxOf(0x17, herbScale ?: 0)
@@ -165,6 +153,10 @@ open class Actor(
     var statusResistance: Int = 0
         set(value) {
             field = maxOf(value, this.statusResistanceMaximum, this.statusResistanceMinimum)
+            logger.debug(
+                "$this: " +
+                        "statusResistance=$field"
+            )
         }
 
     private val statusResistanceMaximum: Int = 0xFF
@@ -187,6 +179,10 @@ open class Actor(
     var strength: Int = 0
         set(value) {
             field = this.getClampedValue(value, this.strengthMaximum, this.strengthMinimum)
+            logger.debug(
+                "$this: " +
+                        "strength=$field"
+            )
         }
 
     private val strengthMaximum: Int = 0x8C
@@ -208,7 +204,7 @@ open class Actor(
 
     val turnsSleepMaximum: Int = maxOf(0, turnsSleepMaximum ?: 0)
 
-    val turnsSleepPercentage: Int
+    private val turnsSleepPercentage: Int
         get() = getPercentage(this.turnsSleep, this.turnsSleepMaximum)
 
     var turnsStopSpell: Int = 0
@@ -232,7 +228,6 @@ open class Actor(
     fun getAttackPower(actor: Actor): Int {
         return this.strength
     }
-
 
     private fun getClampedValue(value: Int, valueMaximum: Int, valueMinimum: Int): Int {
         return maxOf(valueMinimum, minOf(valueMaximum, value))
@@ -314,7 +309,6 @@ open class Actor(
 
     init {
         this.agility = agility ?: this.agilityMinimum
-        this.actionPoints = actionPoints ?: 1
         this.hitPoints = hitPoints ?: this.hitPointsMaximum
         this.magicPoints = magicPoints ?: this.hitPointsMaximum
         this.statusResistance = statusResistance ?: this.statusResistanceMinimum
