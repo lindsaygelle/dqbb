@@ -2,9 +2,12 @@ package dqbb
 
 
 open class Armor(
+    private val armorType: ArmorType,
     defense: Int,
-    name: String,
-) : DefenseEquipment(
-    defense = defense,
-    name = name,
-)
+) : Identifier {
+    val defense: Int = maxOf(0, defense)
+
+    override val id: String = Integer.toHexString(System.identityHashCode(this))
+
+    val name: String = this.armorType.toString()
+}

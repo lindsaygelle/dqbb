@@ -461,4 +461,6 @@ fun main() {
     val decoded = Json.decodeFromString<JSONDecision>(dataString)
 
     println(decoded)
+
+    println(decoded.build())
 }

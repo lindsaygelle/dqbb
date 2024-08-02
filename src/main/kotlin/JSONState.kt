@@ -9,8 +9,8 @@ data class JSONState(
 ) {
     fun build(): State {
         return State(
-            matchType = matchType,
-            qualifiers = qualifiers.map { it.build() }
+            matchType = this.matchType,
+            qualifiers = this.qualifiers.map { it.build() }
         )
     }
 }

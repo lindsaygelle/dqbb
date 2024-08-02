@@ -10,15 +10,41 @@ data class JSONAbility(
 ) {
     fun build(): Ability {
         return when (this.actionType) {
-            ActionType.ATTACK -> Attack(conditionType, orderType)
-            ActionType.HEAL -> MagicHeal(conditionType, orderType)
-            ActionType.HEAL_MORE -> MagicHealMore(conditionType, orderType)
-            ActionType.HERB -> ConsumeHerb(conditionType, orderType)
-            ActionType.HURT -> MagicHurt(conditionType, orderType)
-            ActionType.HURT_MORE -> MagicHurtMore(conditionType, orderType)
-            ActionType.MAGIC_POTION -> ConsumeMagicPotion(conditionType, orderType)
-            ActionType.SLEEP -> MagicSleep(conditionType, orderType)
-            ActionType.STOP_SPELL -> MagicStopSpell(conditionType, orderType)
+            ActionType.ATTACK -> Attack(
+                this.conditionType, this.orderType
+            )
+
+            ActionType.HEAL -> MagicHeal(
+                this.conditionType, this.orderType
+            )
+
+            ActionType.HEAL_MORE -> MagicHealMore(
+                this.conditionType, this.orderType
+            )
+
+            ActionType.HERB -> ConsumeHerb(
+                this.conditionType, this.orderType
+            )
+
+            ActionType.HURT -> MagicHurt(
+                this.conditionType, this.orderType
+            )
+
+            ActionType.HURT_MORE -> MagicHurtMore(
+                this.conditionType, this.orderType
+            )
+
+            ActionType.MAGIC_POTION -> ConsumeMagicPotion(
+                this.conditionType, this.orderType
+            )
+
+            ActionType.SLEEP -> MagicSleep(
+                this.conditionType, this.orderType
+            )
+
+            ActionType.STOP_SPELL -> MagicStopSpell(
+                this.conditionType, this.orderType
+            )
         }
     }
 }

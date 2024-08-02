@@ -1,6 +1,6 @@
 package dqbb
 
-object ArmorClothes: Armor(
+object ArmorClothes : Armor(
+    armorType = ArmorType.CLOTHES,
     defense = 2,
-    name = "CLOTHES"
 )

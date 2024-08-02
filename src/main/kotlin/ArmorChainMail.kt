@@ -1,6 +1,6 @@
 package dqbb
 
 object ArmorChainMail : Armor(
+    armorType = ArmorType.CHAIN_MAIL,
     defense = 10,
-    name = "CHAIN_MAIL"
 )
