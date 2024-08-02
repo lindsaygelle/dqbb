@@ -2,9 +2,9 @@ package dqbb
 
 abstract class Equipment(
     name: String,
-) : Wearable {
+) : Identifier {
 
     override val id: String = Integer.toHexString(System.identityHashCode(this))
 
-    override val name: String = name.uppercase()
+    val name: String = name.uppercase()
 }

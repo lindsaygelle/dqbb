@@ -9,11 +9,14 @@ abstract class Ability(
     private val orderType: OrderType?,
 ) : Identifier {
 
+    abstract val actionType: ActionType
+
     override val id: String = Integer.toHexString(System.identityHashCode(this))
 
     protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
-    abstract val name: String
+    val name: String
+        get() = this.actionType.toString()
 
     protected abstract fun apply(actor: Actor, otherActor: Actor): Boolean
 

@@ -8,9 +8,9 @@ class MagicSleep(
     orderType = orderType,
 ) {
 
-    override val magicPoints: Int = 2
+    override val actionType: ActionType = ActionType.SLEEP
 
-    override val name: String = "SLEEP"
+    override val magicPoints: Int = 2
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         /* Other Actor */
@@ -41,11 +41,11 @@ class MagicSleep(
         val sleepRequirementMinimum = actor.sleepRequirementMinimum
         val sleepRequirement = (sleepRequirementMinimum..sleepRequirementMaximum).random()
         /* Other Actor */
-        val statusResistanceMaximum = otherActor.statusResistanceMaximum
+        val statusResistance = otherActor.statusResistance
         val sleepResistanceScale = 0xF
         val sleepResistanceShift = 28
         val sleepResistance =
-            (statusResistanceMaximum shr sleepResistanceShift) and sleepResistanceScale // First nibble
+            (statusResistance shr sleepResistanceShift) and sleepResistanceScale // First nibble
         logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +

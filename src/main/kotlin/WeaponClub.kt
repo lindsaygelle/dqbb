@@ -1,5 +1,6 @@
 package dqbb
 
 object WeaponClub : Weapon(
-    attack = 4
+    attack = 4,
+    name = "CLUB",
 )

@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger
 
 
 class Qualify(
-    private val checkers: List<Check>,
+    private val checkers: List<CheckActor>,
     private val matchType: MatchType,
     override val priorityType: PriorityType = PriorityType.LOWEST,
     private val targetType: TargetType,
@@ -15,7 +15,7 @@ class Qualify(
 
     private val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
-    private fun check(actor: Actor, check: Check): Boolean {
+    private fun check(actor: Actor, check: CheckActor): Boolean {
         val checkValue = check.check(actor)
         logger.debug(
             "$this: " +

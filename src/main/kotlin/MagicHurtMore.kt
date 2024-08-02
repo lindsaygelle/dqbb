@@ -8,9 +8,9 @@ class MagicHurtMore(
     orderType = orderType,
 ) {
 
-    override val magicPoints: Int = 5
+    override val actionType: ActionType = ActionType.HURT_MORE
 
-    override val name: String = "${super.name} MORE"
+    override val magicPoints: Int = 5
 
     override fun applyEffect(actor: Actor, otherActor: Actor): Boolean {
         /* Actor */
