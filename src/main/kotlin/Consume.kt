@@ -28,14 +28,14 @@ abstract class Consume(
                     "applyEffect=$applyEffectValue " +
                     "otherActor.id=${otherActor.id}"
         )
-        actor.items[itemType]?.minus(1)
+        actor.subtractItem(this.itemType)
         return applyEffectValue
     }
 
     protected abstract fun applyEffect(actor: Actor, otherActor: Actor): Boolean
 
     override fun check(actor: Actor, otherActor: Actor): Boolean {
-        val itemCount = actor.items.getOrDefault(this.itemType, 0)
+        val itemCount = actor.getItem(this.itemType)
         logger.debug(
             "$this: " +
                     "actor.items.$itemType=$itemCount " +
