@@ -24,7 +24,7 @@ class BattleSystem(
                     "actor.allegiance=${actor.allegiance} " +
                     "actor.armor.id=${actor.armor?.id} " +
                     "actor.armor.name=${actor.armor?.name} " +
-                    "actor.damageResistanceMaximum=${actor.damageResistanceMaximum} " +
+                    "actor.damageResistance=${actor.damageResistance} " +
                     "actor.hitPoints=${actor.hitPoints} " +
                     "actor.hitPointsMaximum=${actor.hitPointsMaximum} " +
                     "actor.id=${actor.id} " +
