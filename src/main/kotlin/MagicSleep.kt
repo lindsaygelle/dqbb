@@ -41,11 +41,11 @@ class MagicSleep(
         val sleepRequirementMinimum = actor.sleepRequirementMinimum
         val sleepRequirement = (sleepRequirementMinimum..sleepRequirementMaximum).random()
         /* Other Actor */
-        val statusResistanceMaximum = otherActor.statusResistanceMaximum
+        val statusResistance = otherActor.statusResistance
         val sleepResistanceScale = 0xF
         val sleepResistanceShift = 28
         val sleepResistance =
-            (statusResistanceMaximum shr sleepResistanceShift) and sleepResistanceScale // First nibble
+            (statusResistance shr sleepResistanceShift) and sleepResistanceScale // First nibble
         logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +

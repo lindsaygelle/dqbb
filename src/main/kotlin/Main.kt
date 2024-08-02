@@ -4,7 +4,7 @@ fun main() {
 
     val actor0 = Actor(
         actionPointsMaximum = 2,
-        agilityMaximum = 0,
+        agility = 0,
         allegiance = (0..2).random(),
         armor = ArmorErdrick,
         decisions = listOf(
@@ -19,7 +19,8 @@ fun main() {
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
-                                CheckHitPoints(
+                                CheckActor(
+                                    conditionType = ConditionType.HIT_POINTS,
                                     expressionType = ExpressionType.PERCENTAGE,
                                     operatorType = OperatorType.LESS_THAN,
                                     value = 10,
@@ -30,7 +31,8 @@ fun main() {
                         ),
                         Qualify(
                             checkers = listOf(
-                                CheckMagicPoints(
+                                CheckActor(
+                                    conditionType = ConditionType.MAGIC_POINTS,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.GREATER_THAN,
                                     value = 1
@@ -46,7 +48,8 @@ fun main() {
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
-                                CheckHitPoints(
+                                CheckActor(
+                                    conditionType = ConditionType.HIT_POINTS,
                                     expressionType = ExpressionType.PERCENTAGE,
                                     operatorType = OperatorType.LESS_THAN,
                                     value = 10,
@@ -69,7 +72,8 @@ fun main() {
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
-                                CheckMagicPoints(
+                                CheckActor(
+                                    conditionType = ConditionType.MAGIC_POINTS,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.LESS_THAN,
                                     value = 3,
@@ -80,7 +84,8 @@ fun main() {
                         ),
                         Qualify(
                             checkers = listOf(
-                                CheckMagicPotions(
+                                CheckActor(
+                                    conditionType = ConditionType.MAGIC_POTIONS,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.GREATER_THAN,
                                     value = 0
@@ -96,7 +101,8 @@ fun main() {
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
-                                CheckMagicPoints(
+                                CheckActor(
+                                    conditionType = ConditionType.MAGIC_POINTS,
                                     expressionType = ExpressionType.PERCENTAGE,
                                     operatorType = OperatorType.LESS_THAN,
                                     value = 3,
@@ -122,7 +128,7 @@ fun main() {
 
     val actor1 = Actor(
         actionPointsMaximum = 2,
-        agilityMaximum = 1,
+        agility = 1,
         allegiance = (0..2).random(),
         decisions = listOf(
             Decision(
@@ -136,7 +142,8 @@ fun main() {
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
-                                CheckHitPoints(
+                                CheckActor(
+                                    conditionType = ConditionType.HIT_POINTS,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.GREATER_THAN,
                                     value = 0,
@@ -169,7 +176,7 @@ fun main() {
 
     val actor2 = Actor(
         actionPointsMaximum = 4,
-        agilityMaximum = 10,
+        agility = 10,
         allegiance = (0..2).random(),
         armor = ArmorMagic,
         decisions = listOf(
@@ -184,7 +191,8 @@ fun main() {
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
-                                CheckHitPoints(
+                                CheckActor(
+                                    conditionType = ConditionType.HIT_POINTS,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.GREATER_THAN,
                                     value = 0,
@@ -217,7 +225,8 @@ fun main() {
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
-                                CheckTurnsSleep(
+                                CheckActor(
+                                    conditionType = ConditionType.TURNS_SLEEP,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0,
@@ -229,10 +238,11 @@ fun main() {
                         ),
                         Qualify(
                             checkers = listOf(
-                                CheckMagicPoints(
+                                CheckActor(
+                                    conditionType = ConditionType.MAGIC_POINTS,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.GREATER_THAN,
-                                    value = 9,
+                                    value = 1,
                                 )
                             ),
                             matchType = MatchType.ANY,
@@ -246,7 +256,8 @@ fun main() {
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
-                                CheckTurnsSleep(
+                                CheckActor(
+                                    conditionType = ConditionType.TURNS_SLEEP,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0,
@@ -269,7 +280,8 @@ fun main() {
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
-                                CheckTurnsSleep(
+                                CheckActor(
+                                    conditionType = ConditionType.TURNS_SLEEP,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0,
@@ -281,7 +293,8 @@ fun main() {
                         ),
                         Qualify(
                             checkers = listOf(
-                                CheckMagicPoints(
+                                CheckActor(
+                                    conditionType = ConditionType.MAGIC_POINTS,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.GREATER_THAN,
                                     value = 9,
@@ -298,7 +311,8 @@ fun main() {
                     qualifiers = listOf(
                         Qualify(
                             checkers = listOf(
-                                CheckTurnsSleep(
+                                CheckActor(
+                                    conditionType = ConditionType.TURNS_SLEEP,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0,

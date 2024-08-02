@@ -40,11 +40,11 @@ class MagicStopSpell(
         val stopSpellRequirementMinimum = actor.stopSpellRequirementMinimum
         val stopSpellRequirement = (stopSpellRequirementMinimum..stopSpellRequirementMaximum).random()
         /* Other Actor */
-        val statusResistanceMaximum = otherActor.statusResistanceMaximum
+        val statusResistance = otherActor.statusResistance
         val stopSpellResistanceScale = 0x0F
         val stopSpellResistanceShift = 4
         val stopSpellResistance =
-            (statusResistanceMaximum shr stopSpellResistanceShift) and stopSpellResistanceScale // Second nibble
+            (statusResistance shr stopSpellResistanceShift) and stopSpellResistanceScale // Second nibble
         logger.debug(
             "$this: " +
                     "actor.id=${actor.id} " +

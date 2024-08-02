@@ -3,17 +3,17 @@ package dqbb
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-
-abstract class Check(
+class CheckActor(
+    private val conditionType: ConditionType,
     private val expressionType: ExpressionType,
     private val operatorType: OperatorType,
-    override val priorityType: PriorityType,
+    override val priorityType: PriorityType = PriorityType.HIGHEST,
     private val value: Int,
 ) : Identifier, Prioritized {
 
     override val id: String = Integer.toHexString(System.identityHashCode(this))
 
-    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     fun check(actor: Actor): Boolean {
         val valueOther = when (this.expressionType) {
@@ -25,6 +25,7 @@ abstract class Check(
             "$this: " +
                     "actor.id=${actor.id} " +
                     "checkValue=$checkValueResult " +
+                    "conditionType=${this.conditionType} " +
                     "expressionType=${this.expressionType} " +
                     "operatorType=${this.operatorType} " +
                     "priorityType=${this.priorityType} " +
@@ -43,7 +44,11 @@ abstract class Check(
         }
     }
 
-    protected abstract fun getExactValue(actor: Actor): Int
+    private fun getExactValue(actor: Actor): Int {
+        return actor.getConditionType(this.conditionType)
+    }
 
-    protected abstract fun getPercentageValue(actor: Actor): Int
+    private fun getPercentageValue(actor: Actor): Int {
+        return actor.getConditionTypePercentage(this.conditionType)
+    }
 }

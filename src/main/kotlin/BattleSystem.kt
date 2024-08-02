@@ -33,9 +33,8 @@ class BattleSystem(
                     "actor.magicPoints=${actor.magicPoints} " +
                     "actor.magicPointsMaximum=${actor.magicPointsMaximum} " +
                     "actor.shield=${actor.shield} " +
-                    "actor.statusResistanceMaximum=${actor.statusResistanceMaximum} " +
+                    "actor.statusResistance=${actor.statusResistance} " +
                     "actor.strength=${actor.strength} " +
-                    "actor.strengthMaximum=${actor.strengthMaximum} " +
                     "actor.turnsAlive=${actor.turnsAlive} " +
                     "actor.turnsSleep=${actor.turnsSleep} " +
                     "actor.turnsSleepMaximum=${actor.turnsSleepMaximum} " +
