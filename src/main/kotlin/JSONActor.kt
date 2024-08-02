@@ -4,8 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class JSONActor(
-    val allegiance: Int,
+    val agility: Int? = null,
+    var allegiance: Int = 0,
     val armor: JSONArmor? = null,
+    val damageResistance: Int? = null,
     val decisions: List<JSONDecision> = listOf(
         JSONDecision(
             ability = JSONAbility(
@@ -17,8 +19,8 @@ data class JSONActor(
                 matchType = MatchType.ANY,
                 qualifiers = listOf(
                     JSONQualify(
-                        checkers = listOf(
-                            JSONCheckActor(
+                        actorCheckers = listOf(
+                            JSONActorChecker(
                                 conditionType = ConditionType.HIT_POINTS,
                                 expressionType = ExpressionType.EXACT,
                                 priorityType = PriorityType.HIGHEST,
@@ -37,7 +39,7 @@ data class JSONActor(
                 matchType = MatchType.ANY,
                 qualifiers = listOf(
                     JSONQualify(
-                        checkers = listOf(),
+                        actorCheckers = listOf(),
                         matchType = MatchType.ANY,
                         priorityType = PriorityType.HIGHEST,
                         targetType = TargetType.ENEMY,
@@ -46,17 +48,27 @@ data class JSONActor(
             )
         )
     ),
+    val hitPoints: Int? = null,
+    val hitPointsMaximum: Int? = null,
     val items: MutableMap<ItemType, Int> = mutableMapOf(),
     val shield: JSONShield? = null,
+    val statusResistance: Int? = null,
+    val strength: Int? = null,
     val weapon: JSONWeapon? = null,
 ) {
     fun build(): Actor {
         return Actor(
+            agility = this.agility,
             allegiance = this.allegiance,
             armor = this.armor?.build(),
+            damageResistance = this.damageResistance,
             decisions = this.decisions.map { it.build() },
             items = this.items,
+            hitPoints = this.hitPoints,
+            hitPointsMaximum = this.hitPointsMaximum,
             shield = this.shield?.build(),
+            statusResistance = this.statusResistance,
+            strength = this.strength,
             weapon = this.weapon?.build()
         )
     }

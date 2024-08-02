@@ -60,18 +60,18 @@ open class MagicHurt(
         val hurtRequirementRange = (hurtRequirementMinimum..hurtRequirementMaximum)
         val hurtRequirement = hurtRequirementRange.random()
         /* Other Actor */
-        val damageResistanceMaximum = otherActor.damageResistanceMaximum
+        val damageResistance = otherActor.damageResistance
         val hurtResistanceScale = 0xF
         val hurtResistanceShift = 28
         val hurtResistance =
-            (damageResistanceMaximum shr hurtResistanceShift) and hurtResistanceScale // First nibble: TODO check
+            (damageResistance shr hurtResistanceShift) and hurtResistanceScale // First nibble: TODO check
         logger.debug(
             "$this: " +
                     "actor.hurtRequirementMaximum=$hurtRequirementMaximum " +
                     "actor.hurtRequirementMinimum=$hurtRequirementMinimum " +
                     "actor.hurtRequirement=$hurtRequirement " +
                     "actor.id=${actor.id} " +
-                    "otherActor.damageResistanceMaximum=$damageResistanceMaximum " +
+                    "otherActor.damageResistanceMaximum=$damageResistance " +
                     "otherActor.hurtResistance=$hurtResistance " +
                     "otherActor.id=${otherActor.id} " +
                     "hurtResistanceScale=$hurtResistanceScale " +

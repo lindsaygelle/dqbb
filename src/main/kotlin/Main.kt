@@ -1,7 +1,7 @@
 package dqbb
 
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.Json
+import java.nio.charset.Charset
 
 fun main() {
 
@@ -20,8 +20,8 @@ fun main() {
                     matchType = MatchType.ALL,
                     qualifiers = listOf(
                         Qualify(
-                            checkers = listOf(
-                                CheckActor(
+                            actorCheckers = listOf(
+                                ActorChecker(
                                     conditionType = ConditionType.HIT_POINTS,
                                     expressionType = ExpressionType.PERCENTAGE,
                                     operatorType = OperatorType.LESS_THAN,
@@ -32,8 +32,8 @@ fun main() {
                             targetType = TargetType.ALLY,
                         ),
                         Qualify(
-                            checkers = listOf(
-                                CheckActor(
+                            actorCheckers = listOf(
+                                ActorChecker(
                                     conditionType = ConditionType.MAGIC_POINTS,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.GREATER_THAN,
@@ -49,8 +49,8 @@ fun main() {
                     matchType = MatchType.ANY,
                     qualifiers = listOf(
                         Qualify(
-                            checkers = listOf(
-                                CheckActor(
+                            actorCheckers = listOf(
+                                ActorChecker(
                                     conditionType = ConditionType.HIT_POINTS,
                                     expressionType = ExpressionType.PERCENTAGE,
                                     operatorType = OperatorType.LESS_THAN,
@@ -73,8 +73,8 @@ fun main() {
                     matchType = MatchType.ALL,
                     qualifiers = listOf(
                         Qualify(
-                            checkers = listOf(
-                                CheckActor(
+                            actorCheckers = listOf(
+                                ActorChecker(
                                     conditionType = ConditionType.MAGIC_POINTS,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.LESS_THAN,
@@ -85,8 +85,8 @@ fun main() {
                             targetType = TargetType.ALLY,
                         ),
                         Qualify(
-                            checkers = listOf(
-                                CheckActor(
+                            actorCheckers = listOf(
+                                ActorChecker(
                                     conditionType = ConditionType.MAGIC_POTIONS,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.GREATER_THAN,
@@ -102,8 +102,8 @@ fun main() {
                     matchType = MatchType.ANY,
                     qualifiers = listOf(
                         Qualify(
-                            checkers = listOf(
-                                CheckActor(
+                            actorCheckers = listOf(
+                                ActorChecker(
                                     conditionType = ConditionType.MAGIC_POINTS,
                                     expressionType = ExpressionType.PERCENTAGE,
                                     operatorType = OperatorType.LESS_THAN,
@@ -142,8 +142,8 @@ fun main() {
                     matchType = MatchType.ALL,
                     qualifiers = listOf(
                         Qualify(
-                            checkers = listOf(
-                                CheckActor(
+                            actorCheckers = listOf(
+                                ActorChecker(
                                     conditionType = ConditionType.HIT_POINTS,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.GREATER_THAN,
@@ -159,7 +159,7 @@ fun main() {
                     matchType = MatchType.ANY,
                     qualifiers = listOf(
                         Qualify(
-                            checkers = listOf(),
+                            actorCheckers = listOf(),
                             matchType = MatchType.ANY,
                             targetType = TargetType.ENEMY,
                         )
@@ -190,8 +190,8 @@ fun main() {
                     matchType = MatchType.ALL,
                     qualifiers = listOf(
                         Qualify(
-                            checkers = listOf(
-                                CheckActor(
+                            actorCheckers = listOf(
+                                ActorChecker(
                                     conditionType = ConditionType.HIT_POINTS,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.GREATER_THAN,
@@ -207,7 +207,7 @@ fun main() {
                     matchType = MatchType.ANY,
                     qualifiers = listOf(
                         Qualify(
-                            checkers = listOf(),
+                            actorCheckers = listOf(),
                             matchType = MatchType.ANY,
                             targetType = TargetType.ENEMY,
                         )
@@ -224,8 +224,8 @@ fun main() {
                     matchType = MatchType.ALL,
                     qualifiers = listOf(
                         Qualify(
-                            checkers = listOf(
-                                CheckActor(
+                            actorCheckers = listOf(
+                                ActorChecker(
                                     conditionType = ConditionType.TURNS_SLEEP,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.EQUAL,
@@ -237,8 +237,8 @@ fun main() {
                             targetType = TargetType.ENEMY,
                         ),
                         Qualify(
-                            checkers = listOf(
-                                CheckActor(
+                            actorCheckers = listOf(
+                                ActorChecker(
                                     conditionType = ConditionType.MAGIC_POINTS,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.GREATER_THAN,
@@ -255,8 +255,8 @@ fun main() {
                     matchType = MatchType.ANY,
                     qualifiers = listOf(
                         Qualify(
-                            checkers = listOf(
-                                CheckActor(
+                            actorCheckers = listOf(
+                                ActorChecker(
                                     conditionType = ConditionType.TURNS_SLEEP,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.EQUAL,
@@ -279,8 +279,8 @@ fun main() {
                     matchType = MatchType.ALL,
                     qualifiers = listOf(
                         Qualify(
-                            checkers = listOf(
-                                CheckActor(
+                            actorCheckers = listOf(
+                                ActorChecker(
                                     conditionType = ConditionType.TURNS_SLEEP,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.EQUAL,
@@ -292,8 +292,8 @@ fun main() {
                             targetType = TargetType.ENEMY,
                         ),
                         Qualify(
-                            checkers = listOf(
-                                CheckActor(
+                            actorCheckers = listOf(
+                                ActorChecker(
                                     conditionType = ConditionType.MAGIC_POINTS,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.GREATER_THAN,
@@ -310,8 +310,8 @@ fun main() {
                     matchType = MatchType.ANY,
                     qualifiers = listOf(
                         Qualify(
-                            checkers = listOf(
-                                CheckActor(
+                            actorCheckers = listOf(
+                                ActorChecker(
                                     conditionType = ConditionType.TURNS_SLEEP,
                                     expressionType = ExpressionType.EXACT,
                                     operatorType = OperatorType.EQUAL,
@@ -350,7 +350,7 @@ fun main() {
                     matchType = MatchType.ANY,
                     qualifiers = listOf(
                         Qualify(
-                            checkers = listOf(),
+                            actorCheckers = listOf(),
                             matchType = MatchType.ANY,
                             targetType = TargetType.ENEMY,
                         )
@@ -377,7 +377,7 @@ fun main() {
                     matchType = MatchType.ANY,
                     qualifiers = listOf(
                         Qualify(
-                            checkers = listOf(),
+                            actorCheckers = listOf(),
                             matchType = MatchType.ANY,
                             targetType = TargetType.ALLY,
                         )
@@ -407,84 +407,16 @@ fun main() {
     println("Battle finished in ${battleSystem.turns} turns")
 
 
-    /*
-    val data = JSONDecision(
-        ability = JSONAbility(
-            actionType = ActionType.ATTACK,
-            conditionType = ConditionType.HIT_POINTS,
-            orderType = OrderType.MIN,
-        ),
-        preCondition = JSONState(
-            matchType = MatchType.ANY,
-            qualifiers = listOf(
-                JSONQualify(
-                    checkers = listOf(
-                        JSONCheckActor(
-                            conditionType = ConditionType.HIT_POINTS,
-                            expressionType = ExpressionType.EXACT,
-                            operatorType = OperatorType.EQUAL,
-                            priorityType = PriorityType.HIGHEST,
-                            value = 0
-                        )
-                    ),
-                    matchType = MatchType.ANY,
-                    priorityType = PriorityType.HIGHEST,
-                    targetType = TargetType.ENEMY
-                )
-            ),
-        ),
-        priorityType = PriorityType.HIGHEST,
-        targetSelection = JSONState(
-            matchType = MatchType.ANY,
-            qualifiers = listOf(
-                JSONQualify(
-                    checkers = listOf(
-                        JSONCheckActor(
-                            conditionType = ConditionType.HIT_POINTS,
-                            expressionType = ExpressionType.EXACT,
-                            operatorType = OperatorType.EQUAL,
-                            priorityType = PriorityType.HIGHEST,
-                            value = 0
-                        )
-                    ),
-                    matchType = MatchType.ANY,
-                    priorityType = PriorityType.HIGHEST,
-                    targetType = TargetType.ENEMY
-                )
-            ),
-        ),
-    )
+    val jsonContent = ClassLoader.getSystemResource("actors/slime.json")?.readText(Charset.defaultCharset())
+        ?: throw IllegalArgumentException("File not found: actors/slime.json")
 
-    val dataString = Json.encodeToString(data)
+    println("JSON: $jsonContent")
 
-    println("JSON: $dataString")
-
-    val decoded = Json.decodeFromString<JSONDecision>(dataString)
+    val decoded = Json.decodeFromString<JSONActor>(jsonContent)
+    println("Decoded: $decoded")
 
     println(decoded)
 
     println(decoded.build())
-
-     */
-
-    val actors = mutableSetOf<Actor>()
-
-    for (i in (0..10)) {
-        val jsonActor = JSONActor(
-            allegiance = if (i % 2 == 0) 0 else 1,
-        )
-        val actor = jsonActor.build()
-        actors.add(actor)
-    }
-
-    battleSystem = BattleSystem(actors)
-    while (battleSystem.isActive) {
-        battleSystem.run()
-    }
-    println("Battle log:")
-    battleSystem.trail.forEach {
-        println(it.message)
-    }
-    println("Battle finished in ${battleSystem.turns} turns")
-
+    
 }

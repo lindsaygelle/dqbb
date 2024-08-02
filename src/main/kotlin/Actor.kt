@@ -8,7 +8,7 @@ open class Actor(
     agility: Int? = null,
     val allegiance: Int,
     var armor: Armor? = null,
-    damageResistanceMaximum: Int? = null,
+    damageResistance: Int? = null,
     decisions: List<Decision>,
     excellentMoveChanceMaximum: Int? = null,
     excellentMoveChanceMinimum: Int? = null,
@@ -60,7 +60,18 @@ open class Actor(
     val attackValue: Int
         get() = 0
 
-    val damageResistanceMaximum: Int = maxOf(0x0F, damageResistanceMaximum ?: 0)
+    var damageResistance: Int = 0
+        set(value) {
+            field = this.getClampedValue(value, this.damageResistanceMaximum, this.damageResistanceMinimum)
+            logger.debug(
+                "$this: " +
+                        "damageResistance=$field"
+            )
+        }
+
+    val damageResistanceMaximum: Int = 0x34
+
+    private val damageResistanceMinimum: Int = 0x0F
 
     private val decisions: List<Decision> = decisions.sortedByDescending { decision ->
         decision.priorityType.ordinal
@@ -322,6 +333,7 @@ open class Actor(
 
     init {
         this.agility = agility ?: this.agilityMinimum
+        this.damageResistance = damageResistance ?: this.damageResistanceMinimum
         this.hitPoints = hitPoints ?: this.hitPointsMaximum
         this.magicPoints = magicPoints ?: this.hitPointsMaximum
         this.statusResistance = statusResistance ?: this.statusResistanceMinimum

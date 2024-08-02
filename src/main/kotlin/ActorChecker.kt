@@ -3,7 +3,7 @@ package dqbb
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-class CheckActor(
+class ActorChecker(
     private val conditionType: ConditionType,
     private val expressionType: ExpressionType,
     private val operatorType: OperatorType,

@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger
 
 
 class Qualify(
-    private val checkers: List<CheckActor>,
+    private val actorCheckers: List<ActorChecker>,
     private val matchType: MatchType,
     override val priorityType: PriorityType = PriorityType.LOWEST,
     private val targetType: TargetType,
@@ -63,32 +63,32 @@ class Qualify(
         return value
     }
 
-    private fun match(checkActor: CheckActor, index: Int, otherActor: Actor): Boolean {
-        val checkValue = checkActor.check(otherActor)
+    private fun match(actorChecker: ActorChecker, index: Int, otherActor: Actor): Boolean {
+        val checkValue = actorChecker.check(otherActor)
         logger.debug(
             "$this: " +
-                    "checkActor.check=$checkValue " +
-                    "checkActor.id=${checkActor.id} " +
-                    "checkActor.priorityType=${checkActor.priorityType} " +
+                    "actorChecker.check=$checkValue " +
+                    "actorChecker.id=${actorChecker.id} " +
+                    "checkActor.priorityType=${actorChecker.priorityType} " +
                     "index=$index"
         )
         return checkValue
     }
 
     private fun matchAll(otherActor: Actor): Boolean {
-        return this.checkers.withIndex().all { (index, checkActor) ->
+        return this.actorCheckers.withIndex().all { (index, checkActor) ->
             match(checkActor, index, otherActor)
         }
     }
 
     private fun matchAny(otherActor: Actor): Boolean {
-        return this.checkers.withIndex().any { (index, checkActor) ->
+        return this.actorCheckers.withIndex().any { (index, checkActor) ->
             match(checkActor, index, otherActor)
         }
     }
 
     private fun performMatch(otherActor: Actor): Boolean {
-        if (this.checkers.isEmpty()) {
+        if (this.actorCheckers.isEmpty()) {
             return true
         }
         return when (this.matchType) {
@@ -103,11 +103,11 @@ class Qualify(
             "$this: " +
                     "actor.allegiance=${actor.allegiance} " +
                     "actor.id=${actor.id} " +
-                    "checkers.size=${checkers.size} " +
-                    "matchType=$matchType " +
+                    "actorCheckers.size=${this.actorCheckers.size} " +
+                    "matchType=${this.matchType} " +
                     "otherActors.size=${otherActors.size} " +
-                    "priorityType=$priorityType " +
-                    "targetType=$targetType"
+                    "priorityType=${this.priorityType} " +
+                    "targetType=${this.targetType}"
         )
         otherActors.forEachIndexed { index, otherActor ->
             if (this.checkActor(actor, index, otherActor)) {
