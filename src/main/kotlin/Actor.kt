@@ -4,16 +4,21 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 
-open class Actor(
+class Actor(
     agility: Int? = null,
+    agilityMaximum: Int? = null,
+    agilityMinimum: Int? = null,
     val allegiance: Int,
     var armor: Armor? = null,
     damageResistance: Int? = null,
+    damageResistanceMaximum: Int? = null,
+    damageResistanceMinimum: Int? = null,
     decisions: List<Decision>,
     excellentMoveChanceMaximum: Int? = null,
-    excellentMoveChanceMinimum: Int? = null,
     healMoreScale: Int? = null,
     healMoreShift: Int? = null,
+    healRangeMaximum: Int? = null,
+    healRangeMinimum: Int? = null,
     healScale: Int? = null,
     healShift: Int? = null,
     herbCountMaximum: Int? = null,
@@ -28,10 +33,12 @@ open class Actor(
     private val items: MutableMap<ItemType, Int> = mutableMapOf(),
     magicPoints: Int? = null,
     magicPointsMaximum: Int? = null,
-    magicPotionsMaximum: Int? = null,
+    magicPotionsCountMaximum: Int? = null,
     var shield: Shield? = null,
     statusResistance: Int? = null,
     strength: Int? = null,
+    strengthMaximum: Int? = null,
+    strengthMinimum: Int? = null,
     turnsSleep: Int? = null,
     turnsSleepMaximum: Int? = null,
     turnsStopSpell: Int? = null,
@@ -50,9 +57,9 @@ open class Actor(
             )
         }
 
-    private val agilityMaximum: Int = 0xFF // 255
+    private val agilityMaximum: Int = maxOf(1, (agilityMaximum ?: 0xFF)) // 255
 
-    private val agilityMinimum: Int = 0x03 // 03
+    private val agilityMinimum: Int = maxOf(0, minOf((this.agilityMaximum - 1), (agilityMinimum ?: 0x03))) // 03
 
     private val agilityPercentage: Int
         get() = this.getPercentage(this.agility, this.agilityMaximum)
@@ -69,31 +76,32 @@ open class Actor(
             )
         }
 
-    val damageResistanceMaximum: Int = 0x34
+    private val damageResistanceMaximum: Int = maxOf(1, (damageResistanceMaximum ?: 0x34))
 
-    private val damageResistanceMinimum: Int = 0x0F
+    private val damageResistanceMinimum: Int =
+        maxOf(0, minOf((this.damageResistanceMaximum - 1), (damageResistanceMinimum ?: 0x0F)))
 
     private val decisions: List<Decision> = decisions.sortedByDescending { decision ->
         decision.priorityType.ordinal
     }
 
-    val excellentMoveChanceMaximum: Int = maxOf(0, excellentMoveChanceMaximum ?: 0)
+    val excellentMoveChanceMaximum: Int = maxOf(0, (excellentMoveChanceMaximum ?: 32))
 
-    val excellentMoveChanceMinimum: Int = maxOf(0, excellentMoveChanceMinimum ?: 0)
+    val excellentMoveChanceMinimum: Int = 0
 
     val healMoreScale: Int = maxOf(0x55, healMoreScale ?: 0)
 
     val healMoreShift: Int = maxOf(0x0F, healMoreShift ?: 0)
 
-    val healRangeMaximum: Int = 7
+    val healRangeMaximum: Int = maxOf(1, (healRangeMaximum ?: 7))
 
-    val healRangeMinimum: Int = 0
+    val healRangeMinimum: Int = minOf(this.healRangeMaximum, healRangeMinimum ?: 0)
 
     val healScale: Int = maxOf(0x0A, healScale ?: 0)
 
     val healShift: Int = maxOf(0x07, healShift ?: 0)
 
-    private val herbCountMaximum: Int = maxOf(1, herbCountMaximum ?: 0)
+    private val herbCountMaximum: Int = maxOf(10, herbCountMaximum ?: 0)
 
     private val herbCountPercentage: Int
         get() = this.getPercentage(this.getItem(ItemType.HERB), this.herbCountMaximum)
@@ -137,7 +145,7 @@ open class Actor(
     val isAlive: Boolean
         get() = this.hitPoints > 0
 
-    protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
     var magicPoints: Int = 0
         set(value) {
@@ -153,10 +161,10 @@ open class Actor(
     private val magicPointsPercentage: Int
         get() = this.getPercentage(this.magicPoints, this.magicPointsMaximum)
 
-    private val magicPotionsMaximum: Int = maxOf(1, magicPotionsMaximum ?: 0)
+    private val magicPotionsCountMaximum: Int = maxOf(10, magicPotionsCountMaximum ?: 0)
 
     private val magicPotionsPercentage: Int
-        get() = this.getPercentage(this.getItem(ItemType.MAGIC_POTION), this.magicPotionsMaximum)
+        get() = this.getPercentage(this.getItem(ItemType.MAGIC_POTION), this.magicPotionsCountMaximum)
 
     val sleepRequirementMaximum: Int = 16
 
@@ -164,7 +172,7 @@ open class Actor(
 
     var statusResistance: Int = 0
         set(value) {
-            field = maxOf(value, this.statusResistanceMaximum, this.statusResistanceMinimum)
+            field = this.getClampedValue(value, this.statusResistanceMaximum, this.statusResistanceMinimum)
             logger.debug(
                 "$this: " +
                         "statusResistance=$field"
@@ -197,9 +205,9 @@ open class Actor(
             )
         }
 
-    private val strengthMaximum: Int = 0x8C // 140
+    private val strengthMaximum: Int = maxOf(1, strengthMaximum ?: 0x8C) // 140
 
-    private val strengthMinimum: Int = 0x05 // 05
+    private val strengthMinimum: Int = maxOf(0, minOf((this.strengthMaximum - 1), (strengthMinimum ?: 0x05)))
 
     val trail: MutableList<Trail> = mutableListOf()
 
@@ -237,7 +245,16 @@ open class Actor(
 
     val wakeUpChanceMinimum: Int = maxOf(0, minOf(this.wakeUpChanceMaximum, wakeUpChanceMinimum ?: 0))
 
-    fun getAttackPower(actor: Actor): Int {
+    fun addItem(itemType: ItemType, value: Int) {
+        this.items[itemType]?.plus(
+            when (itemType) {
+                ItemType.HERB -> this.getClampedValue(value, this.herbCountMaximum, 0)
+                ItemType.MAGIC_POTION -> this.getClampedValue(value, this.magicPotionsCountMaximum, 0)
+            }
+        )
+    }
+
+    fun getAttackValue(actor: Actor): Int {
         return this.strength
     }
 
@@ -290,7 +307,7 @@ open class Actor(
         return null
     }
 
-    fun getDefensePower(actor: Actor): Int {
+    fun getDefenseValue(actor: Actor): Int {
         return this.agility / 2
     }
 
@@ -340,5 +357,53 @@ open class Actor(
         this.strength = strength ?: this.strengthMinimum
         this.turnsSleep = turnsSleep ?: 0
         this.turnsStopSpell = turnsStopSpell ?: 0
+
+        logger.info(
+            "$this: " +
+                    "agility=${this.agility} " +
+                    "agilityMaximum=${this.agilityMaximum} " +
+                    "agilityMinimum=${this.agilityMinimum} " +
+                    "allegiance=${this.allegiance} " +
+                    "armor.name=${this.armor?.name} " +
+                    "damageResistance=${this.damageResistance} " +
+                    "damageResistanceMaximum=${this.damageResistanceMaximum} " +
+                    "damageResistanceMinimum=${this.damageResistanceMinimum} " +
+                    "decisions.size=${this.decisions.size} " +
+                    "excellentMoveChanceMaximum=${this.excellentMoveChanceMaximum} " +
+                    "excellentMoveChanceMinimum=${this.excellentMoveChanceMaximum} " +
+                    "healMoreScale=${this.healMoreScale} " +
+                    "healMoreShift=${this.healMoreShift} " +
+                    "healRangeMaximum=${this.healRangeMaximum} " +
+                    "healRangeMinimum=${this.healRangeMinimum} " +
+                    "healScale=${this.healScale} " +
+                    "healShift=${this.healShift} " +
+                    "herbCountMaximum=${this.herbCountMaximum} " +
+                    "herbScale=${this.herbScale} " +
+                    "herbShift=${this.herbShift} " +
+                    "hitPoints=${this.hitPoints} " +
+                    "hitPointsMaximum=${this.hitPointsMaximum} " +
+                    "hurtMoreScale=${this.hurtMoreScale} " +
+                    "hurtMoreShift=${this.hurtMoreShift} " +
+                    "hurtScale=${this.hurtScale} " +
+                    "hurtShift=${this.hurtShift} " +
+                    "items.size=${this.items.size} " +
+                    "magicPoints=${this.magicPoints} " +
+                    "magicPointsMaximum=${this.magicPointsMaximum} " +
+                    "magicPotionsCountMaximum=${this.magicPotionsCountMaximum} " +
+                    "shield.name=${this.shield?.name} " +
+                    "statusResistance=${this.statusResistance} " +
+                    "statusResistanceMaximum=${this.statusResistanceMaximum} " +
+                    "statusResistanceMinimum=${this.statusResistanceMinimum} " +
+                    "strength=${this.strength} " +
+                    "strengthMaximum=${this.strengthMaximum} " +
+                    "strengthMinimum=${this.strengthMinimum} " +
+                    "turnsSleep=${this.turnsSleep} " +
+                    "turnsSleepMaximum=${this.turnsSleepMaximum} " +
+                    "turnsStopSpell=${this.turnsStopSpell} " +
+                    "turnsStopSpellMaximum=${this.turnsStopSpellMaximum} " +
+                    "wakeUpChanceMaximum=${this.wakeUpChanceMaximum} " +
+                    "wakeUpChanceMinimum=${this.wakeUpChanceMinimum} " +
+                    "weapon.name=${this.weapon?.name}"
+        )
     }
 }
