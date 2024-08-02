@@ -29,7 +29,7 @@ class CheckActor(
                     "expressionType=${this.expressionType} " +
                     "operatorType=${this.operatorType} " +
                     "priorityType=${this.priorityType} " +
-                    "vale=${this.value} " +
+                    "value=${this.value} " +
                     "valueOther=$valueOther"
         )
         return checkValueResult

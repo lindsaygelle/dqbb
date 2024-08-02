@@ -390,7 +390,7 @@ fun main() {
         )
     )
 
-    val battleSystem = BattleSystem(
+    var battleSystem = BattleSystem(
         actors = mutableSetOf(
             actor0, actor1, actor2, actor3, actor4
         )
@@ -407,6 +407,7 @@ fun main() {
     println("Battle finished in ${battleSystem.turns} turns")
 
 
+    /*
     val data = JSONDecision(
         ability = JSONAbility(
             actionType = ActionType.ATTACK,
@@ -463,4 +464,27 @@ fun main() {
     println(decoded)
 
     println(decoded.build())
+
+     */
+
+    val actors = mutableSetOf<Actor>()
+
+    for (i in (0..10)) {
+        val jsonActor = JSONActor(
+            allegiance = if (i % 2 == 0) 0 else 1,
+        )
+        val actor = jsonActor.build()
+        actors.add(actor)
+    }
+
+    battleSystem = BattleSystem(actors)
+    while (battleSystem.isActive) {
+        battleSystem.run()
+    }
+    println("Battle log:")
+    battleSystem.trail.forEach {
+        println(it.message)
+    }
+    println("Battle finished in ${battleSystem.turns} turns")
+
 }

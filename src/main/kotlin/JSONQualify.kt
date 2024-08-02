@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class JSONQualify(
-    val checkers: List<JSONCheckActor>,
+    val checkers: List<JSONCheckActor> = listOf(),
     val matchType: MatchType,
     val priorityType: PriorityType?,
     val targetType: TargetType,
