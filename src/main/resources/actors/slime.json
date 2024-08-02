@@ -1,0 +1,55 @@
+{
+  "agility": 3,
+  "damageResistance": 1,
+  "decisions": [
+    {
+      "ability": {
+        "actionType": "ATTACK",
+        "conditionType": "HIT_POINTS",
+        "orderType": "MAX"
+      },
+      "preCondition": {
+        "matchType": "ANY",
+        "qualifiers": [
+          {
+            "actorCheckers": [
+              {
+                "conditionType": "HIT_POINTS",
+                "expressionType": "EXACT",
+                "operatorType": "GREATER_THAN",
+                "priorityType": "HIGHEST",
+                "value": 0
+              }
+            ],
+            "matchType": "ANY",
+            "priorityType": "HIGHEST",
+            "targetType": "ENEMY"
+          }
+        ]
+      },
+      "priorityType": "HIGHEST",
+      "targetSelection": {
+        "matchType": "ANY",
+        "qualifiers": [
+          {
+            "actorCheckers": [
+              {
+                "conditionType": "HIT_POINTS",
+                "expressionType": "EXACT",
+                "operatorType": "EQUAL",
+                "priorityType": "HIGHEST",
+                "value": 0
+              }
+            ],
+            "matchType": "ANY",
+            "priorityType": "HIGHEST",
+            "targetType": "ENEMY"
+          }
+        ]
+      }
+    }
+  ],
+  "hitPointsMaximum": 3,
+  "statusResistance": 15,
+  "strength": 5
+}
