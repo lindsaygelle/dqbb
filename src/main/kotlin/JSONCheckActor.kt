@@ -12,11 +12,11 @@ data class JSONCheckActor(
 ) {
     fun build(): CheckActor {
         return CheckActor(
-            conditionType = conditionType,
-            expressionType = expressionType,
-            operatorType = operatorType,
-            priorityType = priorityType,
-            value = value
+            conditionType = this.conditionType,
+            expressionType = this.expressionType,
+            operatorType = this.operatorType,
+            priorityType = this.priorityType,
+            value = this.value
         )
     }
 }

@@ -6,15 +6,15 @@ import kotlinx.serialization.*
 data class JSONDecision(
     val ability: JSONAbility,
     val preCondition: JSONState,
-    val priorityType: PriorityType,
+    val priorityType: PriorityType?,
     val targetSelection: JSONState,
 ) {
     fun build(): Decision {
         return Decision(
-            ability = ability.build(),
-            preCondition = preCondition.build(),
-            priorityType = priorityType,
-            targetSelection = targetSelection.build(),
+            ability = this.ability.build(),
+            preCondition = this.preCondition.build(),
+            priorityType = this.priorityType ?: PriorityType.HIGHEST,
+            targetSelection = this.targetSelection.build(),
         )
     }
 }
