@@ -13,6 +13,7 @@ open class Actor(
     excellentMoveChanceMaximum: Int? = null,
     excellentMoveChanceMinimum: Int? = null,
     healMoreScale: Int? = null,
+    healMoreShift: Int? = null,
     healScale: Int? = null,
     healShift: Int? = null,
     herbCountMaximum: Int? = null,
@@ -24,7 +25,7 @@ open class Actor(
     hurtMoreShift: Int? = null,
     hurtScale: Int? = null,
     hurtShift: Int? = null,
-    val items: MutableMap<ItemType, Int> = mutableMapOf(),
+    private val items: MutableMap<ItemType, Int> = mutableMapOf(),
     magicPoints: Int? = null,
     magicPointsMaximum: Int? = null,
     magicPotionsMaximum: Int? = null,
@@ -49,9 +50,9 @@ open class Actor(
             )
         }
 
-    private val agilityMaximum: Int = 0xFF
+    private val agilityMaximum: Int = 0xFF // 255
 
-    private val agilityMinimum: Int = 0x03
+    private val agilityMinimum: Int = 0x03 // 03
 
     private val agilityPercentage: Int
         get() = this.getPercentage(this.agility, this.agilityMaximum)
@@ -71,7 +72,7 @@ open class Actor(
 
     val healMoreScale: Int = maxOf(0x55, healMoreScale ?: 0)
 
-    val healMoreShift: Int = 0x0F
+    val healMoreShift: Int = maxOf(0x0F, healMoreShift ?: 0)
 
     val healRangeMaximum: Int = 7
 
@@ -84,7 +85,7 @@ open class Actor(
     private val herbCountMaximum: Int = maxOf(1, herbCountMaximum ?: 0)
 
     private val herbCountPercentage: Int
-        get() = this.getPercentage(this.items.getOrDefault(ItemType.HERB, 0), this.herbCountMaximum)
+        get() = this.getPercentage(this.getItem(ItemType.HERB), this.herbCountMaximum)
 
     val herbScale: Int = maxOf(0x17, herbScale ?: 0)
 
@@ -144,7 +145,7 @@ open class Actor(
     private val magicPotionsMaximum: Int = maxOf(1, magicPotionsMaximum ?: 0)
 
     private val magicPotionsPercentage: Int
-        get() = this.getPercentage(this.items.getOrDefault(ItemType.MAGIC_POTION, 0), this.magicPotionsMaximum)
+        get() = this.getPercentage(this.getItem(ItemType.MAGIC_POTION), this.magicPotionsMaximum)
 
     val sleepRequirementMaximum: Int = 16
 
@@ -159,9 +160,9 @@ open class Actor(
             )
         }
 
-    private val statusResistanceMaximum: Int = 0xFF
+    private val statusResistanceMaximum: Int = 0xFF // 255
 
-    private val statusResistanceMinimum: Int = 0x00
+    private val statusResistanceMinimum: Int = 0x00 // 0
 
     private val statusResistancePercentage: Int
         get() = this.getPercentage(this.statusResistance, this.statusResistanceMaximum)
@@ -185,9 +186,9 @@ open class Actor(
             )
         }
 
-    private val strengthMaximum: Int = 0x8C
+    private val strengthMaximum: Int = 0x8C // 140
 
-    private val strengthMinimum: Int = 0x05
+    private val strengthMinimum: Int = 0x05 // 05
 
     val trail: MutableList<Trail> = mutableListOf()
 
@@ -236,10 +237,10 @@ open class Actor(
     fun getConditionType(conditionType: ConditionType): Int {
         return when (conditionType) {
             ConditionType.AGILITY -> this.agility
-            ConditionType.HERBS -> this.items.getOrDefault(ItemType.HERB, 0)
+            ConditionType.HERBS -> this.getItem(ItemType.HERB)
             ConditionType.HIT_POINTS -> this.hitPoints
             ConditionType.MAGIC_POINTS -> this.magicPoints
-            ConditionType.MAGIC_POTIONS -> this.items.getOrDefault(ItemType.MAGIC_POTION, 0)
+            ConditionType.MAGIC_POTIONS -> this.getItem(ItemType.MAGIC_POTION)
             ConditionType.STATUS_RESISTANCE -> this.statusResistanceMaximum
             ConditionType.TURNS_SLEEP -> this.turnsSleep
             ConditionType.TURNS_STOP_SPELL -> this.turnsStopSpell
@@ -282,8 +283,20 @@ open class Actor(
         return this.agility / 2
     }
 
+    fun getItem(itemType: ItemType): Int {
+        return this.items.getOrDefault(itemType, 0)
+    }
+
     private fun getPercentage(value: Int, valueMaximum: Int): Int {
         return ((value.toDouble() / valueMaximum) * 100).toInt()
+    }
+
+    fun subtractItem(itemType: ItemType) {
+        this.items[itemType]?.let { itemCount ->
+            if (itemCount > 0) {
+                this.items[itemType] = itemCount - 1
+            }
+        }
     }
 
     fun takeTurn(otherActors: Collection<Actor>): Boolean {
