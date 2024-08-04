@@ -1,6 +1,6 @@
 {
-    "agility": 3,
-    "damageResistance": 1,
+    "agility": 22,
+    "damageResistance": 2,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 1,
-    "goldPoints": 2,
-    "hitPointsMaximum": 3,
-    "id": "00",
-    "name": "SLIME",
-    "pattern": "0",
-    "statusResistance": 15,
-    "strength": 5
+    "experiencePoints": 13,
+    "goldPoints": 35,
+    "hitPointsMaximum": 30,
+    "id": "0C",
+    "name": "WARLOCK",
+    "pattern": "18",
+    "statusResistance": 49,
+    "strength": 28
 }

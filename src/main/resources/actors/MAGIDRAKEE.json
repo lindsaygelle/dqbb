@@ -1,0 +1,106 @@
+{
+    "agility": 14,
+    "damageResistance": 1,
+    "decisions": [
+        {
+            "ability": {
+                "actionType": "ATTACK",
+                "conditionType": "HIT_POINTS",
+                "orderType": "MAX"
+            },
+            "preCondition": {
+                "matchType": "ANY",
+                "qualifiers": [
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "HIT_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 0
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "ENEMY"
+                    }
+                ]
+            },
+            "priorityType": "HIGHEST",
+            "targetSelection": {
+                "matchType": "ANY",
+                "qualifiers": [
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "HIT_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "EQUAL",
+                                "priorityType": "HIGHEST",
+                                "value": 0
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "ENEMY"
+                    }
+                ]
+            }
+        },
+        {
+            "ability": {
+                "actionType": "HURT",
+                "conditionType": "HIT_POINTS",
+                "orderType": "MAX"
+            },
+            "preCondition": {
+                "matchType": "ANY",
+                "qualifiers": [
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "HIT_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 0
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "ENEMY"
+                    }
+                ]
+            },
+            "priorityType": "HIGH",
+            "targetSelection": {
+                "matchType": "ANY",
+                "qualifiers": [
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "HIT_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "EQUAL",
+                                "priorityType": "HIGHEST",
+                                "value": 0
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "ENEMY"
+                    }
+                ]
+            }
+        }
+    ],
+    "experiencePoints": 5,
+    "goldPoints": 12,
+    "hitPointsMaximum": 15,
+    "id": "05",
+    "name": "MAGIDRAKEE",
+    "pattern": "2",
+    "statusResistance": 0,
+    "strength": 14
+}

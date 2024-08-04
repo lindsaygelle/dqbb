@@ -1,6 +1,6 @@
 {
-    "agility": 3,
-    "damageResistance": 1,
+    "agility": 48,
+    "damageResistance": 2,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 1,
-    "goldPoints": 2,
-    "hitPointsMaximum": 3,
-    "id": "00",
-    "name": "SLIME",
+    "experiencePoints": 24,
+    "goldPoints": 100,
+    "hitPointsMaximum": 42,
+    "id": "15",
+    "name": "WYVERN",
     "pattern": "0",
-    "statusResistance": 15,
-    "strength": 5
+    "statusResistance": 79,
+    "strength": 56
 }

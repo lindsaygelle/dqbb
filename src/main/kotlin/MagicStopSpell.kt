@@ -2,7 +2,7 @@ package dqbb
 
 class MagicStopSpell(
     conditionType: ConditionType,
-    orderType: OrderType? = null,
+    orderType: OrderType,
 ) : Magic(
     conditionType,
     orderType = orderType,

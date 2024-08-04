@@ -1,6 +1,6 @@
 {
-    "agility": 3,
-    "damageResistance": 1,
+    "agility": 34,
+    "damageResistance": 4,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 1,
-    "goldPoints": 2,
-    "hitPointsMaximum": 3,
-    "id": "00",
-    "name": "SLIME",
-    "pattern": "0",
-    "statusResistance": 15,
-    "strength": 5
+    "experiencePoints": 17,
+    "goldPoints": 60,
+    "hitPointsMaximum": 36,
+    "id": "0F",
+    "name": "WRAITH",
+    "pattern": "144",
+    "statusResistance": 112,
+    "strength": 44
 }

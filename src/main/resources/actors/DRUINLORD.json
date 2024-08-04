@@ -1,6 +1,6 @@
 {
-    "agility": 3,
-    "damageResistance": 1,
+    "agility": 40,
+    "damageResistance": 4,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 1,
-    "goldPoints": 2,
-    "hitPointsMaximum": 3,
-    "id": "00",
-    "name": "SLIME",
-    "pattern": "0",
-    "statusResistance": 15,
-    "strength": 5
+    "experiencePoints": 20,
+    "goldPoints": 85,
+    "hitPointsMaximum": 35,
+    "id": "13",
+    "name": "DRUINLORD",
+    "pattern": "177",
+    "statusResistance": 240,
+    "strength": 47
 }

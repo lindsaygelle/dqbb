@@ -1,6 +1,6 @@
 {
-    "agility": 3,
-    "damageResistance": 1,
+    "agility": 70,
+    "damageResistance": 7,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 1,
-    "goldPoints": 2,
-    "hitPointsMaximum": 3,
-    "id": "00",
-    "name": "SLIME",
+    "experiencePoints": 40,
+    "goldPoints": 155,
+    "hitPointsMaximum": 60,
+    "id": "1D",
+    "name": "WEREWOLF",
     "pattern": "0",
-    "statusResistance": 15,
-    "strength": 5
+    "statusResistance": 127,
+    "strength": 86
 }

@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class ActionType {
     ATTACK,
+    BREATHE_FIRE,
     HEAL,
     HEAL_MORE,
     HERB,

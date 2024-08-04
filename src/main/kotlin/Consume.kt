@@ -35,7 +35,7 @@ abstract class Consume(
     protected abstract fun applyEffect(actor: Actor, otherActor: Actor): Boolean
 
     override fun check(actor: Actor, otherActor: Actor): Boolean {
-        val itemCount = actor.getItem(this.itemType)
+        val itemCount = actor.getItemCount(this.itemType)
         logger.debug(
             "$this: " +
                     "actor.items.$itemType=$itemCount " +

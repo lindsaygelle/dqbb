@@ -6,11 +6,15 @@ import kotlinx.serialization.Serializable
 data class JSONAbility(
     val actionType: ActionType,
     val conditionType: ConditionType,
-    val orderType: OrderType?,
+    val orderType: OrderType,
 ) {
     fun build(): Ability {
         return when (this.actionType) {
             ActionType.ATTACK -> Attack(
+                this.conditionType, this.orderType
+            )
+
+            ActionType.BREATHE_FIRE -> MagicBreatheFire(
                 this.conditionType, this.orderType
             )
 

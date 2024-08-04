@@ -1,6 +1,6 @@
 {
-    "agility": 3,
-    "damageResistance": 1,
+    "agility": 90,
+    "damageResistance": 242,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 1,
-    "goldPoints": 2,
-    "hitPointsMaximum": 3,
-    "id": "00",
-    "name": "SLIME",
-    "pattern": "0",
-    "statusResistance": 15,
-    "strength": 5
+    "experiencePoints": 100,
+    "goldPoints": 140,
+    "hitPointsMaximum": 100,
+    "id": "25",
+    "name": "RED_DRAGON",
+    "pattern": "25",
+    "statusResistance": 247,
+    "strength": 120
 }

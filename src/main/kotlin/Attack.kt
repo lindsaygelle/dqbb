@@ -51,7 +51,7 @@ class Attack(
                     "$actor PERFORMED AN EXCELLENT ATTACK!"
                 )
             )
-            val attackValue = actor.attackValue
+            val attackValue = actor.strength
             attackScore = attackValue
         }
         actor.trail.add(

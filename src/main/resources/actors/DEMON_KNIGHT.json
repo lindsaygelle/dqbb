@@ -1,6 +1,6 @@
 {
-    "agility": 3,
-    "damageResistance": 1,
+    "agility": 64,
+    "damageResistance": 255,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 1,
-    "goldPoints": 2,
-    "hitPointsMaximum": 3,
-    "id": "00",
-    "name": "SLIME",
+    "experiencePoints": 37,
+    "goldPoints": 150,
+    "hitPointsMaximum": 50,
+    "id": "1C",
+    "name": "DEMON_KNIGHT",
     "pattern": "0",
-    "statusResistance": 15,
-    "strength": 5
+    "statusResistance": 255,
+    "strength": 79
 }

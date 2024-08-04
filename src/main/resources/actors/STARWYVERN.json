@@ -1,6 +1,6 @@
 {
-    "agility": 3,
-    "damageResistance": 1,
+    "agility": 80,
+    "damageResistance": 18,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 1,
-    "goldPoints": 2,
-    "hitPointsMaximum": 3,
-    "id": "00",
-    "name": "SLIME",
-    "pattern": "0",
-    "statusResistance": 15,
-    "strength": 5
+    "experiencePoints": 43,
+    "goldPoints": 160,
+    "hitPointsMaximum": 65,
+    "id": "1F",
+    "name": "STARWYVERN",
+    "pattern": "249",
+    "statusResistance": 128,
+    "strength": 86
 }

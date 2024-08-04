@@ -1,6 +1,6 @@
 {
-    "agility": 3,
-    "damageResistance": 1,
+    "agility": 86,
+    "damageResistance": 18,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 1,
-    "goldPoints": 2,
-    "hitPointsMaximum": 3,
-    "id": "00",
-    "name": "SLIME",
-    "pattern": "0",
-    "statusResistance": 15,
-    "strength": 5
+    "experiencePoints": 70,
+    "goldPoints": 140,
+    "hitPointsMaximum": 90,
+    "id": "24",
+    "name": "ARMORED_KNIGHT",
+    "pattern": "245",
+    "statusResistance": 247,
+    "strength": 105
 }

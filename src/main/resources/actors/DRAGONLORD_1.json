@@ -1,6 +1,6 @@
 {
-    "agility": 3,
-    "damageResistance": 1,
+    "agility": 75,
+    "damageResistance": 240,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 1,
-    "goldPoints": 2,
-    "hitPointsMaximum": 3,
-    "id": "00",
-    "name": "SLIME",
-    "pattern": "0",
-    "statusResistance": 15,
-    "strength": 5
+    "experiencePoints": 0,
+    "goldPoints": 0,
+    "hitPointsMaximum": 100,
+    "id": "26",
+    "name": "DRAGONLORD_1",
+    "pattern": "87",
+    "statusResistance": 255,
+    "strength": 90
 }

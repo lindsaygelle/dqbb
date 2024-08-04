@@ -1,5 +1,5 @@
 {
-    "agility": 3,
+    "agility": 78,
     "damageResistance": 1,
     "decisions": [
         {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 1,
-    "goldPoints": 2,
-    "hitPointsMaximum": 3,
-    "id": "00",
-    "name": "SLIME",
-    "pattern": "0",
-    "statusResistance": 15,
-    "strength": 5
+    "experiencePoints": 33,
+    "goldPoints": 130,
+    "hitPointsMaximum": 55,
+    "id": "1A",
+    "name": "KNIGHT",
+    "pattern": "96",
+    "statusResistance": 103,
+    "strength": 76
 }
