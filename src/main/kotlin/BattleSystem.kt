@@ -32,6 +32,7 @@ class BattleSystem(
                     "actor.id=${actor.id} " +
                     "actor.magicPoints=${actor.magicPoints} " +
                     "actor.magicPointsMaximum=${actor.magicPointsMaximum} " +
+                    "actor.name=${actor.name} " +
                     "actor.shield=${actor.shield} " +
                     "actor.statusResistance=${actor.statusResistance} " +
                     "actor.strength=${actor.strength} " +

@@ -418,11 +418,31 @@ fun main() {
     val actorFiles = actorsFolder.listFiles { _, name -> name.endsWith(".json") }
         ?: throw IllegalArgumentException("No JSON files found in the actors folder")
 
+    val actors = mutableMapOf<String, Actor>()
+
     actorFiles.forEach { file ->
         val jsonContent = file.readText(Charset.defaultCharset())
 
         val decoded = Json.decodeFromString<JSONActor>(jsonContent)
 
-        decoded.build()
+        val actor = decoded.build()
+
+        actors[actor.name] = actor
+    }
+
+    actors["SLIME"]?.allegiance = 1
+
+    actors["GOLEM"]?.allegiance = 1
+
+    actors["DRAGONLORD_1"]?.allegiance = 0
+
+    val bs = BattleSystem(setOf(actors["SLIME"]!!, actors["GOLEM"]!!, actors["DRAGONLORD_1"]!!))
+
+    while (bs.isActive) {
+        bs.run()
+    }
+
+    bs.trail.forEach {
+        println(it.message)
     }
 }
