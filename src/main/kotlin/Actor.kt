@@ -4,6 +4,8 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 const val AGILITY_MINIMUM: Int = 0x03
+const val BREATHE_FIRE_RANGE_MAXIMUM: Int = 255 // TODO: This number seems really high
+const val BREATHE_FIRE_RANGE_MINIMUM: Int = 0
 const val BREATHE_FIRE_SCALE: Int = 0x10
 const val BREATHE_FIRE_SHIFT: Int = 0x07
 const val DAMAGE_RESISTANCE_MINIMUM: Int = 0x01
@@ -33,16 +35,21 @@ const val STATUS_RESISTANCE_MINIMUM: Int = 0x00
 const val STOP_SPELL_REQUIREMENT_MAXIMUM: Int = 16
 const val STOP_SPELL_REQUIREMENT_MINIMUM: Int = 0
 const val STRENGTH_MINIMUM: Int = 0x05
-const val TURNS_SLEEP_MINIMUM: Int = 6
-const val TURNS_STOP_SPELL_MINIMUM: Int = 6
+const val TURNS_SLEEP_MAXIMUM: Int = 6
+const val TURNS_SLEEP_MINIMUM: Int = 1
+const val TURNS_STOP_SPELL_MAXIMUM: Int = 6
+const val TURNS_STOP_SPELL_MINIMUM: Int = 1
 
 class Actor(
     agility: Int? = null,
     val allegiance: Int,
     var armor: Armor? = null,
+    breatheFireRangeMaximum: Int? = null,
+    breatheFireRangeMinimum: Int? = null,
+    breatheFireScale: Int? = null,
+    breatheFireShift: Int? = null,
     damageResistance: Int? = null,
     decisions: List<Decision>,
-    excellentMoveChanceMaximum: Int? = null,
     healMoreScale: Int? = null,
     healMoreShift: Int? = null,
     healRangeMaximum: Int? = null,
@@ -66,6 +73,7 @@ class Actor(
     magicPoints: Int? = null,
     magicPointsMaximum: Int? = null,
     magicPotionsCountMaximum: Int? = null,
+    name: String? = null,
     var shield: Shield? = null,
     sleepRequirementMaximum: Int? = null,
     sleepRequirementMinimum: Int? = null,
@@ -75,18 +83,22 @@ class Actor(
     strength: Int? = null,
     turnsSleep: Int? = null,
     turnsSleepMaximum: Int? = null,
+    turnsSleepMinimum: Int? = null,
     turnsStopSpell: Int? = null,
     turnsStopSpellMaximum: Int? = null,
+    turnsStopSpellMinimum: Int? = null,
     var weapon: Weapon? = null,
 ) : Identifier {
 
     var agility: Int = maxOf(0, agility ?: AGILITY_MINIMUM)
 
-    private val agilityPercentage: Int = 100 // TODO
+    val breatheFireRangeMaximum: Int = maxOf(1, (breatheFireRangeMaximum ?: BREATHE_FIRE_RANGE_MAXIMUM))
 
-    val breatheFireScale: Int = BREATHE_FIRE_SCALE // TODO
+    val breatheFireRangeMinimum: Int = breatheFireRangeMinimum ?: BREATHE_FIRE_RANGE_MINIMUM
 
-    val breatheFireShift: Int = BREATHE_FIRE_SHIFT // TODO
+    val breatheFireScale: Int = (breatheFireScale ?: BREATHE_FIRE_SCALE)
+
+    val breatheFireShift: Int = (breatheFireShift ?: BREATHE_FIRE_SHIFT)
 
     var damageResistance: Int = (damageResistance ?: DAMAGE_RESISTANCE_MINIMUM)
 
@@ -94,7 +106,7 @@ class Actor(
         decision.priorityType.ordinal
     }
 
-    val excellentMoveChanceMaximum: Int = maxOf(0, (excellentMoveChanceMaximum ?: 32))
+    val excellentMoveChanceMaximum: Int = 31
 
     val excellentMoveChanceMinimum: Int = 0
 
@@ -121,7 +133,7 @@ class Actor(
 
     var hitPoints: Int = 0
         set(value) {
-            field = maxOf(0, minOf(this.hitPointsMaximum, value))
+            field = this.getClampedValue(field, this.hitPointsMaximum)
             logger.debug(
                 "$this: " +
                         "hitPoints=$field"
@@ -158,7 +170,7 @@ class Actor(
 
     var magicPoints: Int = 0
         set(value) {
-            field = maxOf(0, minOf(this.magicPointsMaximum, value))
+            field = this.getClampedValue(value, this.magicPointsMaximum)
             logger.debug(
                 "$this: " +
                         "magicPoints=$field"
@@ -174,6 +186,8 @@ class Actor(
 
     private val magicPotionsPercentage: Int
         get() = this.getPercentage(this.getItem(ItemType.MAGIC_POTION), this.magicPotionsCountMaximum)
+
+    val name: String = (name ?: "ACTOR").replace(" ", "_").uppercase()
 
     val sleepRequirementMaximum: Int = (sleepRequirementMaximum ?: SLEEP_REQUIREMENT_MAXIMUM)
 
@@ -191,7 +205,7 @@ class Actor(
     val statusStopSpell: Boolean
         get() = this.turnsStopSpell > 0
 
-    val strength: Int = (strength ?: STRENGTH_MINIMUM)
+    val strength: Int = maxOf(0, (strength ?: STRENGTH_MINIMUM))
 
     val trail: MutableList<Trail> = mutableListOf()
 
@@ -199,31 +213,41 @@ class Actor(
 
     var turnsSleep: Int = 0
         set(value) {
-            field = this.getClampedValue(value, this.turnsSleepMaximum, 0)
+            field = this.getClampedValue(value, this.turnsSleepMaximum)
             logger.debug(
                 "$this: " +
                         "turnsSleep=$field"
             )
         }
 
-    val turnsSleepMaximum: Int = (turnsSleepMaximum ?: TURNS_SLEEP_MINIMUM)
+    // turnsSleepMaximum should be at least 0.
+    val turnsSleepMaximum: Int = maxOf(0, (turnsSleepMaximum ?: TURNS_SLEEP_MAXIMUM))
+
+    // turnsSleepMinimum should be at least 0 and less than turnsSleepMaximum
+    val turnsSleepMinimum: Int =
+        minOf(this.turnsSleepMaximum, maxOf(0, (turnsSleepMinimum ?: TURNS_SLEEP_MINIMUM)))
 
     private val turnsSleepPercentage: Int
-        get() = getPercentage(this.turnsSleep, this.turnsSleepMaximum)
+        get() = this.getPercentage(this.turnsSleep, this.turnsSleepMaximum)
 
     var turnsStopSpell: Int = 0
         set(value) {
-            field = this.getClampedValue(value, turnsStopSpellMaximum, 0)
+            field = this.getClampedValue(value, this.turnsStopSpellMaximum)
             logger.debug(
                 "$this: " +
                         "turnsStopSpell=$field"
             )
         }
 
-    val turnsStopSpellMaximum: Int = (turnsStopSpellMaximum ?: TURNS_STOP_SPELL_MINIMUM)
+    // turnsStopSpellMaximum should be at least 0.
+    val turnsStopSpellMaximum: Int = maxOf(0, (turnsStopSpellMaximum ?: TURNS_STOP_SPELL_MAXIMUM))
+
+    // turnsStopSpellMinimum should be at least 0 and less than turnsStopSpellMaximum.
+    val turnsStopSpellMinimum: Int =
+        minOf(this.turnsStopSpellMaximum, maxOf(0, (turnsStopSpellMinimum ?: TURNS_STOP_SPELL_MINIMUM)))
 
     private val turnsStopSpellPercentage: Int
-        get() = getPercentage(this.turnsStopSpell, this.turnsStopSpellMaximum)
+        get() = this.getPercentage(this.turnsStopSpell, this.turnsStopSpellMaximum)
 
     val wakeUpChanceMaximum: Int = 3
 
@@ -250,8 +274,8 @@ class Actor(
         return this.strength
     }
 
-    private fun getClampedValue(value: Int, valueMaximum: Int, valueMinimum: Int): Int {
-        return maxOf(valueMinimum, minOf(valueMaximum, value))
+    private fun getClampedValue(value: Int, valueMaximum: Int): Int {
+        return maxOf(0, minOf(valueMaximum, value))
     }
 
     fun getConditionType(conditionType: ConditionType): Int {
@@ -270,7 +294,6 @@ class Actor(
 
     fun getConditionTypePercentage(conditionType: ConditionType): Int {
         return when (conditionType) {
-            ConditionType.AGILITY -> this.agilityPercentage
             ConditionType.HERBS -> this.herbCountPercentage
             ConditionType.HIT_POINTS -> this.hitPointsPercentage
             ConditionType.MAGIC_POINTS -> this.magicPointsPercentage
@@ -342,16 +365,18 @@ class Actor(
     }
 
     init {
-        this.hitPoints = hitPoints ?: this.hitPointsMaximum
-        this.magicPoints = magicPoints ?: this.magicPointsMaximum
-        this.turnsSleep = turnsSleep ?: 0
-        this.turnsStopSpell = turnsStopSpell ?: 0
+        this.hitPoints = maxOf(HIT_POINTS_MINIMUM, (hitPoints ?: this.hitPointsMaximum))
+        this.magicPoints = maxOf(0, (magicPoints ?: this.magicPointsMaximum))
+        this.turnsSleep = maxOf(0, turnsSleep ?: 0)
+        this.turnsStopSpell = maxOf(0, turnsStopSpell ?: 0)
 
         logger.info(
             "$this: " +
                     "agility=${this.agility} " +
                     "allegiance=${this.allegiance} " +
                     "armor.name=${this.armor?.name} " +
+                    "breatheFireRangeMaximum=${this.breatheFireRangeMaximum} " +
+                    "breatheFireRangeMinimum=${this.breatheFireRangeMinimum} " +
                     "breatheFireScale=${this.breatheFireScale} " +
                     "breatheFireShift=${this.breatheFireShift} " +
                     "damageResistance=${this.damageResistance} " +
@@ -377,13 +402,16 @@ class Actor(
                     "magicPoints=${this.magicPoints} " +
                     "magicPointsMaximum=${this.magicPointsMaximum} " +
                     "magicPotionsCountMaximum=${this.magicPotionsCountMaximum} " +
+                    "name=${this.name} " +
                     "shield.name=${this.shield?.name} " +
                     "statusResistance=${this.statusResistance} " +
                     "strength=${this.strength} " +
                     "turnsSleep=${this.turnsSleep} " +
                     "turnsSleepMaximum=${this.turnsSleepMaximum} " +
+                    "turnsSleepMinimum=${this.turnsSleepMinimum} " +
                     "turnsStopSpell=${this.turnsStopSpell} " +
                     "turnsStopSpellMaximum=${this.turnsStopSpellMaximum} " +
+                    "turnsStopSpellMinimum=${this.turnsStopSpellMinimum} " +
                     "wakeUpChanceMaximum=${this.wakeUpChanceMaximum} " +
                     "wakeUpChanceMinimum=${this.wakeUpChanceMinimum} " +
                     "weapon.name=${this.weapon?.name}"

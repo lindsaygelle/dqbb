@@ -217,7 +217,7 @@ fun main() {
             Decision(
                 ability = MagicSleep(
                     conditionType = ConditionType.HIT_POINTS,
-                    // orderBy = OrderBy.MIN,
+                    orderType = OrderType.MAX,
                 ),
                 priorityType = PriorityType.HIGHEST,
                 preCondition = State(
@@ -407,8 +407,8 @@ fun main() {
     println("Battle finished in ${battleSystem.turns} turns")
 
 
-    val jsonContent = ClassLoader.getSystemResource("actors/slime.json")?.readText(Charset.defaultCharset())
-        ?: throw IllegalArgumentException("File not found: actors/slime.json")
+    val jsonContent = ClassLoader.getSystemResource("actors/SLIME.json")?.readText(Charset.defaultCharset())
+        ?: throw IllegalArgumentException("File not found: actors/SLIME.json")
 
     println("JSON: $jsonContent")
 
@@ -418,5 +418,5 @@ fun main() {
     println(decoded)
 
     println(decoded.build())
-    
+
 }

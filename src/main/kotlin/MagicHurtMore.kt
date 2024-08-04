@@ -2,7 +2,7 @@ package dqbb
 
 class MagicHurtMore(
     conditionType: ConditionType,
-    orderType: OrderType? = null,
+    orderType: OrderType,
 ) : MagicHurt(
     conditionType = conditionType,
     orderType = orderType,

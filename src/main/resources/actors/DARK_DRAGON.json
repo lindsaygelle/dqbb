@@ -1,6 +1,6 @@
 {
-    "agility": 3,
-    "damageResistance": 1,
+    "agility": 30,
+    "damageResistance": 10,
     "decisions": [
         {
             "ability": {
@@ -49,11 +49,11 @@
             }
         }
     ],
-    "experiencePoints": 1,
-    "goldPoints": 2,
-    "hitPointsMaximum": 3,
-    "id": "00",
-    "name": "SLIME",
-    "statusResistance": 15,
-    "strength": 5
+    "experiencePoints": 15,
+    "goldPoints": 30,
+    "hitPointsMaximum": 40,
+    "id": "0C",
+    "name": "DARK_DRAGON",
+    "statusResistance": 30,
+    "strength": 30
 }

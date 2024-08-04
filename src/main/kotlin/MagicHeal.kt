@@ -3,7 +3,7 @@ package dqbb
 
 open class MagicHeal(
     conditionType: ConditionType,
-    orderType: OrderType? = null,
+    orderType: OrderType,
 ) : Magic(
     conditionType = conditionType,
     orderType = orderType

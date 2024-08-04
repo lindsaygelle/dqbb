@@ -3,7 +3,7 @@ package dqbb
 
 abstract class Magic(
     conditionType: ConditionType,
-    orderType: OrderType? = null,
+    orderType: OrderType,
 ) : Ability(
     conditionType = conditionType,
     orderType = orderType,

@@ -2,7 +2,7 @@ package dqbb
 
 class MagicHealMore(
     conditionType: ConditionType,
-    orderType: OrderType? = null,
+    orderType: OrderType,
 ) : MagicHeal(
     conditionType = conditionType,
     orderType = orderType,

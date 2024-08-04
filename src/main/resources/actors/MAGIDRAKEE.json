@@ -1,5 +1,5 @@
 {
-    "agility": 3,
+    "agility": 14,
     "damageResistance": 1,
     "decisions": [
         {
@@ -49,11 +49,11 @@
             }
         }
     ],
-    "experiencePoints": 1,
-    "goldPoints": 2,
-    "hitPointsMaximum": 3,
-    "id": "00",
-    "name": "SLIME",
-    "statusResistance": 15,
-    "strength": 5
+    "experiencePoints": 5,
+    "goldPoints": 12,
+    "hitPointsMaximum": 15,
+    "id": "05",
+    "name": "MAGIDRAKEE",
+    "statusResistance": 0,
+    "strength": 14
 }

@@ -1,6 +1,6 @@
 {
-    "agility": 3,
-    "damageResistance": 1,
+    "agility": 18,
+    "damageResistance": 2,
     "decisions": [
         {
             "ability": {
@@ -49,11 +49,11 @@
             }
         }
     ],
-    "experiencePoints": 1,
-    "goldPoints": 2,
-    "hitPointsMaximum": 3,
-    "id": "00",
-    "name": "SLIME",
+    "experiencePoints": 7,
+    "goldPoints": 16,
+    "hitPointsMaximum": 22,
+    "id": "07",
+    "name": "DRUIN",
     "statusResistance": 15,
-    "strength": 5
+    "strength": 20
 }

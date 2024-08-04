@@ -7,7 +7,9 @@ class BattleSystem(
     actors: Set<Actor>
 ) : Runnable {
 
-    private val actors: MutableList<Actor> = actors.sortedByDescending { actor -> actor.agility }.toMutableList()
+    private val actors: MutableList<Actor> = actors.sortedByDescending { actor: Actor ->
+        actor.agility
+    }.toMutableList()
 
     var isActive: Boolean = true
 
@@ -64,6 +66,10 @@ class BattleSystem(
         if (!actor.statusSleep) {
             return
         }
+        actor.turnsSleep += 1
+        if (actor.turnsSleep < actor.turnsSleepMinimum) {
+            return
+        }
         val wakeUpChanceMaximum = actor.wakeUpChanceMaximum
         val wakeUpChanceMinimum = actor.wakeUpChanceMinimum
         val wakeUpRequirement = 0
@@ -97,6 +103,9 @@ class BattleSystem(
             return
         }
         actor.turnsStopSpell += 1
+        if (actor.turnsStopSpell < actor.turnsStopSpellMinimum) {
+            return
+        }
         if (!actor.statusStopSpell) {
             actor.trail.add(
                 Trail(

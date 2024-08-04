@@ -2,7 +2,7 @@ package dqbb
 
 class MagicSleep(
     conditionType: ConditionType,
-    orderType: OrderType? = null,
+    orderType: OrderType,
 ) : Magic(
     conditionType = conditionType,
     orderType = orderType,

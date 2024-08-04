@@ -2,7 +2,7 @@ package dqbb
 
 open class MagicHurt(
     conditionType: ConditionType,
-    orderType: OrderType? = null
+    orderType: OrderType
 ) : Magic(
     conditionType = conditionType,
     orderType = orderType,
