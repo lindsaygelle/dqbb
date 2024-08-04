@@ -57,6 +57,7 @@ data class JSONActor(
     val magicPoints: Int? = null,
     val magicPointsMaximum: Int? = null,
     val name: String? = null,
+    val pattern: String? = null,
     val shield: JSONShield? = null,
     val statusResistance: Int? = null,
     val strength: Int? = null,

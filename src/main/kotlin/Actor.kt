@@ -42,7 +42,7 @@ const val TURNS_STOP_SPELL_MINIMUM: Int = 1
 
 class Actor(
     agility: Int? = null,
-    val allegiance: Int,
+    var allegiance: Int,
     var armor: Armor? = null,
     breatheFireRangeMaximum: Int? = null,
     breatheFireRangeMinimum: Int? = null,
@@ -101,11 +101,11 @@ class Actor(
             maxOf(BREATHE_FIRE_RANGE_MINIMUM, (breatheFireRangeMinimum ?: BREATHE_FIRE_RANGE_MINIMUM))
         )
 
-    val breatheFireScale: Int = (breatheFireScale ?: BREATHE_FIRE_SCALE)
+    val breatheFireScale: Int = maxOf(0, (breatheFireScale ?: BREATHE_FIRE_SCALE))
 
-    val breatheFireShift: Int = (breatheFireShift ?: BREATHE_FIRE_SHIFT)
+    val breatheFireShift: Int = maxOf(0, (breatheFireShift ?: BREATHE_FIRE_SHIFT))
 
-    var damageResistance: Int = (damageResistance ?: DAMAGE_RESISTANCE_MINIMUM)
+    var damageResistance: Int = maxOf(0, (damageResistance ?: DAMAGE_RESISTANCE_MINIMUM))
 
     private val decisions: List<Decision> = decisions.sortedByDescending { decision ->
         decision.priorityType.ordinal
@@ -131,7 +131,7 @@ class Actor(
     private val herbCountMaximum: Int = maxOf(0, (herbCountMaximum ?: HERB_COUNT_MINIMUM))
 
     private val herbCountPercentage: Int
-        get() = this.getPercentage(this.getItem(ItemType.HERB), this.herbCountMaximum)
+        get() = this.getPercentage(this.getItemCount(ItemType.HERB), this.herbCountMaximum)
 
     val herbScale: Int = maxOf(0, (herbScale ?: HERB_SCALE))
 
@@ -189,10 +189,10 @@ class Actor(
     private val magicPointsPercentage: Int
         get() = this.getPercentage(this.magicPoints, this.magicPointsMaximum)
 
-    private val magicPotionsCountMaximum: Int = (magicPotionsCountMaximum ?: MAGIC_POTION_COUNT_MINIMUM)
+    private val magicPotionsCountMaximum: Int = maxOf(0, (magicPotionsCountMaximum ?: MAGIC_POTION_COUNT_MINIMUM))
 
     private val magicPotionsPercentage: Int
-        get() = this.getPercentage(this.getItem(ItemType.MAGIC_POTION), this.magicPotionsCountMaximum)
+        get() = this.getPercentage(this.getItemCount(ItemType.MAGIC_POTION), this.magicPotionsCountMaximum)
 
     val name: String = (name ?: "ACTOR").replace(" ", "_").uppercase()
 
@@ -217,7 +217,7 @@ class Actor(
     val statusStopSpell: Boolean
         get() = this.turnsStopSpell > 0
 
-    val strength: Int = maxOf(0, (strength ?: STRENGTH_MINIMUM))
+    val strength: Int = maxOf(STRENGTH_MINIMUM, (strength ?: STRENGTH_MINIMUM))
 
     val trail: MutableList<Trail> = mutableListOf()
 
@@ -293,11 +293,11 @@ class Actor(
     fun getConditionType(conditionType: ConditionType): Int {
         return when (conditionType) {
             ConditionType.AGILITY -> this.agility
-            ConditionType.HERBS -> this.getItem(ItemType.HERB)
+            ConditionType.HERBS -> this.getItemCount(ItemType.HERB)
             ConditionType.HIT_POINTS -> this.hitPoints
             ConditionType.MAGIC_POINTS -> this.magicPoints
             ConditionType.MAGIC_POINTS_MAXIMUM -> this.magicPointsMaximum
-            ConditionType.MAGIC_POTIONS -> this.getItem(ItemType.MAGIC_POTION)
+            ConditionType.MAGIC_POTIONS -> this.getItemCount(ItemType.MAGIC_POTION)
             ConditionType.STATUS_RESISTANCE -> this.statusResistance
             ConditionType.TURNS_SLEEP -> this.turnsSleep
             ConditionType.TURNS_STOP_SPELL -> this.turnsStopSpell
@@ -312,7 +312,7 @@ class Actor(
             ConditionType.MAGIC_POTIONS -> this.magicPotionsPercentage
             ConditionType.TURNS_SLEEP -> this.turnsSleepPercentage
             ConditionType.TURNS_STOP_SPELL -> this.turnsStopSpellPercentage
-            else -> 0
+            else -> -1
         }
     }
 
@@ -339,7 +339,7 @@ class Actor(
         return this.agility / 2
     }
 
-    fun getItem(itemType: ItemType): Int {
+    fun getItemCount(itemType: ItemType): Int {
         return this.items.getOrDefault(itemType, 0)
     }
 

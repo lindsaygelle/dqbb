@@ -1,10 +1,12 @@
 package dqbb
 
 import kotlinx.serialization.json.Json
+import java.io.File
 import java.nio.charset.Charset
 
 fun main() {
 
+    /*
     val actor0 = Actor(
         agility = 0,
         allegiance = (0..2).random(),
@@ -406,17 +408,21 @@ fun main() {
     }
     println("Battle finished in ${battleSystem.turns} turns")
 
+    */
+    val actorsFolder = File(ClassLoader.getSystemResource("actors").file)
 
-    val jsonContent = ClassLoader.getSystemResource("actors/SLIME.json")?.readText(Charset.defaultCharset())
-        ?: throw IllegalArgumentException("File not found: actors/SLIME.json")
+    if (!actorsFolder.exists() || !actorsFolder.isDirectory) {
+        throw IllegalArgumentException("Folder not found: actors")
+    }
 
-    println("JSON: $jsonContent")
+    val actorFiles = actorsFolder.listFiles { _, name -> name.endsWith(".json") }
+        ?: throw IllegalArgumentException("No JSON files found in the actors folder")
 
-    val decoded = Json.decodeFromString<JSONActor>(jsonContent)
-    println("Decoded: $decoded")
+    actorFiles.forEach { file ->
+        val jsonContent = file.readText(Charset.defaultCharset())
 
-    println(decoded)
+        val decoded = Json.decodeFromString<JSONActor>(jsonContent)
 
-    println(decoded.build())
-
+        decoded.build()
+    }
 }

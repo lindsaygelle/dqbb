@@ -36,7 +36,7 @@
                             {
                                 "conditionType": "HIT_POINTS",
                                 "expressionType": "EXACT",
-                                "operatorType": "EQUAL",
+                                "operatorType": "GREATER_THAN",
                                 "priorityType": "HIGHEST",
                                 "value": 0
                             }
