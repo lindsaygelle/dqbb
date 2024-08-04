@@ -1,6 +1,6 @@
 {
     "agility": 30,
-    "damageResistance": 10,
+    "damageResistance": 2,
     "decisions": [
         {
             "ability": {
@@ -49,11 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 15,
-    "goldPoints": 30,
-    "hitPointsMaximum": 40,
-    "id": "0C",
-    "name": "DARK_DRAGON",
-    "statusResistance": 30,
-    "strength": 30
+    "experiencePoints": 16,
+    "goldPoints": 50,
+    "hitPointsMaximum": 34,
+    "id": "0E",
+    "name": "WOLF",
+    "pattern": "0",
+    "statusResistance": 31,
+    "strength": 40
 }

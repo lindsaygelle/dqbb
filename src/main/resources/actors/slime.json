@@ -54,6 +54,7 @@
     "hitPointsMaximum": 3,
     "id": "00",
     "name": "SLIME",
+    "pattern": "0",
     "statusResistance": 15,
     "strength": 5
 }

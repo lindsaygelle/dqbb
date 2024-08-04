@@ -54,6 +54,7 @@
     "hitPointsMaximum": 4,
     "id": "01",
     "name": "RED_SLIME",
+    "pattern": "0",
     "statusResistance": 15,
     "strength": 7
 }

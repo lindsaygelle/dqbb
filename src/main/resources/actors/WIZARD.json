@@ -1,6 +1,6 @@
 {
-    "agility": 24,
-    "damageResistance": 2,
+    "agility": 70,
+    "damageResistance": 242,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 10,
-    "goldPoints": 25,
-    "hitPointsMaximum": 25,
-    "id": "09",
-    "name": "DROLL",
-    "pattern": "0",
-    "statusResistance": 14,
-    "strength": 24
+    "experiencePoints": 50,
+    "goldPoints": 165,
+    "hitPointsMaximum": 65,
+    "id": "20",
+    "name": "WIZARD",
+    "pattern": "6",
+    "statusResistance": 247,
+    "strength": 80
 }

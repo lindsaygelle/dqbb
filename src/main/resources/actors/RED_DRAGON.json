@@ -1,6 +1,6 @@
 {
-    "agility": 24,
-    "damageResistance": 2,
+    "agility": 90,
+    "damageResistance": 242,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 10,
-    "goldPoints": 25,
-    "hitPointsMaximum": 25,
-    "id": "09",
-    "name": "DROLL",
-    "pattern": "0",
-    "statusResistance": 14,
-    "strength": 24
+    "experiencePoints": 100,
+    "goldPoints": 140,
+    "hitPointsMaximum": 100,
+    "id": "25",
+    "name": "RED_DRAGON",
+    "pattern": "25",
+    "statusResistance": 247,
+    "strength": 120
 }

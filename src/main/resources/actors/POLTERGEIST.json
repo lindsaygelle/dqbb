@@ -54,6 +54,7 @@
     "hitPointsMaximum": 23,
     "id": "08",
     "name": "POLTERGEIST",
+    "pattern": "3",
     "statusResistance": 0,
     "strength": 18
 }

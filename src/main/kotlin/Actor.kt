@@ -90,11 +90,16 @@ class Actor(
     var weapon: Weapon? = null,
 ) : Identifier {
 
-    var agility: Int = maxOf(0, agility ?: AGILITY_MINIMUM)
+    var agility: Int = maxOf(0, (agility ?: AGILITY_MINIMUM))
 
-    val breatheFireRangeMaximum: Int = maxOf(1, (breatheFireRangeMaximum ?: BREATHE_FIRE_RANGE_MAXIMUM))
+    val breatheFireRangeMaximum: Int =
+        maxOf(BREATHE_FIRE_RANGE_MINIMUM, (breatheFireRangeMaximum ?: BREATHE_FIRE_RANGE_MAXIMUM))
 
-    val breatheFireRangeMinimum: Int = breatheFireRangeMinimum ?: BREATHE_FIRE_RANGE_MINIMUM
+    val breatheFireRangeMinimum: Int =
+        minOf(
+            this.breatheFireRangeMaximum,
+            maxOf(BREATHE_FIRE_RANGE_MINIMUM, (breatheFireRangeMinimum ?: BREATHE_FIRE_RANGE_MINIMUM))
+        )
 
     val breatheFireScale: Int = (breatheFireScale ?: BREATHE_FIRE_SCALE)
 
@@ -110,56 +115,58 @@ class Actor(
 
     val excellentMoveChanceMinimum: Int = 0
 
-    val healMoreScale: Int = (healMoreScale ?: HEAL_MORE_SCALE)
+    val healMoreScale: Int = maxOf(0, (healMoreScale ?: HEAL_MORE_SCALE))
 
-    val healMoreShift: Int = (healMoreShift ?: HEAL_MORE_SHIFT)
+    val healMoreShift: Int = maxOf(0, (healMoreShift ?: HEAL_MORE_SHIFT))
 
-    val healRangeMaximum: Int = (healRangeMaximum ?: HEAL_RANGE_MAXIMUM)
+    val healRangeMaximum: Int = maxOf(HEAL_RANGE_MINIMUM, (healRangeMaximum ?: HEAL_RANGE_MAXIMUM))
 
-    val healRangeMinimum: Int = (healRangeMinimum ?: HEAL_RANGE_MINIMUM)
+    val healRangeMinimum: Int =
+        minOf(this.healRangeMaximum, maxOf(HEAL_RANGE_MINIMUM, (healRangeMinimum ?: HEAL_RANGE_MINIMUM)))
 
-    val healScale: Int = (healScale ?: HEAL_SCALE)
+    val healScale: Int = maxOf(0, (healScale ?: HEAL_SCALE))
 
-    val healShift: Int = (healShift ?: HEAL_SHIFT)
+    val healShift: Int = maxOf(0, (healShift ?: HEAL_SHIFT))
 
-    private val herbCountMaximum: Int = (herbCountMaximum ?: HERB_COUNT_MINIMUM)
+    private val herbCountMaximum: Int = maxOf(0, (herbCountMaximum ?: HERB_COUNT_MINIMUM))
 
     private val herbCountPercentage: Int
         get() = this.getPercentage(this.getItem(ItemType.HERB), this.herbCountMaximum)
 
-    val herbScale: Int = (herbScale ?: HERB_SCALE)
+    val herbScale: Int = maxOf(0, (herbScale ?: HERB_SCALE))
 
-    val herbShift: Int = (herbShift ?: HERB_SHIFT)
+    val herbShift: Int = maxOf(0, (herbShift ?: HERB_SHIFT))
 
     var hitPoints: Int = 0
         set(value) {
-            field = this.getClampedValue(field, this.hitPointsMaximum)
+            field = this.getClampedValue(value, this.hitPointsMaximum)
             logger.debug(
                 "$this: " +
                         "hitPoints=$field"
             )
         }
 
-    val hitPointsMaximum: Int = maxOf(1, (hitPointsMaximum ?: HIT_POINTS_MINIMUM))
+    val hitPointsMaximum: Int = maxOf(HIT_POINTS_MINIMUM, (hitPointsMaximum ?: HIT_POINTS_MINIMUM))
 
     private val hitPointsPercentage: Int
         get() = getPercentage(this.hitPoints, this.hitPointsMaximum)
 
-    val hurtMoreScale: Int = (hurtMoreScale ?: HURT_MORE_SCALE)
+    val hurtMoreScale: Int = maxOf(0, (hurtMoreScale ?: HURT_MORE_SCALE))
 
-    val hurtMoreShift: Int = (hurtMoreShift ?: HURT_MORE_SHIFT)
+    val hurtMoreShift: Int = maxOf(0, (hurtMoreShift ?: HURT_MORE_SHIFT))
 
-    val hurtRangeMaximum: Int = (hurtRangeMaximum ?: HURT_RANGE_MAXIMUM)
+    val hurtRangeMaximum: Int = maxOf(0, (hurtRangeMaximum ?: HURT_RANGE_MAXIMUM))
 
-    val hurtRangeMinimum: Int = (hurtRangeMinimum ?: HURT_RANGE_MINIMUM)
+    val hurtRangeMinimum: Int = minOf(this.hurtRangeMaximum, maxOf(0, (hurtRangeMinimum ?: HURT_RANGE_MINIMUM)))
 
-    val hurtRequirementMaximum: Int = (hurtRequirementMaximum ?: HURT_REQUIREMENT_MAXIMUM)
+    val hurtRequirementMaximum: Int = maxOf(0, (hurtRequirementMaximum ?: HURT_REQUIREMENT_MAXIMUM))
 
-    val hurtRequirementMinimum: Int = (hurtRequirementMinimum ?: HURT_REQUIREMENT_MINIMUM)
+    val hurtRequirementMinimum: Int =
+        minOf(this.hurtRequirementMaximum, maxOf(0, (hurtRequirementMinimum ?: HURT_REQUIREMENT_MINIMUM)))
 
-    val hurtScale: Int = (hurtScale ?: HURT_SCALE)
+    val hurtScale: Int = maxOf(0, (hurtScale ?: HURT_SCALE))
 
-    val hurtShift: Int = (hurtShift ?: HURT_SHIFT)
+    val hurtShift: Int = maxOf(0, (hurtShift ?: HURT_SHIFT))
 
     override val id: String = Integer.toHexString(System.identityHashCode(this))
 
@@ -177,7 +184,7 @@ class Actor(
             )
         }
 
-    val magicPointsMaximum: Int = (magicPointsMaximum ?: MAGIC_POINTS_MINIMUM)
+    val magicPointsMaximum: Int = maxOf(MAGIC_POINTS_MINIMUM, (magicPointsMaximum ?: MAGIC_POINTS_MINIMUM))
 
     private val magicPointsPercentage: Int
         get() = this.getPercentage(this.magicPoints, this.magicPointsMaximum)
@@ -189,15 +196,20 @@ class Actor(
 
     val name: String = (name ?: "ACTOR").replace(" ", "_").uppercase()
 
-    val sleepRequirementMaximum: Int = (sleepRequirementMaximum ?: SLEEP_REQUIREMENT_MAXIMUM)
+    val sleepRequirementMaximum: Int = maxOf(0, (sleepRequirementMaximum ?: SLEEP_REQUIREMENT_MAXIMUM))
 
-    val sleepRequirementMinimum: Int = (sleepRequirementMinimum ?: SLEEP_REQUIREMENT_MINIMUM)
+    val sleepRequirementMinimum: Int =
+        minOf(this.sleepRequirementMaximum, maxOf((sleepRequirementMinimum ?: SLEEP_REQUIREMENT_MINIMUM)))
 
-    val statusResistance: Int = (statusResistance ?: STATUS_RESISTANCE_MINIMUM)
+    val statusResistance: Int = maxOf(STATUS_RESISTANCE_MINIMUM, (statusResistance ?: STATUS_RESISTANCE_MINIMUM))
 
-    val stopSpellRequirementMaximum: Int = (stopSpellRequirementMaximum ?: STOP_SPELL_REQUIREMENT_MAXIMUM)
+    val stopSpellRequirementMaximum: Int =
+        maxOf(STOP_SPELL_REQUIREMENT_MINIMUM, (stopSpellRequirementMaximum ?: STOP_SPELL_REQUIREMENT_MAXIMUM))
 
-    val stopSpellRequirementMinimum: Int = (stopSpellRequirementMinimum ?: STOP_SPELL_REQUIREMENT_MINIMUM)
+    val stopSpellRequirementMinimum: Int = minOf(
+        this.stopSpellRequirementMaximum,
+        maxOf(STOP_SPELL_REQUIREMENT_MINIMUM, (stopSpellRequirementMinimum ?: STOP_SPELL_REQUIREMENT_MINIMUM))
+    )
 
     val statusSleep: Boolean
         get() = this.turnsSleep > 0
@@ -366,7 +378,7 @@ class Actor(
 
     init {
         this.hitPoints = maxOf(HIT_POINTS_MINIMUM, (hitPoints ?: this.hitPointsMaximum))
-        this.magicPoints = maxOf(0, (magicPoints ?: this.magicPointsMaximum))
+        this.magicPoints = maxOf(MAGIC_POINTS_MINIMUM, (magicPoints ?: this.magicPointsMaximum))
         this.turnsSleep = maxOf(0, turnsSleep ?: 0)
         this.turnsStopSpell = maxOf(0, turnsStopSpell ?: 0)
 

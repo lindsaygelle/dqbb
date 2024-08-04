@@ -1,6 +1,6 @@
 {
-    "agility": 24,
-    "damageResistance": 2,
+    "agility": 22,
+    "damageResistance": 4,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 10,
-    "goldPoints": 25,
-    "hitPointsMaximum": 25,
-    "id": "09",
-    "name": "DROLL",
+    "experiencePoints": 11,
+    "goldPoints": 30,
+    "hitPointsMaximum": 30,
+    "id": "0B",
+    "name": "SKELETON",
     "pattern": "0",
-    "statusResistance": 14,
-    "strength": 24
+    "statusResistance": 15,
+    "strength": 28
 }

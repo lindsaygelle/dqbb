@@ -54,6 +54,7 @@
     "hitPointsMaximum": 7,
     "id": "03",
     "name": "GHOST",
+    "pattern": "0",
     "statusResistance": 15,
     "strength": 11
 }

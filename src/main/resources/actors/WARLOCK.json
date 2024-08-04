@@ -1,5 +1,5 @@
 {
-    "agility": 24,
+    "agility": 22,
     "damageResistance": 2,
     "decisions": [
         {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 10,
-    "goldPoints": 25,
-    "hitPointsMaximum": 25,
-    "id": "09",
-    "name": "DROLL",
-    "pattern": "0",
-    "statusResistance": 14,
-    "strength": 24
+    "experiencePoints": 13,
+    "goldPoints": 35,
+    "hitPointsMaximum": 30,
+    "id": "0C",
+    "name": "WARLOCK",
+    "pattern": "18",
+    "statusResistance": 49,
+    "strength": 28
 }

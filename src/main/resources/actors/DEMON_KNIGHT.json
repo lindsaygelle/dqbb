@@ -1,6 +1,6 @@
 {
-    "agility": 24,
-    "damageResistance": 2,
+    "agility": 64,
+    "damageResistance": 255,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 10,
-    "goldPoints": 25,
-    "hitPointsMaximum": 25,
-    "id": "09",
-    "name": "DROLL",
+    "experiencePoints": 37,
+    "goldPoints": 150,
+    "hitPointsMaximum": 50,
+    "id": "1C",
+    "name": "DEMON_KNIGHT",
     "pattern": "0",
-    "statusResistance": 14,
-    "strength": 24
+    "statusResistance": 255,
+    "strength": 79
 }

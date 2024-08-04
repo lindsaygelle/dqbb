@@ -54,6 +54,7 @@
     "hitPointsMaximum": 20,
     "id": "06",
     "name": "SCORPION",
+    "pattern": "0",
     "statusResistance": 15,
     "strength": 18
 }

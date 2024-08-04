@@ -1,6 +1,6 @@
 {
-    "agility": 24,
-    "damageResistance": 2,
+    "agility": 74,
+    "damageResistance": 34,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 10,
-    "goldPoints": 25,
-    "hitPointsMaximum": 25,
-    "id": "09",
-    "name": "DROLL",
-    "pattern": "0",
-    "statusResistance": 14,
-    "strength": 24
+    "experiencePoints": 45,
+    "goldPoints": 160,
+    "hitPointsMaximum": 65,
+    "id": "1E",
+    "name": "GREEN_DRAGON",
+    "pattern": "9",
+    "statusResistance": 127,
+    "strength": 88
 }

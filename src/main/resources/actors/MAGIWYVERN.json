@@ -1,5 +1,5 @@
 {
-    "agility": 24,
+    "agility": 68,
     "damageResistance": 2,
     "decisions": [
         {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 10,
-    "goldPoints": 25,
-    "hitPointsMaximum": 25,
-    "id": "09",
-    "name": "DROLL",
-    "pattern": "0",
-    "statusResistance": 14,
-    "strength": 24
+    "experiencePoints": 34,
+    "goldPoints": 140,
+    "hitPointsMaximum": 58,
+    "id": "1B",
+    "name": "MAGIWYVERN",
+    "pattern": "32",
+    "statusResistance": 32,
+    "strength": 78
 }

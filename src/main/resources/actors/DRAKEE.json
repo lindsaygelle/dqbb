@@ -54,6 +54,7 @@
     "hitPointsMaximum": 6,
     "id": "02",
     "name": "DRAKEE",
+    "pattern": "0",
     "statusResistance": 15,
     "strength": 9
 }

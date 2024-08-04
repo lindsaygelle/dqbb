@@ -54,6 +54,7 @@
     "hitPointsMaximum": 20,
     "id": "0A",
     "name": "DRAKEEMA",
+    "pattern": "146",
     "statusResistance": 32,
     "strength": 22
 }

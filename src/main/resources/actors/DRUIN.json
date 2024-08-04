@@ -54,6 +54,7 @@
     "hitPointsMaximum": 22,
     "id": "07",
     "name": "DRUIN",
+    "pattern": "0",
     "statusResistance": 15,
     "strength": 20
 }

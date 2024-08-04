@@ -54,6 +54,7 @@
     "hitPointsMaximum": 13,
     "id": "04",
     "name": "MAGICIAN",
+    "pattern": "2",
     "statusResistance": 0,
     "strength": 11
 }

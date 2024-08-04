@@ -54,6 +54,7 @@
     "hitPointsMaximum": 15,
     "id": "05",
     "name": "MAGIDRAKEE",
+    "pattern": "2",
     "statusResistance": 0,
     "strength": 14
 }

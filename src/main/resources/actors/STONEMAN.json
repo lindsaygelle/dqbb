@@ -1,6 +1,6 @@
 {
-    "agility": 24,
-    "damageResistance": 2,
+    "agility": 40,
+    "damageResistance": 113,
     "decisions": [
         {
             "ability": {
@@ -49,12 +49,12 @@
             }
         }
     ],
-    "experiencePoints": 10,
-    "goldPoints": 25,
-    "hitPointsMaximum": 25,
-    "id": "09",
-    "name": "DROLL",
+    "experiencePoints": 65,
+    "goldPoints": 140,
+    "hitPointsMaximum": 160,
+    "id": "23",
+    "name": "STONEMAN",
     "pattern": "0",
-    "statusResistance": 14,
-    "strength": 24
+    "statusResistance": 47,
+    "strength": 100
 }
