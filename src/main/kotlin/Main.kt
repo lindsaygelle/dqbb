@@ -3,6 +3,7 @@ package dqbb
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.nio.charset.Charset
+import kotlin.system.exitProcess
 
 fun main() {
 
@@ -427,22 +428,11 @@ fun main() {
 
         val actor = decoded.build()
 
-        actors[actor.name] = actor
-    }
-
-    actors["SLIME"]?.allegiance = 1
-
-    actors["GOLEM"]?.allegiance = 1
-
-    actors["DRAGONLORD_1"]?.allegiance = 0
-
-    val bs = BattleSystem(setOf(actors["SLIME"]!!, actors["GOLEM"]!!, actors["DRAGONLORD_1"]!!))
-
-    while (bs.isActive) {
-        bs.run()
-    }
-
-    bs.trail.forEach {
-        println(it.message)
+        var hasAttack = false
+        actor.decisions.forEach {
+            if (it.ability.name == ActionType.ATTACK.toString()) {
+                hasAttack = true
+            }
+        }
     }
 }

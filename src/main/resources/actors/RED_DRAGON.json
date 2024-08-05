@@ -31,17 +31,24 @@
                                 "conditionType": "TURNS_SLEEP",
                                 "expressionType": "EXACT",
                                 "operatorType": "EQUAL",
-                                "priorityType": "HIGH",
+                                "priorityType": "HIGHEST",
+                                "value": 0
+                            },
+                            {
+                                "conditionType": "HIT_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
                                 "value": 0
                             }
                         ],
-                        "matchType": "ANY",
+                        "matchType": "ALL",
                         "priorityType": "HIGHEST",
                         "targetType": "ENEMY"
                     }
                 ]
             },
-            "priorityType": "HIGH",
+            "priorityType": "HIGHEST",
             "targetSelection": {
                 "matchType": "ANY",
                 "qualifiers": [
@@ -69,6 +76,66 @@
                 "orderType": "MAX"
             },
             "preCondition": {
+                "matchType": "ALL",
+                "qualifiers": [
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "HIT_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 0
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "ENEMY"
+                    },
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "MAGIC_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 9
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "SELF"
+                    }
+                ]
+            },
+            "priorityType": "HIGHEST",
+            "targetSelection": {
+                "matchType": "ANY",
+                "qualifiers": [
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "HIT_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 0
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "ENEMY"
+                    }
+                ]
+            }
+        },
+        {
+            "ability": {
+                "actionType": "ATTACK",
+                "conditionType": "HIT_POINTS",
+                "orderType": "MAX"
+            },
+            "preCondition": {
                 "matchType": "ANY",
                 "qualifiers": [
                     {
@@ -87,7 +154,7 @@
                     }
                 ]
             },
-            "priorityType": "HIGHEST",
+            "priorityType": "LOWEST",
             "targetSelection": {
                 "matchType": "ANY",
                 "qualifiers": [

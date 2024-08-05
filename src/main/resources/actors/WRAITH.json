@@ -4,6 +4,66 @@
     "decisions": [
         {
             "ability": {
+                "actionType": "HEAL",
+                "conditionType": "HIT_POINTS",
+                "orderType": "MIN"
+            },
+            "preCondition": {
+                "matchType": "ALL",
+                "qualifiers": [
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "HIT_POINTS",
+                                "expressionType": "PERCENTAGE",
+                                "operatorType": "LESS_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 26
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "ALLY"
+                    },
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "MAGIC_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 1
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "SELF"
+                    }
+                ]
+            },
+            "priorityType": "HIGHEST",
+            "targetSelection": {
+                "matchType": "ANY",
+                "qualifiers": [
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "HIT_POINTS",
+                                "expressionType": "PERCENTAGE",
+                                "operatorType": "LESS_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 26
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "ALLY"
+                    }
+                ]
+            }
+        },
+        {
+            "ability": {
                 "actionType": "ATTACK",
                 "conditionType": "HIT_POINTS",
                 "orderType": "MAX"
@@ -27,7 +87,7 @@
                     }
                 ]
             },
-            "priorityType": "HIGHEST",
+            "priorityType": "LOWEST",
             "targetSelection": {
                 "matchType": "ANY",
                 "qualifiers": [

@@ -87,7 +87,7 @@
                     }
                 ]
             },
-            "priorityType": "HIGH",
+            "priorityType": "LOWEST",
             "targetSelection": {
                 "matchType": "ANY",
                 "qualifiers": [

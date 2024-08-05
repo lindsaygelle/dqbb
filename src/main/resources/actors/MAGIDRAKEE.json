@@ -4,12 +4,12 @@
     "decisions": [
         {
             "ability": {
-                "actionType": "ATTACK",
+                "actionType": "HURT",
                 "conditionType": "HIT_POINTS",
                 "orderType": "MAX"
             },
             "preCondition": {
-                "matchType": "ANY",
+                "matchType": "ALL",
                 "qualifiers": [
                     {
                         "actorCheckers": [
@@ -24,6 +24,20 @@
                         "matchType": "ANY",
                         "priorityType": "HIGHEST",
                         "targetType": "ENEMY"
+                    },
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "MAGIC_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 1
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "SELF"
                     }
                 ]
             },
@@ -50,7 +64,7 @@
         },
         {
             "ability": {
-                "actionType": "HURT",
+                "actionType": "ATTACK",
                 "conditionType": "HIT_POINTS",
                 "orderType": "MAX"
             },
@@ -73,7 +87,7 @@
                     }
                 ]
             },
-            "priorityType": "HIGH",
+            "priorityType": "LOWEST",
             "targetSelection": {
                 "matchType": "ANY",
                 "qualifiers": [
