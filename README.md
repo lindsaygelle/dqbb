@@ -1,4 +1,4 @@
-# dqbb
+# DQBB
 
 Dragon Quest Battle Builder (DQBB) is a turn-based battle simulator inspired by the classic Dragon Quest game. It allows users to create custom teams with configurable characters, enabling them to strategize and pit their teams against one another in simulated battles.
 
@@ -6,7 +6,7 @@ Dragon Quest Battle Builder (DQBB) is a turn-based battle simulator inspired by 
 The battle simulator allows for the creation of characters with detailed configurations, including attributes, abilities, and decision-making logic. These characters can be assembled into teams to battle each other, with each battle playing out based on the characters' configurations and the strategies they employ.
 
 # Character Configuration
-Characters in the simulator are defined using a JSON configuration. Each character has various attributes such as agility, damage resistance, hit points, and more. Below is an example configuration for a character named WRAITH KNIGHT:
+Characters in the simulator are defined using a JSON configuration. Each character has various attributes such as agility, damage resistance, hit points, and more. Below is an example configuration for a WRAITH KNIGHT:
 
 ```json
 {
@@ -200,3 +200,18 @@ Conditions and targeting rules dictate when and how abilities are used. These ru
     "strength": 68
 }
 ```
+
+### Condition Types
+
+The following enum defines the possible condition types that can be checked for a character's state:
+
+- AGILITY
+- HERBS
+- HIT_POINTS
+- HIT_POINTS_MAXIMUM
+- MAGIC_POINTS
+- MAGIC_POINTS_MAXIMUM
+- MAGIC_POTIONS
+- STATUS_RESISTANCE
+- TURNS_SLEEP
+- TURNS_STOP_SPELL
