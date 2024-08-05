@@ -187,6 +187,7 @@
     "goldPoints": 35,
     "hitPointsMaximum": 30,
     "id": "0C",
+    "magicPointsMaximum": 20,
     "name": "WARLOCK",
     "pattern": "18",
     "statusResistance": 49,

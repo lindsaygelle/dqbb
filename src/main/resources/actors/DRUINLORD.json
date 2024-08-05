@@ -113,6 +113,7 @@
     "goldPoints": 85,
     "hitPointsMaximum": 35,
     "id": "13",
+    "magicPointsMaximum": 20,
     "name": "DRUINLORD",
     "pattern": "177",
     "statusResistance": 240,

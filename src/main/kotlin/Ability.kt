@@ -59,7 +59,7 @@ abstract class Ability(
     fun use(actor: Actor, otherActors: Collection<Actor>): Boolean {
         actor.trail.add(
             Trail(
-                "${actor.name}(${actor.id}) TRIES ability ${this.name}"
+                "${actor.arn} TRIES ${this.name}"
             )
         )
         val actorStatusSleep = actor.statusSleep
@@ -71,7 +71,7 @@ abstract class Ability(
         if (actorStatusSleep) {
             actor.trail.add(
                 Trail(
-                    "${actor.name}(${actor.id}) FAILED to use ${this.name} because they are ASLEEP"
+                    "${actor.arn} is ASLEEP"
                 )
             )
             return false
@@ -84,14 +84,14 @@ abstract class Ability(
         if (otherActor == null) {
             actor.trail.add(
                 Trail(
-                    "${actor.name}(${actor.id}) FAILED to use ${this.name} because there was no suitable target"
+                    "${actor.arn} cannot find a TARGET"
                 )
             )
             return false
         }
         actor.trail.add(
             Trail(
-                "${actor.name}(${actor.id}) CHOSE $otherActor as target for ability ${this.name}"
+                "${actor.arn} CHOSE ${otherActor.arn}"
             )
         )
         val checkValue = check(actor, otherActor)
@@ -110,7 +110,7 @@ abstract class Ability(
         if (!otherActor.isAlive) {
             actor.trail.add(
                 Trail(
-                    "${actor.name}(${actor.id}) DEFEATED ${otherActor.name}(${otherActor.id}) after ${actor.turnsAlive} turns!"
+                    "${actor.arn} DEFEATED ${otherActor.arn}"
                 )
             )
         }

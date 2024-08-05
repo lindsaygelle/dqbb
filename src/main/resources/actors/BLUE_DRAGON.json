@@ -99,6 +99,7 @@
     "goldPoints": 150,
     "hitPointsMaximum": 70,
     "id": "22",
+    "magicPointsMaximum": 40,
     "name": "BLUE_DRAGON",
     "pattern": "9",
     "statusResistance": 255,

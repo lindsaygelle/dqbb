@@ -113,6 +113,7 @@
     "goldPoints": 165,
     "hitPointsMaximum": 65,
     "id": "20",
+    "magicPointsMaximum": 20,
     "name": "WIZARD",
     "pattern": "6",
     "statusResistance": 247,

@@ -113,6 +113,7 @@
     "goldPoints": 130,
     "hitPointsMaximum": 55,
     "id": "1A",
+    "magicPointsMaximum": 20,
     "name": "KNIGHT",
     "pattern": "96",
     "statusResistance": 103,

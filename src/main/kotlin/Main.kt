@@ -52,12 +52,12 @@ fun main() {
 
     // Set allegiance for each created actor instance
     actors.forEachIndexed { index, actor ->
-        println("Set allegiance for ${actor.name}(${actor.id}) (${index + 1}) (default is 0):")
+        println("Set allegiance for ${actor.arn} (${index + 1}) (default is 0):")
         val allegiance = scanner.nextLine().toIntOrNull() ?: 0
         actor.allegiance = allegiance // Assuming Actor class has a mutable property 'allegiance'
-        println("${actor.name}(${actor.id}) (${index + 1}) set with allegiance $allegiance")
+        println("${actor.arn} (${index + 1}) set with allegiance $allegiance")
     }
-
+3
     // Pass the actors to the BattleSystem and start it
     val battleSystem = BattleSystem(actors)
 

@@ -173,6 +173,7 @@
     "goldPoints": 160,
     "hitPointsMaximum": 65,
     "id": "1F",
+    "magicPointsMaximum": 20,
     "name": "STARWYVERN",
     "pattern": "249",
     "statusResistance": 128,

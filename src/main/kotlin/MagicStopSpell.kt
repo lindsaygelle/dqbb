@@ -26,7 +26,7 @@ class MagicStopSpell(
         if ((armor != ArmorErdrick) && !otherActor.statusStopSpell) {
             actor.trail.add(
                 Trail(
-                    "${actor.name}(${actor.id}) STOPS ${otherActor.name}(${otherActor.id}) SPELLS"
+                    "${actor.arn} STOPS ${otherActor.arn} SPELLS"
                 )
             )
             otherActor.turnsStopSpell = 1

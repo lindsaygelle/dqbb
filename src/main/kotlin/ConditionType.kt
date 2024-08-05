@@ -7,6 +7,7 @@ enum class ConditionType {
     AGILITY,
     HERBS,
     HIT_POINTS,
+    HIT_POINTS_MAXIMUM,
     MAGIC_POINTS,
     MAGIC_POINTS_MAXIMUM,
     MAGIC_POTIONS,

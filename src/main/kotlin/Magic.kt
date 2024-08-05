@@ -22,7 +22,7 @@ abstract class Magic(
         if (checkResistanceValue) {
             actor.trail.add(
                 Trail(
-                    "${actor.name}(${actor.id})'s SPELL ${this.name} was RESISTED!"
+                    "${actor.arn} SPELL ${this.actionType} was RESISTED"
                 )
             )
             return false
@@ -49,7 +49,7 @@ abstract class Magic(
         if (statusStopSpell) {
             actor.trail.add(
                 Trail(
-                    "${actor.name}(${actor.id})'s MAGIC is blocked!"
+                    "${actor.arn} MAGIC is BLOCKED"
                 )
             )
             return false
@@ -65,7 +65,7 @@ abstract class Magic(
         if (magicPointsValue < 0) {
             actor.trail.add(
                 Trail(
-                    "${actor.name}(${actor.id}) has INSUFFICIENT magic points!"
+                    "${actor.arn} does not have enough MAGIC POINTS"
                 )
             )
             return false

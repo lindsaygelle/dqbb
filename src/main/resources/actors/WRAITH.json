@@ -113,6 +113,7 @@
     "goldPoints": 60,
     "hitPointsMaximum": 36,
     "id": "0F",
+    "magicPointsMaximum": 20,
     "name": "WRAITH",
     "pattern": "144",
     "statusResistance": 112,
