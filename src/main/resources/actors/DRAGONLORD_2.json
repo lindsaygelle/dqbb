@@ -9,7 +9,7 @@
                 "orderType": "MAX"
             },
             "preCondition": {
-                "matchType": "ANY",
+                "matchType": "ALL",
                 "qualifiers": [
                     {
                         "actorCheckers": [
@@ -73,7 +73,7 @@
                     }
                 ]
             },
-            "priorityType": "HIGH",
+            "priorityType": "LOWEST",
             "targetSelection": {
                 "matchType": "ANY",
                 "qualifiers": [

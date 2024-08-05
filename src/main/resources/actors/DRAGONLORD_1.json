@@ -28,10 +28,10 @@
                     {
                         "actorCheckers": [
                             {
-                                "conditionType": "TURNS_SLEEP",
+                                "conditionType": "TURNS_STOP_SPELL",
                                 "expressionType": "EXACT",
                                 "operatorType": "EQUAL",
-                                "priorityType": "HIGHEST",
+                                "priorityType": "HIGH",
                                 "value": 0
                             }
                         ],
@@ -88,7 +88,7 @@
                     {
                         "actorCheckers": [
                             {
-                                "conditionType": "TURNS_SLEEP",
+                                "conditionType": "TURNS_STOP_SPELL",
                                 "expressionType": "EXACT",
                                 "operatorType": "GREATER_THAN",
                                 "priorityType": "HIGHEST",
