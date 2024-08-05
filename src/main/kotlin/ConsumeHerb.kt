@@ -42,7 +42,7 @@ class ConsumeHerb(
         )
         actor.trail.add(
             Trail(
-                "${actor.arn} HEALED ${otherActor.arn} for $herbValue HIT POINTS"
+                "${actor.arn} HEALS ${otherActor.arn} for $herbValue HIT POINTS"
             )
         )
         return true

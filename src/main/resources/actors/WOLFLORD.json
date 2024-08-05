@@ -120,6 +120,7 @@
     "goldPoints": 80,
     "hitPointsMaximum": 38,
     "id": "12",
+    "magicPointsMaximum": 20,
     "name": "WOLFLORD",
     "pattern": "96",
     "statusResistance": 71,

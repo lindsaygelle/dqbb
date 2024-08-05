@@ -99,6 +99,7 @@
     "goldPoints": 160,
     "hitPointsMaximum": 65,
     "id": "1E",
+    "magicPointsMaximum": 30,
     "name": "GREEN_DRAGON",
     "pattern": "9",
     "statusResistance": 127,

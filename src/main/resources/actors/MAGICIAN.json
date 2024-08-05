@@ -113,6 +113,7 @@
     "goldPoints": 12,
     "hitPointsMaximum": 13,
     "id": "04",
+    "magicPointsMaximum": 20,
     "name": "MAGICIAN",
     "pattern": "2",
     "statusResistance": 0,

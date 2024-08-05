@@ -99,6 +99,7 @@
     "goldPoints": 0,
     "hitPointsMaximum": 130,
     "id": "27",
+    "magicPointsMaximum": 80,
     "name": "DRAGONLORD_2",
     "pattern": "14",
     "statusResistance": 255,

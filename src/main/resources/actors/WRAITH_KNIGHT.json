@@ -113,6 +113,7 @@
     "goldPoints": 120,
     "hitPointsMaximum": 46,
     "id": "17",
+    "magicPointsMaximum": 20,
     "name": "WRAITH_KNIGHT",
     "pattern": "176",
     "statusResistance": 80,

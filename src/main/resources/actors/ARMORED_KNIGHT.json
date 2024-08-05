@@ -173,6 +173,7 @@
     "goldPoints": 140,
     "hitPointsMaximum": 90,
     "id": "24",
+    "magicPointsMaximum": 20,
     "name": "ARMORED_KNIGHT",
     "pattern": "245",
     "statusResistance": 247,

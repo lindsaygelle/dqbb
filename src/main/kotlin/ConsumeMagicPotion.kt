@@ -33,7 +33,7 @@ class ConsumeMagicPotion(
         )
         actor.trail.add(
             Trail(
-                "${actor.arn} RESTORED ${otherActor.arn} for ${this.magicPoints} magic points"
+                "${actor.arn} RESTORES ${otherActor.arn} for ${this.magicPoints} MAGIC POINTS"
             )
         )
         return true

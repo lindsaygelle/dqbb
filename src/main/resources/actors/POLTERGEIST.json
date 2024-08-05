@@ -113,6 +113,7 @@
     "goldPoints": 18,
     "hitPointsMaximum": 23,
     "id": "08",
+    "magicPointsMaximum": 20,
     "name": "POLTERGEIST",
     "pattern": "3",
     "statusResistance": 0,

@@ -47,7 +47,7 @@ class MagicBreatheFire(
         )
         actor.trail.add(
             Trail(
-                "${actor.arn} breatheFire $${otherActor.arn} for $breatheFireReduction HIT POINTS"
+                "${actor.arn} DAMAGES ${otherActor.arn} for $breatheFireReduction HIT POINTS"
             )
         )
         return true

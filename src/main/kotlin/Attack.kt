@@ -48,7 +48,7 @@ class Attack(
         if (excellentMoveScore > 31) {
             actor.trail.add(
                 Trail(
-                    "${actor.arn} PERFORMED AN EXCELLENT ATTACK!"
+                    "${actor.arn} performed an EXCELLENT ATTACK"
                 )
             )
             val attackValue = actor.strength
@@ -56,7 +56,7 @@ class Attack(
         }
         actor.trail.add(
             Trail(
-                "${actor.arn} does $attackScore damage to ${otherActor.arn}"
+                "${actor.arn} DAMAGES ${otherActor.arn} for $attackScore HIT POINTS"
             )
         )
         otherActor.hitPoints -= attackScore

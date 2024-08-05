@@ -180,6 +180,7 @@
     "goldPoints": 140,
     "hitPointsMaximum": 100,
     "id": "25",
+    "magicPointsMaximum": 20,
     "name": "RED_DRAGON",
     "pattern": "25",
     "statusResistance": 247,

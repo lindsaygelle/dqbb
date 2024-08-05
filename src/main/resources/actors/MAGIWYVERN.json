@@ -120,6 +120,7 @@
     "goldPoints": 140,
     "hitPointsMaximum": 58,
     "id": "1B",
+    "magicPointsMaximum": 20,
     "name": "MAGIWYVERN",
     "pattern": "32",
     "statusResistance": 32,

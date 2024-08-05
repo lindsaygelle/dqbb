@@ -113,6 +113,7 @@
     "goldPoints": 90,
     "hitPointsMaximum": 38,
     "id": "14",
+    "magicPointsMaximum": 20,
     "name": "DROLLMAGI",
     "pattern": "96",
     "statusResistance": 34,

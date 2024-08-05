@@ -113,6 +113,7 @@
     "goldPoints": 12,
     "hitPointsMaximum": 15,
     "id": "05",
+    "magicPointsMaximum": 20,
     "name": "MAGIDRAKEE",
     "pattern": "2",
     "statusResistance": 0,

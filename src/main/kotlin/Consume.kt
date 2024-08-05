@@ -21,6 +21,11 @@ abstract class Consume(
         if (checkResistanceValue) {
             return false
         }
+        actor.trail.add(
+            Trail(
+                "${actor.arn} item ${this.itemType} on ${otherActor.arn}"
+            )
+        )
         val applyEffectValue = applyEffect(actor, otherActor)
         logger.debug(
             "$this: " +

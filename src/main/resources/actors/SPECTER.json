@@ -180,6 +180,7 @@
     "goldPoints": 70,
     "hitPointsMaximum": 36,
     "id": "11",
+    "magicPointsMaximum": 20,
     "name": "SPECTER",
     "pattern": "19",
     "statusResistance": 49,

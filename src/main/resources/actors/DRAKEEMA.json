@@ -61,7 +61,7 @@
                 "orderType": "MAX"
             },
             "preCondition": {
-                "matchType": "ANY",
+                "matchType": "ALL",
                 "qualifiers": [
                     {
                         "actorCheckers": [
