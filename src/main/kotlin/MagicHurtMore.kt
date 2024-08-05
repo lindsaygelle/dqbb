@@ -47,7 +47,7 @@ class MagicHurtMore(
         )
         actor.trail.add(
             Trail(
-                "$actor HURT $otherActor for $hurtReduction HIT POINTS"
+                "${actor.name}(${actor.id}) HURT ${otherActor.name}(${otherActor.id}) for $hurtReduction HIT POINTS"
             )
         )
         return true

@@ -107,7 +107,7 @@ class Actor(
 
     var damageResistance: Int = maxOf(0, (damageResistance ?: DAMAGE_RESISTANCE_MINIMUM))
 
-    private val decisions: List<Decision> = decisions.sortedByDescending { decision ->
+    val decisions: List<Decision> = decisions.sortedByDescending { decision ->
         decision.priorityType.ordinal
     }
 

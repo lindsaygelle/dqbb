@@ -6,14 +6,17 @@ import org.apache.logging.log4j.Logger
 
 class Decision(
     val ability: Ability,
-    private val preCondition: State,
+    val preCondition: State,
     override val priorityType: PriorityType,
     val targetSelection: State,
+    variability: Int? = null,
 ) : Identifier, Prioritized {
 
     override val id: String = Integer.toHexString(System.identityHashCode(this))
 
     private val logger: Logger = LogManager.getLogger(this::class.simpleName)
+
+    private val variability: Int = maxOf(0, maxOf(variability ?: 100))
 
     fun isValid(actor: Actor, otherActors: Collection<Actor>): Boolean {
         logger.debug(
@@ -21,7 +24,8 @@ class Decision(
                     "ability.id=${this.ability.id} " +
                     "ability.name=${this.ability.name} " +
                     "actor.id=${actor.id} " +
-                    "priorityType=${this.priorityType}"
+                    "priorityType=${this.priorityType} " +
+                    "variability=${this.variability}"
         )
         val preConditionCheck = this.preCondition.check(actor, otherActors)
         logger.debug(

@@ -15,7 +15,7 @@ class State(
 
     private val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
-    private val qualifiers: List<Qualify> = qualifiers.sortedByDescending { it.priorityType.ordinal }
+    val qualifiers: List<Qualify> = qualifiers.sortedByDescending { it.priorityType.ordinal }
 
     fun check(actor: Actor, otherActors: Collection<Actor>): Boolean {
         this.actors.clear() // Make sure to clear this, otherwise it is possible to reuse? Could be a method?

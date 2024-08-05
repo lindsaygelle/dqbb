@@ -4,6 +4,52 @@
     "decisions": [
         {
             "ability": {
+                "actionType": "BREATHE_FIRE",
+                "conditionType": "HIT_POINTS",
+                "orderType": "MAX"
+            },
+            "preCondition": {
+                "matchType": "ANY",
+                "qualifiers": [
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "MAGIC_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 9
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "SELF"
+                    }
+                ]
+            },
+            "priorityType": "HIGHEST",
+            "targetSelection": {
+                "matchType": "ANY",
+                "qualifiers": [
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "HIT_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 0
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "ENEMY"
+                    }
+                ]
+            }
+        },
+        {
+            "ability": {
                 "actionType": "ATTACK",
                 "conditionType": "HIT_POINTS",
                 "orderType": "MAX"
@@ -27,7 +73,7 @@
                     }
                 ]
             },
-            "priorityType": "HIGHEST",
+            "priorityType": "LOWEST",
             "targetSelection": {
                 "matchType": "ANY",
                 "qualifiers": [

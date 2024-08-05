@@ -4,17 +4,91 @@
     "decisions": [
         {
             "ability": {
-                "actionType": "ATTACK",
+                "actionType": "STOP_SPELL",
                 "conditionType": "HIT_POINTS",
                 "orderType": "MAX"
             },
             "preCondition": {
+                "matchType": "ALL",
+                "qualifiers": [
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "MAGIC_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 1
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "SELF"
+                    },
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "TURNS_STOP_SPELL",
+                                "expressionType": "EXACT",
+                                "operatorType": "EQUAL",
+                                "priorityType": "HIGH",
+                                "value": 0
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "ENEMY"
+                    }
+                ]
+            },
+            "priorityType": "HIGH",
+            "targetSelection": {
                 "matchType": "ANY",
                 "qualifiers": [
                     {
                         "actorCheckers": [
                             {
                                 "conditionType": "HIT_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 0
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "ENEMY"
+                    }
+                ]
+            }
+        },
+        {
+            "ability": {
+                "actionType": "HURT_MORE",
+                "conditionType": "HIT_POINTS",
+                "orderType": "MAX"
+            },
+            "preCondition": {
+                "matchType": "ALL",
+                "qualifiers": [
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "MAGIC_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 1
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "SELF"
+                    },
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "TURNS_STOP_SPELL",
                                 "expressionType": "EXACT",
                                 "operatorType": "GREATER_THAN",
                                 "priorityType": "HIGHEST",
@@ -47,12 +121,59 @@
                     }
                 ]
             }
+        },
+        {
+            "ability": {
+                "actionType": "ATTACK",
+                "conditionType": "HIT_POINTS",
+                "orderType": "MAX"
+            },
+            "preCondition": {
+                "matchType": "ANY",
+                "qualifiers": [
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "HIT_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 0
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "ENEMY"
+                    }
+                ]
+            },
+            "priorityType": "LOWEST",
+            "targetSelection": {
+                "matchType": "ANY",
+                "qualifiers": [
+                    {
+                        "actorCheckers": [
+                            {
+                                "conditionType": "HIT_POINTS",
+                                "expressionType": "EXACT",
+                                "operatorType": "GREATER_THAN",
+                                "priorityType": "HIGHEST",
+                                "value": 0
+                            }
+                        ],
+                        "matchType": "ANY",
+                        "priorityType": "HIGHEST",
+                        "targetType": "ENEMY"
+                    }
+                ]
+            }
         }
     ],
     "experiencePoints": 0,
     "goldPoints": 0,
     "hitPointsMaximum": 100,
     "id": "26",
+    "magicPointsMaximum": 20,
     "name": "DRAGONLORD_1",
     "pattern": "87",
     "statusResistance": 255,

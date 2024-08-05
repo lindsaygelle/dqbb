@@ -13,7 +13,7 @@ class Attack(
     override fun apply(actor: Actor, otherActor: Actor): Boolean {
         actor.trail.add(
             Trail(
-                "$actor ATTACKS $otherActor"
+                "${actor.name}(${actor.id}) ATTACKS ${otherActor.name}(${otherActor.id})"
             )
         )
         val attackPower = actor.getAttackValue(otherActor)
@@ -48,7 +48,7 @@ class Attack(
         if (excellentMoveScore > 31) {
             actor.trail.add(
                 Trail(
-                    "$actor PERFORMED AN EXCELLENT ATTACK!"
+                    "${actor.name}(${actor.id}) PERFORMED AN EXCELLENT ATTACK!"
                 )
             )
             val attackValue = actor.strength
@@ -56,7 +56,7 @@ class Attack(
         }
         actor.trail.add(
             Trail(
-                "$actor does $attackScore damage to $otherActor"
+                "${actor.name}(${actor.id}) does $attackScore damage to ${otherActor.name}(${otherActor.id})"
             )
         )
         otherActor.hitPoints -= attackScore

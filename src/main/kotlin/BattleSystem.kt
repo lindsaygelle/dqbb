@@ -4,10 +4,10 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 class BattleSystem(
-    actors: Set<Actor>
+    actors: Collection<Actor>
 ) : Runnable {
 
-    private val actors: MutableList<Actor> = actors.sortedByDescending { actor: Actor ->
+    private val actors: MutableList<Actor> = actors.distinct().sortedByDescending { actor: Actor ->
         actor.agility
     }.toMutableList()
 
@@ -32,6 +32,7 @@ class BattleSystem(
                     "actor.id=${actor.id} " +
                     "actor.magicPoints=${actor.magicPoints} " +
                     "actor.magicPointsMaximum=${actor.magicPointsMaximum} " +
+                    "actor.name=${actor.name} " +
                     "actor.shield=${actor.shield} " +
                     "actor.statusResistance=${actor.statusResistance} " +
                     "actor.strength=${actor.strength} " +

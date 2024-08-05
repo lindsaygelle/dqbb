@@ -33,7 +33,7 @@ class ConsumeMagicPotion(
         )
         actor.trail.add(
             Trail(
-                "$actor RESTORED $otherActor for ${this.magicPoints} magic points"
+                "${actor.name}(${actor.id}) RESTORED ${otherActor.name}(${otherActor.id}) for ${this.magicPoints} magic points"
             )
         )
         return true
