@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger
 
 class Decision(
     val ability: Ability,
-    private val preCondition: State,
+    val preCondition: State,
     override val priorityType: PriorityType,
     val targetSelection: State,
     variability: Int? = null,

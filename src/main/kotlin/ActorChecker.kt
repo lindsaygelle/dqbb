@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 class ActorChecker(
-    private val conditionType: ConditionType,
+    val conditionType: ConditionType,
     private val expressionType: ExpressionType,
     private val operatorType: OperatorType,
     override val priorityType: PriorityType = PriorityType.HIGHEST,

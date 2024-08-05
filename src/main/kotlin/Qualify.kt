@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger
 
 
 class Qualify(
-    private val actorCheckers: List<ActorChecker>,
+    val actorCheckers: List<ActorChecker>,
     private val matchType: MatchType,
     override val priorityType: PriorityType = PriorityType.LOWEST,
     private val targetType: TargetType,

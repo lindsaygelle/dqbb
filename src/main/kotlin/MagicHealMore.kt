@@ -39,7 +39,7 @@ class MagicHealMore(
         )
         actor.trail.add(
             Trail(
-                "$actor HEALED $otherActor for $healMoreValue HIT POINTS"
+                "${actor.name}(${actor.id}) HEALED ${otherActor.name}(${otherActor.id}) for $healMoreValue HIT POINTS"
             )
         )
         return true
