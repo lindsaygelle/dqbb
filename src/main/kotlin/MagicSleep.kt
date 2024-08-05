@@ -27,7 +27,7 @@ class MagicSleep(
         if ((armor != ArmorErdrick) && !otherActor.statusSleep) {
             actor.trail.add(
                 Trail(
-                    "${actor.name}(${actor.id}) SLEEPS ${otherActor.name}(${otherActor.id})"
+                    "${actor.arn} SLEEPS ${otherActor.arn}"
                 )
             )
             otherActor.turnsSleep = 1

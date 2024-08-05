@@ -92,6 +92,9 @@ class Actor(
 
     var agility: Int = maxOf(0, (agility ?: AGILITY_MINIMUM))
 
+    val arn: String
+        get() = "${this.name}:${this.id}:${this.allegiance}"
+
     val breatheFireRangeMaximum: Int =
         maxOf(BREATHE_FIRE_RANGE_MINIMUM, (breatheFireRangeMaximum ?: BREATHE_FIRE_RANGE_MAXIMUM))
 
@@ -295,6 +298,7 @@ class Actor(
             ConditionType.AGILITY -> this.agility
             ConditionType.HERBS -> this.getItemCount(ItemType.HERB)
             ConditionType.HIT_POINTS -> this.hitPoints
+            ConditionType.HIT_POINTS_MAXIMUM -> this.hitPointsMaximum
             ConditionType.MAGIC_POINTS -> this.magicPoints
             ConditionType.MAGIC_POINTS_MAXIMUM -> this.magicPointsMaximum
             ConditionType.MAGIC_POTIONS -> this.getItemCount(ItemType.MAGIC_POTION)

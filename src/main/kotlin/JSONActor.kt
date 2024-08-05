@@ -8,46 +8,7 @@ data class JSONActor(
     var allegiance: Int = 0,
     val armor: JSONArmor? = null,
     val damageResistance: Int? = null,
-    val decisions: List<JSONDecision> = listOf(
-        JSONDecision(
-            ability = JSONAbility(
-                actionType = ActionType.ATTACK,
-                conditionType = ConditionType.HIT_POINTS,
-                orderType = OrderType.MAX,
-            ),
-            preCondition = JSONState(
-                matchType = MatchType.ANY,
-                qualifiers = listOf(
-                    JSONQualify(
-                        actorCheckers = listOf(
-                            JSONActorChecker(
-                                conditionType = ConditionType.HIT_POINTS,
-                                expressionType = ExpressionType.EXACT,
-                                priorityType = PriorityType.HIGHEST,
-                                operatorType = OperatorType.GREATER_THAN,
-                                value = 0
-                            )
-                        ),
-                        matchType = MatchType.ANY,
-                        priorityType = PriorityType.HIGHEST,
-                        targetType = TargetType.ENEMY,
-                    )
-                )
-            ),
-            priorityType = PriorityType.HIGHEST,
-            targetSelection = JSONState(
-                matchType = MatchType.ANY,
-                qualifiers = listOf(
-                    JSONQualify(
-                        actorCheckers = listOf(),
-                        matchType = MatchType.ANY,
-                        priorityType = PriorityType.HIGHEST,
-                        targetType = TargetType.ENEMY,
-                    )
-                )
-            )
-        )
-    ),
+    val decisions: List<JSONDecision>,
     val experiencePoints: Int? = null,
     val goldPoints: Int? = null,
     val hitPoints: Int? = null,
