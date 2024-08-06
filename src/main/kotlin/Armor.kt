@@ -1,13 +1,18 @@
 package dqbb
 
-
-open class Armor(
-    private val armorType: ArmorType,
-    defense: Int,
-) : Identifier {
-    val defense: Int = maxOf(0, defense)
-
-    override val id: String = Integer.toHexString(System.identityHashCode(this))
-
-    val name: String = this.armorType.toString()
+class Armor {
+    var blocksSleep: Boolean = false
+    var blocksStopSpell: Boolean = false
+    var breatheFireReduction: Int = 1
+        set(value) {
+            field = maxOf(1, value)
+        }
+    var defense: Int = 1
+        set(value) {
+            field = maxOf(1, value)
+        }
+    var hurtReduction: Int = 1
+        set(value) {
+            field = maxOf(1, value)
+        }
 }

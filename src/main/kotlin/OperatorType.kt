@@ -1,11 +1,10 @@
 package dqbb
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 enum class OperatorType {
     EQUAL,
     GREATER_THAN,
+    GREATER_THAN_EQUAL,
     LESS_THAN,
-    NOT,
+    LESS_THAN_EQUAL,
+    NOT
 }

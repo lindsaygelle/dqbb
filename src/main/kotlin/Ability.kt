@@ -2,118 +2,56 @@ package dqbb
 
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import java.util.UUID
 
 
-abstract class Ability(
-    protected val conditionType: ConditionType,
-    private val orderType: OrderType?,
-) : Identifier {
-
-    abstract val actionType: ActionType
-
-    override val id: String = Integer.toHexString(System.identityHashCode(this))
+open class Ability<A, B : Receiver>(
+    private val invokable: Invokable<A, B>,
+) : Identifier where A : HitPointer, A : Invoker, A : SleepAccumulator {
 
     protected val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
-    val name: String
-        get() = this.actionType.toString()
+    override val uuid: UUID = UUID.randomUUID()
 
-    protected abstract fun apply(actor: Actor, otherActor: Actor): Boolean
-
-    protected abstract fun check(actor: Actor, otherActor: Actor): Boolean
-
-    private fun getActor(otherActors: Collection<Actor>): Actor? {
+    private fun check(invoker: A, receiver: B): Boolean {
         logger.debug(
-            "$this: " +
-                    "conditionType=${this.conditionType} " +
-                    "orderType=${this.orderType} " +
-                    "otherActors.size=${otherActors.size}"
+            "invoker.uuid={} receiver.uuid={} uuid={}", invoker.uuid, receiver.uuid, uuid
         )
-        val sortedActors = sortActors(otherActors)
-        logger.debug(
-            "$this: " +
-                    "sortedActors.size=${sortedActors.size}"
-        )
-        val otherActor = sortedActors.firstOrNull()
-        logger.debug(
-            "$this: " +
-                    "otherActor=${otherActor?.id}"
-        )
-        return otherActor
+        return checkInvoker(invoker)
     }
 
-    private fun sortActors(otherActors: Collection<Actor>): Collection<Actor> {
-        return when (this.orderType) {
-            OrderType.MAX -> otherActors.sortedByDescending { actor ->
-                actor.getConditionType(this.conditionType)
-            }
-
-            OrderType.MIN -> otherActors.sortedBy { actor ->
-                actor.getConditionType(this.conditionType)
-            }
-
-            else -> otherActors
-        }
+    protected open fun checkInvoker(invoker: A): Boolean {
+        return checkInvokerHitPoints(invoker) && checkInvokerStatusSleep(invoker)
     }
 
-    fun use(actor: Actor, otherActors: Collection<Actor>): Boolean {
-        actor.trail.add(
-            Trail(
-                "${actor.arn} TRIES ${this.name}"
-            )
-        )
-        val actorStatusSleep = actor.statusSleep
+    private fun checkInvokerHitPoints(invoker: A): Boolean {
+        val hasHitPoints = invoker.hasHitPoints
         logger.debug(
-            "$this: " +
-                    "actor.id=${actor.id} " +
-                    "actor.statusSleep=$actorStatusSleep"
+            "invoker.hasHitPoints={} invoker.hitPoints={} invoker.uuid={} uuid={}",
+            hasHitPoints,
+            invoker.hitPoints,
+            invoker.uuid,
+            uuid
         )
-        if (actorStatusSleep) {
-            actor.trail.add(
-                Trail(
-                    "${actor.arn} is ASLEEP"
-                )
-            )
-            return false
-        }
-        val otherActor = getActor(otherActors)
+        return hasHitPoints
+    }
+
+    private fun checkInvokerStatusSleep(invoker: A): Boolean {
+        val statusSleep = invoker.statusSleep
         logger.debug(
-            "$this: " +
-                    "otherActor.id=${otherActor?.id}"
+            "invoker.statusSleep={} invoker.uuid={} uuid={}", statusSleep, invoker.uuid, uuid
         )
-        if (otherActor == null) {
-            actor.trail.add(
-                Trail(
-                    "${actor.arn} cannot find a TARGET"
-                )
-            )
-            return false
-        }
-        actor.trail.add(
-            Trail(
-                "${actor.arn} CHOSE ${otherActor.arn}"
-            )
+        return !statusSleep
+    }
+
+    fun use(invoker: A, receiver: B): Boolean {
+        logger.info(
+            "invoker.uuid={} receiver.uuid={} uuid={}", invoker.uuid, receiver.uuid, uuid
         )
-        val checkValue = check(actor, otherActor)
-        logger.debug(
-            "$this: " +
-                    "check=$checkValue"
+        val checkResult = check(invoker, receiver) && invokable.invoke(invoker, receiver)
+        logger.info(
+            "checkResult={} invoker.uuid={} receiver.uuid={} uuid={}", checkResult, invoker.uuid, receiver.uuid, uuid
         )
-        if (!checkValue) {
-            return false
-        }
-        val applyValue = apply(actor, otherActor)
-        logger.debug(
-            "$this: " +
-                    "apply=$applyValue"
-        )
-        if (!otherActor.isAlive) {
-            actor.trail.add(
-                Trail(
-                    "${actor.arn} DEFEATED ${otherActor.arn}"
-                )
-            )
-        }
-        return applyValue
+        return checkResult
     }
 }

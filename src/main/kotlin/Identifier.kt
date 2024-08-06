@@ -1,5 +1,7 @@
 package dqbb
 
+import java.util.UUID
+
 interface Identifier {
-    val id: String
+    val uuid: UUID
 }
