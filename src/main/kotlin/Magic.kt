@@ -1,78 +1,39 @@
 package dqbb
 
+abstract class Magic<A : InvokerMagic, B : Receiver>(magicCost: Int) : Action<A, B>() {
+    private val magicCost: Int = maxOf(0, magicCost)
 
-abstract class Magic(
-    conditionType: ConditionType,
-    orderType: OrderType,
-) : Ability(
-    conditionType = conditionType,
-    orderType = orderType,
-) {
-
-    protected abstract val magicPoints: Int
-
-    override fun apply(actor: Actor, otherActor: Actor): Boolean {
-        val checkResistanceValue = checkResistance(actor, otherActor)
-        logger.debug(
-            "$this: " +
-                    "actor.id=${actor.id} " +
-                    "checkResistance=$checkResistanceValue " +
-                    "otherActor.id=${otherActor.id}"
-        )
-        if (checkResistanceValue) {
-            actor.trail.add(
-                Trail(
-                    "${actor.arn} SPELL ${this.actionType} was RESISTED"
-                )
-            )
+    override fun apply(invoker: A, receiver: B): Boolean {
+        invoker.magicPoints -= magicCost
+        logger.debug("invoker.hashCode=${invoker.hashCode()} invoker.magicPoints=${invoker.magicPoints}")
+        val checkResistance = checkResistance(invoker, receiver)
+        logger.info("checkResistance=$checkResistance")
+        if (checkResistance) {
             return false
         }
-        val applyEffectValue = applyEffect(actor, otherActor)
-        logger.debug(
-            "$this: " +
-                    "actor.id=${actor.id} " +
-                    "applyEffect=$applyEffectValue " +
-                    "otherActor.id=${otherActor.id}"
-        )
-        return applyEffectValue
-    }
-
-    protected abstract fun applyEffect(actor: Actor, otherActor: Actor): Boolean
-
-    override fun check(actor: Actor, otherActor: Actor): Boolean {
-        val statusStopSpell = actor.statusStopSpell
-        logger.debug(
-            "$this: " +
-                    "actor.id=${actor.id} " +
-                    "actor.statusStopSpell=$statusStopSpell"
-        )
-        if (statusStopSpell) {
-            actor.trail.add(
-                Trail(
-                    "${actor.arn} MAGIC is BLOCKED"
-                )
-            )
-            return false
-        }
-        val magicPointsValue = actor.magicPoints - magicPoints
-        logger.debug(
-            "$this: " +
-                    "actor.id=${actor.id} " +
-                    "actor.magicPoints=${actor.magicPoints} " +
-                    "magicPoints=${this.magicPoints} " +
-                    "magicPointsValue=$magicPointsValue"
-        )
-        if (magicPointsValue < 0) {
-            actor.trail.add(
-                Trail(
-                    "${actor.arn} does not have enough MAGIC POINTS"
-                )
-            )
-            return false
-        }
-        actor.magicPoints = magicPointsValue
+        applyEffect(invoker, receiver)
         return true
     }
 
-    protected abstract fun checkResistance(actor: Actor, otherActor: Actor): Boolean
+    protected abstract fun applyEffect(invoker: A, receiver: B)
+
+    override fun check(invoker: A, receiver: B): Boolean {
+        val invokerHashCode = invoker.hashCode()
+        val statusStopSpell = invoker.statusStopSpell
+        logger.debug(
+            "invoker.hashCode=$invokerHashCode invoker.statusStopSpell=$statusStopSpell"
+        )
+        if (invoker.statusStopSpell) {
+            return false
+        }
+        val magicPoints = invoker.magicPoints
+        logger.debug("invoker.hashCode=$invokerHashCode invoker.magicPoints=$magicPoints magicCost=$magicCost")
+        return (magicPoints - magicCost) >= 0
+    }
+
+    protected abstract fun checkResistance(invoker: A, receiver: B): Boolean
+
+    override fun toString(): String {
+        return "class=${super.toString()} hashCode=${hashCode()} magicCost=$magicCost"
+    }
 }

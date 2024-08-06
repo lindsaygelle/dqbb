@@ -1,12 +1,12 @@
 package dqbb
 
-open class Shield(
-    defense: Int,
-    private val shieldType: ShieldType,
-) : Identifier {
-    val defense: Int = maxOf(0, defense)
+const val SHIELD_DEFENSE_MINIMUM: Int = 1
 
-    override val id: String = Integer.toHexString(System.identityHashCode(this))
-
-    val name: String = this.shieldType.toString()
+class Shield(
+    defense: Int
+) {
+    val defense: Int = maxOf(SHIELD_DEFENSE_MINIMUM, defense)
+    override fun toString(): String {
+        return "class=${super.toString()} defense=$defense hashCode=${hashCode()}"
+    }
 }

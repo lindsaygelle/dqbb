@@ -1,13 +1,12 @@
 package dqbb
 
+const val ARMOR_DEFENSE_MINIMUM: Int = 1
 
-open class Armor(
-    private val armorType: ArmorType,
-    defense: Int,
-) : Identifier {
-    val defense: Int = maxOf(0, defense)
-
-    override val id: String = Integer.toHexString(System.identityHashCode(this))
-
-    val name: String = this.armorType.toString()
+class Armor(
+    defense: Int
+) {
+    val defense: Int = maxOf(ARMOR_DEFENSE_MINIMUM, defense)
+    override fun toString(): String {
+        return "class=${super.toString()} defense=$defense hashCode=${hashCode()} "
+    }
 }
