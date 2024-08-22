@@ -1,12 +1,28 @@
 package dqbb
 
-open class Shield(
-    defense: Int,
-    private val shieldType: ShieldType,
-) : Identifier {
-    val defense: Int = maxOf(0, defense)
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
-    override val id: String = Integer.toHexString(System.identityHashCode(this))
+class Shield : DefensePointer,
+    Identifier,
+    Nameable {
+    override var defense: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} defense={}", id, field
+            )
+        }
+    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    override var name: String? = null
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} name={}", id, field
+            )
+        }
 
-    val name: String = this.shieldType.toString()
+    override fun toString(): String {
+        return "defense=$defense id=$id name=$name simpleName=$simpleName"
+    }
 }
