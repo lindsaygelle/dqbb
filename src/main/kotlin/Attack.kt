@@ -1,76 +1,142 @@
 package dqbb
 
-class Attack(
-    conditionType: ConditionType,
-    orderType: OrderType? = null,
-) : Ability(
-    conditionType = conditionType,
-    orderType = orderType,
-) {
-
-    override val actionType: ActionType = ActionType.ATTACK
-
-    override fun apply(actor: Actor, otherActor: Actor): Boolean {
-        actor.trail.add(
-            Trail(
-                "${actor.arn} ATTACKS ${otherActor.arn}"
-            )
+abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
+    final override fun apply(invoker: A, receiver: B): Boolean {
+        val hitPoints = receiver.hitPoints
+        val attackPoints = getAttackPoints(invoker, receiver)
+        logger.debug(
+            "attackPoints={} id={} invoker.id={} receiver.id={}", attackPoints, id, invoker.id, receiver.id
         )
-        val attackPower = actor.getAttackValue(otherActor)
-        var attackScore = attackPower
-        val defensePower = otherActor.getDefenseValue(actor)
-        val hitPoints = otherActor.hitPoints
-        if (attackPower < 1) {
-            attackScore = (0..1).random()
+        if (checkReceiverEvasion(receiver)) {
+            return false
         }
-        logger.debug(
-            "$this: " +
-                    "actor.attackPower=$attackPower " +
-                    "actor.attackScore=$attackScore " +
-                    "actor.id=${actor.id} " +
-                    "actor.weapon.id=${actor.weapon?.id} " +
-                    "otherActor.armor.id=${otherActor.armor?.id} " +
-                    "otherActor.armor.name=${otherActor.armor?.name} " +
-                    "otherActor.hitPoints=$hitPoints " +
-                    "otherActor.id=${otherActor.id}"
+        receiver.hitPoints -= attackPoints
+        logger.info(
+            "attackPoints={} id={} invoker.id={} receiver.hitPoints={} receiver.id={}",
+            attackPoints,
+            id,
+            invoker.id,
+            receiver.hitPoints,
+            receiver.id
         )
-        val excellentMoveChanceMaximum = actor.excellentMoveChanceMaximum
-        val excellentMoveChanceMinimum = actor.excellentMoveChanceMinimum
-        val excellentMoveChanceRange = (excellentMoveChanceMinimum..excellentMoveChanceMaximum)
-        val excellentMoveScore = excellentMoveChanceRange.random()
-        logger.debug(
-            "$this: " +
-                    "actor.excellentMoveChanceMaximum=$excellentMoveChanceMaximum " +
-                    "actor.excellentMoveChanceMinimum=$excellentMoveChanceMinimum " +
-                    "actor.excellentMoveScore=$excellentMoveScore " +
-                    "actor.id=${actor.id}"
-        )
-        if (excellentMoveScore > 31) {
-            actor.trail.add(
-                Trail(
-                    "${actor.arn} performed an EXCELLENT ATTACK"
-                )
-            )
-            val attackValue = actor.strength
-            attackScore = attackValue
-        }
-        actor.trail.add(
-            Trail(
-                "${actor.arn} DAMAGES ${otherActor.arn} for $attackScore HIT POINTS"
-            )
-        )
-        otherActor.hitPoints -= attackScore
-        logger.debug(
-            "$this: " +
-                    "actor.attackScore=$attackScore " +
-                    "actor.id=${actor.id} " +
-                    "otherActor.hitPoints=${otherActor.hitPoints} " +
-                    "otherActor.id=${otherActor.id}"
-        )
-        return true
+        return receiver.hitPoints < hitPoints
     }
 
-    override fun check(actor: Actor, otherActor: Actor): Boolean {
-        return true
+    private fun calculateAttackPointsStandard(invoker: A, receiver: B): Int {
+        return getInvokerAttack(invoker) - (getReceiverDefense(receiver))
+    }
+
+    final override fun checkReceiver(receiver: B): Boolean {
+        return checkReceiverHitPoints(receiver)
+    }
+
+    private fun checkReceiverHitPoints(receiver: B): Boolean {
+        logger.debug(
+            "id={} receiver.hitPoints={} receiver.id={}", id, receiver.hitPoints, receiver.id,
+        )
+        return receiver.hitPoints > 0
+    }
+
+    private fun checkReceiverEvasion(receiver: B): Boolean {
+        val evasionRequirement = receiver.evasionRequirement
+        logger.debug(
+            "id={} receiver.evasionRequirement={} receiver.evasionRequirementMaximum={} receiver.evasionRequirementMinimum={} receiver.id={}",
+            id,
+            evasionRequirement,
+            receiver.evasionRequirementMaximum,
+            receiver.evasionRequirementMinimum,
+            receiver.id
+        )
+        return evasionRequirement == receiver.evasionRequirementMaximum
+    }
+
+    protected abstract fun getAttackPoints(invoker: A, receiver: B): Int
+
+    protected fun getInvokerAttack(invoker: A): Int {
+        return getInvokerStrength(invoker) + getInvokerWeaponAttack(invoker)
+    }
+
+    private fun getInvokerStrength(invoker: A): Int {
+        logger.debug(
+            "id={} invoker.id={} invoker.strength={}", id, invoker.id, invoker.strength
+        )
+        return invoker.strength
+    }
+
+    private fun getInvokerWeaponAttack(invoker: A): Int {
+        logger.debug(
+            "id={} invoker.id={} invoker.weapon.attack={} invoker.weapon.id={}",
+            id,
+            invoker.id,
+            invoker.weapon?.attack,
+            invoker.weapon?.attack
+        )
+        return invoker.weapon?.attack ?: 0
+    }
+
+    protected fun getAttackPointsStandardRange(invoker: A, receiver: B): IntRange {
+        val attackPointsStandardRangeMaximum = getAttackPointsStandardRangeMaximum(invoker, receiver)
+        val attackPointsStandardRangeMinimum = getAttackPointsStandardRangeMinimum(invoker, receiver)
+        logger.debug(
+            "attackPointsStandardRangeMaximum={} attackPointsStandardRangeMinimum={} id={} invoker.id={} receiver.id={}",
+            attackPointsStandardRangeMaximum,
+            attackPointsStandardRangeMinimum,
+            id,
+            invoker.id,
+            receiver.id
+        )
+        return (attackPointsStandardRangeMinimum..attackPointsStandardRangeMaximum)
+    }
+
+    private fun getAttackPointsStandardRangeMaximum(invoker: A, receiver: B): Int {
+        return calculateAttackPointsStandard(invoker, receiver) / 2
+    }
+
+    private fun getAttackPointsStandardRangeMinimum(invoker: A, receiver: B): Int {
+        return calculateAttackPointsStandard(invoker, receiver) / 4
+    }
+
+    private fun getReceiverAgility(receiver: B): Int {
+        logger.debug(
+            "id={} receiver.agility={} receiver.id={}", id, receiver.agility, receiver.id
+        )
+        return receiver.agility
+    }
+
+    private fun getReceiverArmorDefense(receiver: B): Int {
+        logger.debug(
+            "id={} receiver.armor.defense={} receiver.armor.id={} receiver.id={}",
+            id,
+            receiver.armor?.defense,
+            receiver.armor?.id,
+            receiver.id
+        )
+        return receiver.armor?.defense ?: 0
+    }
+
+    protected fun getReceiverDefense(receiver: B): Int {
+        return (getReceiverAgility(receiver) / 2) + getReceiverEquipmentDefense(receiver)
+    }
+
+    private fun getReceiverEquipmentDefense(receiver: B): Int {
+        return getReceiverArmorDefense(receiver) + getReceiverShieldDefense(receiver)
+    }
+
+    private fun getReceiverShieldDefense(receiver: B): Int {
+        logger.debug(
+            "id={} receiver.id={} receiver.shield.defense={} receiver.shield.id={}",
+            id,
+            receiver.id,
+            receiver.shield?.defense,
+            receiver.shield?.id,
+        )
+        return receiver.shield?.defense ?: 0
+    }
+
+    final override fun use(invoker: A, receiver: B): Boolean {
+        if (!checkInvoker(invoker) || !checkReceiver(receiver)) {
+            return false
+        }
+        return apply(invoker, receiver)
     }
 }

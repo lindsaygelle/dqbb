@@ -1,12 +1,28 @@
 package dqbb
 
-open class Weapon(
-    attack: Int,
-    private val weaponType: WeaponType,
-) : Identifier {
-    val attack: Int = maxOf(0, attack)
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
-    override val id: String = Integer.toHexString(System.identityHashCode(this))
+class Weapon : AttackPointer,
+    Identifier,
+    Nameable {
+    override var attack: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} attack={}", id, field
+            )
+        }
+    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    override var name: String? = null
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} name={}", id, field
+            )
+        }
 
-    val name: String = this.weaponType.toString()
+    override fun toString(): String {
+        return "attack=$attack id=$id name=$name simpleName=$simpleName"
+    }
 }

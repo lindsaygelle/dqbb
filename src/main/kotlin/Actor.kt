@@ -3,434 +3,635 @@ package dqbb
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-const val AGILITY_MINIMUM: Int = 0x03
-const val BREATHE_FIRE_RANGE_MAXIMUM: Int = 255 // TODO: This number seems really high
-const val BREATHE_FIRE_RANGE_MINIMUM: Int = 0
-const val BREATHE_FIRE_SCALE: Int = 0x10
-const val BREATHE_FIRE_SHIFT: Int = 0x07
-const val DAMAGE_RESISTANCE_MINIMUM: Int = 0x01
-const val HEAL_MORE_SCALE: Int = 0x55
-const val HEAL_MORE_SHIFT: Int = 0x0F
-const val HEAL_RANGE_MAXIMUM: Int = 7
-const val HEAL_RANGE_MINIMUM: Int = 0
-const val HEAL_SCALE: Int = 0x14
-const val HEAL_SHIFT: Int = 0x07
-const val HERB_COUNT_MINIMUM: Int = 0x01
-const val HERB_SCALE: Int = 0x17
-const val HERB_SHIFT: Int = 0x0F
-const val HIT_POINTS_MINIMUM: Int = 0x03
-const val HURT_MORE_SCALE: Int = 0x1E
-const val HURT_MORE_SHIFT: Int = 0x0F
-const val HURT_RANGE_MAXIMUM: Int = 16
-const val HURT_RANGE_MINIMUM: Int = 0
-const val HURT_REQUIREMENT_MAXIMUM: Int = 16
-const val HURT_REQUIREMENT_MINIMUM: Int = 0
-const val HURT_SCALE: Int = 0x03
-const val HURT_SHIFT: Int = 0x07
-const val MAGIC_POINTS_MINIMUM: Int = 0x00
-const val MAGIC_POTION_COUNT_MINIMUM: Int = 0x01
-const val SLEEP_REQUIREMENT_MAXIMUM: Int = 16
-const val SLEEP_REQUIREMENT_MINIMUM: Int = 0
-const val STATUS_RESISTANCE_MINIMUM: Int = 0x00
-const val STOP_SPELL_REQUIREMENT_MAXIMUM: Int = 16
-const val STOP_SPELL_REQUIREMENT_MINIMUM: Int = 0
-const val STRENGTH_MINIMUM: Int = 0x05
-const val TURNS_SLEEP_MAXIMUM: Int = 6
-const val TURNS_SLEEP_MINIMUM: Int = 1
-const val TURNS_STOP_SPELL_MAXIMUM: Int = 6
-const val TURNS_STOP_SPELL_MINIMUM: Int = 1
-
-class Actor(
-    agility: Int? = null,
-    var allegiance: Int,
-    var armor: Armor? = null,
-    breatheFireRangeMaximum: Int? = null,
-    breatheFireRangeMinimum: Int? = null,
-    breatheFireScale: Int? = null,
-    breatheFireShift: Int? = null,
-    damageResistance: Int? = null,
-    decisions: List<Decision>,
-    healMoreScale: Int? = null,
-    healMoreShift: Int? = null,
-    healRangeMaximum: Int? = null,
-    healRangeMinimum: Int? = null,
-    healScale: Int? = null,
-    healShift: Int? = null,
-    herbCountMaximum: Int? = null,
-    herbScale: Int? = null,
-    herbShift: Int? = null,
-    hitPoints: Int? = null,
-    hitPointsMaximum: Int? = null,
-    hurtMoreScale: Int? = null,
-    hurtMoreShift: Int? = null,
-    hurtRangeMaximum: Int? = null,
-    hurtRangeMinimum: Int? = null,
-    hurtRequirementMaximum: Int? = null,
-    hurtRequirementMinimum: Int? = null,
-    hurtScale: Int? = null,
-    hurtShift: Int? = null,
-    private val items: MutableMap<ItemType, Int> = mutableMapOf(),
-    magicPoints: Int? = null,
-    magicPointsMaximum: Int? = null,
-    magicPotionsCountMaximum: Int? = null,
-    name: String? = null,
-    var shield: Shield? = null,
-    sleepRequirementMaximum: Int? = null,
-    sleepRequirementMinimum: Int? = null,
-    statusResistance: Int? = null,
-    stopSpellRequirementMaximum: Int? = null,
-    stopSpellRequirementMinimum: Int? = null,
-    strength: Int? = null,
-    turnsSleep: Int? = null,
-    turnsSleepMaximum: Int? = null,
-    turnsSleepMinimum: Int? = null,
-    turnsStopSpell: Int? = null,
-    turnsStopSpellMaximum: Int? = null,
-    turnsStopSpellMinimum: Int? = null,
-    var weapon: Weapon? = null,
-) : Identifier {
-
-    var agility: Int = maxOf(0, (agility ?: AGILITY_MINIMUM))
-
-    val arn: String
-        get() = "${this.name}:${this.id}:${this.allegiance}"
-
-    val breatheFireRangeMaximum: Int =
-        maxOf(BREATHE_FIRE_RANGE_MINIMUM, (breatheFireRangeMaximum ?: BREATHE_FIRE_RANGE_MAXIMUM))
-
-    val breatheFireRangeMinimum: Int =
-        minOf(
-            this.breatheFireRangeMaximum,
-            maxOf(BREATHE_FIRE_RANGE_MINIMUM, (breatheFireRangeMinimum ?: BREATHE_FIRE_RANGE_MINIMUM))
-        )
-
-    val breatheFireScale: Int = maxOf(0, (breatheFireScale ?: BREATHE_FIRE_SCALE))
-
-    val breatheFireShift: Int = maxOf(0, (breatheFireShift ?: BREATHE_FIRE_SHIFT))
-
-    var damageResistance: Int = maxOf(0, (damageResistance ?: DAMAGE_RESISTANCE_MINIMUM))
-
-    val decisions: List<Decision> = decisions.sortedByDescending { decision ->
-        decision.priorityType.ordinal
-    }
-
-    val excellentMoveChanceMaximum: Int = 31
-
-    val excellentMoveChanceMinimum: Int = 0
-
-    val healMoreScale: Int = maxOf(0, (healMoreScale ?: HEAL_MORE_SCALE))
-
-    val healMoreShift: Int = maxOf(0, (healMoreShift ?: HEAL_MORE_SHIFT))
-
-    val healRangeMaximum: Int = maxOf(HEAL_RANGE_MINIMUM, (healRangeMaximum ?: HEAL_RANGE_MAXIMUM))
-
-    val healRangeMinimum: Int =
-        minOf(this.healRangeMaximum, maxOf(HEAL_RANGE_MINIMUM, (healRangeMinimum ?: HEAL_RANGE_MINIMUM)))
-
-    val healScale: Int = maxOf(0, (healScale ?: HEAL_SCALE))
-
-    val healShift: Int = maxOf(0, (healShift ?: HEAL_SHIFT))
-
-    private val herbCountMaximum: Int = maxOf(0, (herbCountMaximum ?: HERB_COUNT_MINIMUM))
-
-    private val herbCountPercentage: Int
-        get() = this.getPercentage(this.getItemCount(ItemType.HERB), this.herbCountMaximum)
-
-    val herbScale: Int = maxOf(0, (herbScale ?: HERB_SCALE))
-
-    val herbShift: Int = maxOf(0, (herbShift ?: HERB_SHIFT))
-
-    var hitPoints: Int = 0
+class Actor : AbilityInvoker,
+    BattleReceiver,
+    Identifier,
+    Nameable {
+    var actions: List<Action> = listOf()
         set(value) {
-            field = this.getClampedValue(value, this.hitPointsMaximum)
+            field = value.sortedByDescending { action -> action.priorityType.ordinal }
             logger.debug(
-                "$this: " +
-                        "hitPoints=$field"
+                "id={} actions.size={}", id, field.size
             )
         }
-
-    val hitPointsMaximum: Int = maxOf(HIT_POINTS_MINIMUM, (hitPointsMaximum ?: HIT_POINTS_MINIMUM))
-
-    private val hitPointsPercentage: Int
-        get() = getPercentage(this.hitPoints, this.hitPointsMaximum)
-
-    val hurtMoreScale: Int = maxOf(0, (hurtMoreScale ?: HURT_MORE_SCALE))
-
-    val hurtMoreShift: Int = maxOf(0, (hurtMoreShift ?: HURT_MORE_SHIFT))
-
-    val hurtRangeMaximum: Int = maxOf(0, (hurtRangeMaximum ?: HURT_RANGE_MAXIMUM))
-
-    val hurtRangeMinimum: Int = minOf(this.hurtRangeMaximum, maxOf(0, (hurtRangeMinimum ?: HURT_RANGE_MINIMUM)))
-
-    val hurtRequirementMaximum: Int = maxOf(0, (hurtRequirementMaximum ?: HURT_REQUIREMENT_MAXIMUM))
-
-    val hurtRequirementMinimum: Int =
-        minOf(this.hurtRequirementMaximum, maxOf(0, (hurtRequirementMinimum ?: HURT_REQUIREMENT_MINIMUM)))
-
-    val hurtScale: Int = maxOf(0, (hurtScale ?: HURT_SCALE))
-
-    val hurtShift: Int = maxOf(0, (hurtShift ?: HURT_SHIFT))
-
-    override val id: String = Integer.toHexString(System.identityHashCode(this))
-
-    val isAlive: Boolean
-        get() = this.hitPoints > 0
-
-    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
-
-    var magicPoints: Int = 0
+    override var agility: Int = 0
         set(value) {
-            field = this.getClampedValue(value, this.magicPointsMaximum)
+            field = maxOf(0, value)
             logger.debug(
-                "$this: " +
-                        "magicPoints=$field"
+                "id={} agility={}", id, field
             )
         }
-
-    val magicPointsMaximum: Int = maxOf(MAGIC_POINTS_MINIMUM, (magicPointsMaximum ?: MAGIC_POINTS_MINIMUM))
-
-    private val magicPointsPercentage: Int
-        get() = this.getPercentage(this.magicPoints, this.magicPointsMaximum)
-
-    private val magicPotionsCountMaximum: Int = maxOf(0, (magicPotionsCountMaximum ?: MAGIC_POTION_COUNT_MINIMUM))
-
-    private val magicPotionsPercentage: Int
-        get() = this.getPercentage(this.getItemCount(ItemType.MAGIC_POTION), this.magicPotionsCountMaximum)
-
-    val name: String = (name ?: "ACTOR").replace(" ", "_").uppercase()
-
-    val sleepRequirementMaximum: Int = maxOf(0, (sleepRequirementMaximum ?: SLEEP_REQUIREMENT_MAXIMUM))
-
-    val sleepRequirementMinimum: Int =
-        minOf(this.sleepRequirementMaximum, maxOf((sleepRequirementMinimum ?: SLEEP_REQUIREMENT_MINIMUM)))
-
-    val statusResistance: Int = maxOf(STATUS_RESISTANCE_MINIMUM, (statusResistance ?: STATUS_RESISTANCE_MINIMUM))
-
-    val stopSpellRequirementMaximum: Int =
-        maxOf(STOP_SPELL_REQUIREMENT_MINIMUM, (stopSpellRequirementMaximum ?: STOP_SPELL_REQUIREMENT_MAXIMUM))
-
-    val stopSpellRequirementMinimum: Int = minOf(
-        this.stopSpellRequirementMaximum,
-        maxOf(STOP_SPELL_REQUIREMENT_MINIMUM, (stopSpellRequirementMinimum ?: STOP_SPELL_REQUIREMENT_MINIMUM))
-    )
-
-    val statusSleep: Boolean
-        get() = this.turnsSleep > 0
-
-    val statusStopSpell: Boolean
-        get() = this.turnsStopSpell > 0
-
-    val strength: Int = maxOf(STRENGTH_MINIMUM, (strength ?: STRENGTH_MINIMUM))
-
-    val trail: MutableList<Trail> = mutableListOf()
-
-    var turnsAlive: Int = 0
-
-    var turnsSleep: Int = 0
+    var allegiance: Int = 0
         set(value) {
-            field = this.getClampedValue(value, this.turnsSleepMaximum)
+            field = value
             logger.debug(
-                "$this: " +
-                        "turnsSleep=$field"
+                "id={} allegiance={}", id, field
             )
         }
-
-    // turnsSleepMaximum should be at least 0.
-    val turnsSleepMaximum: Int = maxOf(0, (turnsSleepMaximum ?: TURNS_SLEEP_MAXIMUM))
-
-    // turnsSleepMinimum should be at least 0 and less than turnsSleepMaximum
-    val turnsSleepMinimum: Int =
-        minOf(this.turnsSleepMaximum, maxOf(0, (turnsSleepMinimum ?: TURNS_SLEEP_MINIMUM)))
-
-    private val turnsSleepPercentage: Int
-        get() = this.getPercentage(this.turnsSleep, this.turnsSleepMaximum)
-
-    var turnsStopSpell: Int = 0
+    override var armor: Armor? = null
         set(value) {
-            field = this.getClampedValue(value, this.turnsStopSpellMaximum)
+            field = value
             logger.debug(
-                "$this: " +
-                        "turnsStopSpell=$field"
+                "id={} armor.id={}", id, field?.id
             )
         }
-
-    // turnsStopSpellMaximum should be at least 0.
-    val turnsStopSpellMaximum: Int = maxOf(0, (turnsStopSpellMaximum ?: TURNS_STOP_SPELL_MAXIMUM))
-
-    // turnsStopSpellMinimum should be at least 0 and less than turnsStopSpellMaximum.
-    val turnsStopSpellMinimum: Int =
-        minOf(this.turnsStopSpellMaximum, maxOf(0, (turnsStopSpellMinimum ?: TURNS_STOP_SPELL_MINIMUM)))
-
-    private val turnsStopSpellPercentage: Int
-        get() = this.getPercentage(this.turnsStopSpell, this.turnsStopSpellMaximum)
-
-    val wakeUpChanceMaximum: Int = 3
-
-    val wakeUpChanceMinimum: Int = 0
-
-    fun addItem(itemType: ItemType, value: Int) {
-        val itemCountPrevious = this.items.getOrDefault(itemType, 0)
-        val itemCountMaximum = when (itemType) {
-            ItemType.HERB -> this.herbCountMaximum
-            ItemType.MAGIC_POTION -> this.magicPotionsCountMaximum
-        }
-        val itemCount = minOf((itemCountPrevious + value), itemCountMaximum)
-        this.items[itemType] = itemCount
-        logger.debug(
-            "$this: " +
-                    "itemCount=$itemCount " +
-                    "itemCountMaximum=$itemCountMaximum " +
-                    "itemCountPrevious=$itemCountPrevious " +
-                    "itemType=$itemType"
-        )
-    }
-
-    fun getAttackValue(actor: Actor): Int {
-        return this.strength
-    }
-
-    private fun getClampedValue(value: Int, valueMaximum: Int): Int {
-        return maxOf(0, minOf(valueMaximum, value))
-    }
-
-    fun getConditionType(conditionType: ConditionType): Int {
-        return when (conditionType) {
-            ConditionType.AGILITY -> this.agility
-            ConditionType.HERBS -> this.getItemCount(ItemType.HERB)
-            ConditionType.HIT_POINTS -> this.hitPoints
-            ConditionType.HIT_POINTS_MAXIMUM -> this.hitPointsMaximum
-            ConditionType.MAGIC_POINTS -> this.magicPoints
-            ConditionType.MAGIC_POINTS_MAXIMUM -> this.magicPointsMaximum
-            ConditionType.MAGIC_POTIONS -> this.getItemCount(ItemType.MAGIC_POTION)
-            ConditionType.STATUS_RESISTANCE -> this.statusResistance
-            ConditionType.TURNS_SLEEP -> this.turnsSleep
-            ConditionType.TURNS_STOP_SPELL -> this.turnsStopSpell
-        }
-    }
-
-    fun getConditionTypePercentage(conditionType: ConditionType): Int {
-        return when (conditionType) {
-            ConditionType.HERBS -> this.herbCountPercentage
-            ConditionType.HIT_POINTS -> this.hitPointsPercentage
-            ConditionType.MAGIC_POINTS -> this.magicPointsPercentage
-            ConditionType.MAGIC_POTIONS -> this.magicPotionsPercentage
-            ConditionType.TURNS_SLEEP -> this.turnsSleepPercentage
-            ConditionType.TURNS_STOP_SPELL -> this.turnsStopSpellPercentage
-            else -> -1
-        }
-    }
-
-    private fun getDecision(otherActors: Collection<Actor>): Decision? {
-        this.decisions.forEachIndexed { index, decision ->
-            val isValid = decision.isValid(this, otherActors)
+    private val armorCount: Int
+        get() = if (armor != null) 1 else 0
+    private val armorDefense: Int
+        get() = (armor?.defense ?: 0)
+    private val blocksSleep: Boolean
+        get() = armor?.blocksSleep == true
+    private val blocksStopSpell: Boolean
+        get() = armor?.blocksStopSpell == true
+    override var breatheFireRangeMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
             logger.debug(
-                "$this: " +
-                        "decision.ability.id=${decision.ability.id} " +
-                        "decision.ability.name=${decision.ability.name} " +
-                        "decision.id=${decision.id} " +
-                        "decision.priorityType=${decision.priorityType} " +
-                        "decision.isValid=$isValid " +
-                        "index=$index"
+                "id={} breatheFireRangeMaximum={}", id, field
             )
-            if (isValid) {
-                return decision
+        }
+    override var breatheFireRangeMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(breatheFireRangeMaximum, value))
+            logger.debug(
+                "id={} breatheFireRangeMinimum={}", id, field
+            )
+        }
+    override var breatheFireScale: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} breatheFireScale={}", id, field
+            )
+        }
+    override var breatheFireShift: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} breatheFireShift={}", id, field
+            )
+        }
+    override var canReceiveExcellentAttack: Boolean = true
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} canReceiveExcellentAttack={}", id, field
+            )
+        }
+    private val defenseCount: Int
+        get() = armorCount + shieldCount
+    override var evasionRequirementMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} evasionRequirementMaximum={}", id, field
+            )
+        }
+    override var evasionRequirementMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(evasionRequirementMaximum, value))
+            logger.debug(
+                "id={} evasionRequirementMinimum={}", id, field
+            )
+        }
+    override var excellentAttackRequirementMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} excellentAttackRequirementMaximum={}", id, field
+            )
+        }
+    override var excellentAttackRequirementMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(excellentAttackRequirementMaximum, value))
+            logger.debug(
+                "id={} excellentAttackRequirementMinimum={}", id, field
+            )
+        }
+    override var healMoreScale: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} healMoreScale={}", id, field
+            )
+        }
+    override var healMoreShift: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} healMoreShift={}", id, field
+            )
+        }
+    override var healRangeMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} healRangeMaximum={}", id, field
+            )
+        }
+    override var healRangeMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(healRangeMaximum, value))
+            logger.debug(
+                "id={} healRangeMinimum={}", id, field
+            )
+        }
+    private val herbCount: Int
+        get() = items.getOrDefault(ItemName.HERB, 0)
+    override var healScale: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} healScale={}", id, field
+            )
+        }
+    override var healShift: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} healShift={}", id, field
+            )
+        }
+    override var herbRangeMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} herbRangeMaximum={}", id, field
+            )
+        }
+    override var herbRangeMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(herbRangeMaximum, value))
+            logger.debug(
+                "id={} herbRangeMinimum={}", id, field
+            )
+        }
+    override var herbScale: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} herbScale={}", id, field
+            )
+        }
+    override var herbShift: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} herbShift={}", id, field
+            )
+        }
+    override var hitPoints: Int = 0
+        set(value) {
+            if (value > field) {
+                hitPointsReceived += value
+            } else {
+                hitPointsReduced += value
             }
+            field = maxOf(0, minOf(hitPointsMaximum, value))
+            logger.debug(
+                "id={} hitPoints={}", id, field
+            )
         }
-        return null
-    }
+    override var hitPointsMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} hitPointsMaximum={}", id, field
+            )
+        }
+    private val hitPointsPercentage: Int
+        get() = getPercentage(magicPoints, magicPointsMaximum)
+    var hitPointsReceived: Int = 0
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} hitPointsReceived={}", id, field
+            )
+        }
+    var hitPointsReduced: Int = 0
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} hitPointsReduced={}", id, field
+            )
+        }
+    override var hurtMoreScale: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} hurtMoreScale={}", id, field
+            )
+        }
+    override var hurtMoreShift: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} hurtMoreShift={}", id, field
+            )
+        }
+    override var hurtRangeMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} hurtRangeMaximum={}", id, field
+            )
+        }
+    override var hurtRangeMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(hurtRangeMaximum, value))
+            logger.debug(
+                "id={} hurtRangeMinimum={}", id, field
+            )
+        }
+    override var hurtRequirementMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} hurtRequirementMaximum={}", id, field
+            )
+        }
+    override var hurtRequirementMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(hurtRequirementMaximum, value))
+            logger.debug(
+                "id={} hurtRequirementMinimum={}", id, field
+            )
+        }
+    override var hurtResistanceMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} hurtResistanceMaximum={}", id, field
+            )
+        }
+    override var hurtResistanceMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(hurtResistanceMaximum, value))
+            logger.debug(
+                "id={} hurtResistanceMinimum={}", id, field
+            )
+        }
+    override var hurtScale: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} hurtScale={}", id, field
+            )
+        }
+    override var hurtShift: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} hurtShift={}", id, field
+            )
+        }
+    override var isRunning: Boolean = false
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} isRunning={}", id, field
+            )
+        }
+    override val items: MutableMap<ItemName, Int> = mutableMapOf()
+    private val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    override var magicPoints: Int = 0
+        set(value) {
+            if (value > field) {
+                magicPointsReceived += value
+            } else {
+                magicPointsReduced += value
+            }
+            field = maxOf(0, minOf(magicPointsMaximum, value))
+            logger.debug(
+                "id={} magicPoints={}", id, field
+            )
+        }
+    override var magicPointsMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} magicPointsMaximum={}", id, field
+            )
+        }
+    var magicPointsReceived: Int = 0
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} magicPointsReceived={}", id, field
+            )
+        }
+    var magicPointsReduced: Int = 0
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} magicPointsReduced={}", id, field
+            )
+        }
+    private val magicPotionCount: Int
+        get() = items.getOrDefault(ItemName.MAGIC_POTION, 0)
+    override var magicPotionRangeMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} magicPotionRangeMaximum={}", id, field
+            )
+        }
+    private val magicPointsPercentage: Int
+        get() = getPercentage(magicPoints, magicPointsMaximum)
+    override var magicPotionRangeMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(magicPotionRangeMaximum, value))
+            logger.debug(
+                "id={} magicPotionRangeMinimum={}", id, field
+            )
+        }
+    override var magicPotionScale: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} magicPotionScale={}", id, field
+            )
+        }
+    override var magicPotionShift: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} magicPotionShift={}", id, field
+            )
+        }
+    override var name: String? = null
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} name={}", id, field
+            )
+        }
+    override var runRangeMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} runRangeMaximum={}", id, field
+            )
+        }
+    override var runRangeMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(runRangeMaximum, value))
+            logger.debug(
+                "id={} runRangeMinimum={}", id, field
+            )
+        }
+    override var runShift: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} runShift={}", id, field
+            )
+        }
+    override var shield: Shield? = null
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} shield.id={}", id, field?.id
+            )
+        }
+    private val shieldCount: Int
+        get() = if (shield != null) 1 else 0
+    private val shieldDefense: Int
+        get() = shield?.defense ?: 0
+    override var sleepRequirementMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} sleepRequirementMaximum={}", id, field
+            )
+        }
+    override var sleepRequirementMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(sleepRequirementMaximum, value))
+            logger.debug(
+                "id={} sleepRequirementMinimum={}", id, field
+            )
+        }
+    override var sleepResistanceMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} sleepResistanceMaximum={}", id, field
+            )
+        }
+    override var sleepResistanceMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(sleepResistanceMaximum, value))
+            logger.debug(
+                "id={} sleepResistanceMinimum={}", id, field
+            )
+        }
+    override var sleepResolutionMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} sleepResolutionMaximum={}", id, field
+            )
+        }
+    override var sleepResolutionMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(sleepResolutionMaximum, value))
+            logger.debug(
+                "id={} sleepResolutionMinimum={}", id, field
+            )
+        }
+    override var stopSpellRequirementMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} stopSpellRequirementMaximum={}", id, field
+            )
+        }
+    override var stopSpellRequirementMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(stopSpellRequirementMaximum, value))
+            logger.debug(
+                "id={} stopSpellRequirementMinimum={}", id, field
+            )
+        }
+    override var stopSpellResistanceMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} stopSpellResistanceMaximum={}", id, field
+            )
+        }
+    override var stopSpellResistanceMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(stopSpellResistanceMaximum, value))
+            logger.debug(
+                "id={} stopSpellResistanceMinimum={}", id, field
+            )
+        }
+    override var stopSpellResolutionMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} stopSpellResolutionMaximum={}", id, field
+            )
+        }
+    override var stopSpellResolutionMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(stopSpellResolutionMaximum, value))
+            logger.debug(
+                "id={} stopSpellResolutionMinimum={}", id, field
+            )
+        }
+    override var strength: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} strength={}", id, field
+            )
+        }
+    override var turn: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} turn={}", id, field
+            )
+        }
+    override var turnsSleep: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(turnsSleepMaximum, value))
+            logger.debug(
+                "id={} turnsSleep={}", id, field
+            )
+        }
+    override var turnsSleepMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} turnsSleepMaximum={}", id, field
+            )
+        }
+    override var turnsSleepMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(turnsSleepMaximum, value))
+            logger.debug(
+                "id={} turnsSleepMinimum={}", id, field
+            )
+        }
+    override var turnsStopSpell: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} turnsStopSpell={}", id, field
+            )
+        }
+    override var turnsStopSpellMaximum: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} turnsStopSpellMaximum={}", id, field
+            )
+        }
+    override var turnsStopSpellMinimum: Int = 0
+        set(value) {
+            field = maxOf(0, minOf(turnsStopSpellMaximum, value))
+            logger.debug(
+                "id={} turnsStopSpellMinimum={}", id, field
+            )
+        }
+    override var weapon: Weapon? = null
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} weapon.id={}", id, field?.id
+            )
+        }
+    private val weaponAttack: Int
+        get() = weapon?.attack ?: 0
+    private val weaponCount: Int
+        get() = if (weapon != null) 1 else 0
 
-    fun getDefenseValue(actor: Actor): Int {
-        return this.agility / 2
-    }
-
-    fun getItemCount(itemType: ItemType): Int {
-        return this.items.getOrDefault(itemType, 0)
+    fun getAttribute(attributeName: AttributeName): Int {
+        return when (attributeName) {
+            AttributeName.ACTION_COUNT -> actions.size
+            AttributeName.AGILITY -> agility
+            AttributeName.ALLEGIANCE -> allegiance
+            AttributeName.ARMOR_COUNT -> armorCount
+            AttributeName.ARMOR_DEFENSE -> armorDefense
+            AttributeName.BLOCKS_SLEEP -> (if (blocksSleep) 1 else 0)
+            AttributeName.BLOCKS_STOP_SPELL -> (if (blocksStopSpell) 1 else 1)
+            AttributeName.BREATHE_FIRE_RANGE_MAXIMUM -> breatheFireRangeMaximum
+            AttributeName.BREATHE_FIRE_RANGE_MINIMUM -> breatheFireRangeMinimum
+            AttributeName.BREATHE_FIRE_SCALE -> breatheFireScale
+            AttributeName.BREATHE_FIRE_SHIFT -> breatheFireShift
+            AttributeName.DEFENSE_COUNT -> defenseCount
+            AttributeName.EVASION_REQUIREMENT_MAXIMUM -> evasionRequirementMaximum
+            AttributeName.EVASION_REQUIREMENT_MINIMUM -> evasionRequirementMinimum
+            AttributeName.EXCELLENT_ATTACK_REQUIREMENT_MAXIMUM -> excellentAttackRequirementMaximum
+            AttributeName.EXCELLENT_ATTACK_REQUIREMENT_MINIMUM -> excellentAttackRequirementMinimum
+            AttributeName.HEAL_MORE_SCALE -> healMoreScale
+            AttributeName.HEAL_MORE_SHIFT -> healMoreShift
+            AttributeName.HEAL_RANGE_MAXIMUM -> healRangeMaximum
+            AttributeName.HEAL_RANGE_MINIMUM -> healRangeMinimum
+            AttributeName.HEAL_SCALE -> healScale
+            AttributeName.HEAL_SHIFT -> healShift
+            AttributeName.HERB_COUNT -> herbCount
+            AttributeName.HERB_RANGE_MAXIMUM -> herbRangeMaximum
+            AttributeName.HERB_RANGE_MINIMUM -> herbRangeMinimum
+            AttributeName.HERB_SCALE -> herbScale
+            AttributeName.HERB_SHIFT -> herbShift
+            AttributeName.HIT_POINTS -> hitPoints
+            AttributeName.HIT_POINTS_MAXIMUM -> hitPointsMaximum
+            AttributeName.HIT_POINTS_PERCENTAGE -> hitPointsPercentage
+            AttributeName.HURT_MORE_SCALE -> hurtMoreScale
+            AttributeName.HURT_MORE_SHIFT -> hurtMoreShift
+            AttributeName.HURT_RANGE_MAXIMUM -> hurtRangeMaximum
+            AttributeName.HURT_RANGE_MINIMUM -> hurtRangeMinimum
+            AttributeName.HURT_REQUIREMENT_MAXIMUM -> hurtRequirementMaximum
+            AttributeName.HURT_REQUIREMENT_MINIMUM -> hurtRequirementMinimum
+            AttributeName.HURT_RESISTANCE_MAXIMUM -> hurtResistanceMaximum
+            AttributeName.HURT_RESISTANCE_MINIMUM -> hurtResistanceMinimum
+            AttributeName.HURT_SCALE -> hurtScale
+            AttributeName.HURT_SHIFT -> hurtShift
+            AttributeName.IS_RUNNING -> (if (isRunning) 1 else 0)
+            AttributeName.ITEM_COUNT -> items.size
+            AttributeName.MAGIC_POINTS -> magicPoints
+            AttributeName.MAGIC_POINTS_MAXIMUM -> magicPointsMaximum
+            AttributeName.MAGIC_POINTS_PERCENTAGE -> magicPointsPercentage
+            AttributeName.MAGIC_POTION_COUNT -> magicPotionCount
+            AttributeName.MAGIC_POTION_RANGE_MAXIMUM -> magicPotionRangeMaximum
+            AttributeName.MAGIC_POTION_RANGE_MINIMUM -> magicPotionRangeMinimum
+            AttributeName.MAGIC_POTION_SCALE -> magicPotionScale
+            AttributeName.MAGIC_POTION_SHIFT -> magicPotionShift
+            AttributeName.RUN_RANGE_MAXIMUM -> runRangeMaximum
+            AttributeName.RUN_RANGE_MINIMUM -> runRangeMinimum
+            AttributeName.RUN_SHIFT -> runShift
+            AttributeName.SHIELD_COUNT -> shieldCount
+            AttributeName.SHIELD_DEFENSE -> shieldDefense
+            AttributeName.SLEEP_REQUIREMENT_MAXIMUM -> sleepRequirementMaximum
+            AttributeName.SLEEP_REQUIREMENT_MINIMUM -> sleepRequirementMinimum
+            AttributeName.SLEEP_RESISTANCE_MAXIMUM -> sleepResistanceMaximum
+            AttributeName.SLEEP_RESISTANCE_MINIMUM -> sleepResistanceMinimum
+            AttributeName.SLEEP_RESOLUTION_MAXIMUM -> sleepResolutionMaximum
+            AttributeName.SLEEP_RESOLUTION_MINIMUM -> sleepResolutionMinimum
+            AttributeName.STOP_SPELL_REQUIREMENT_MAXIMUM -> stopSpellRequirementMaximum
+            AttributeName.STOP_SPELL_REQUIREMENT_MINIMUM -> stopSpellRequirementMaximum
+            AttributeName.STOP_SPELL_RESISTANCE_MAXIMUM -> stopSpellResistanceMaximum
+            AttributeName.STOP_SPELL_RESISTANCE_MINIMUM -> stopSpellResistanceMinimum
+            AttributeName.STOP_SPELL_RESOLUTION_MAXIMUM -> stopSpellResolutionMaximum
+            AttributeName.STOP_SPELL_RESOLUTION_MINIMUM -> stopSpellResolutionMinimum
+            AttributeName.STRENGTH -> strength
+            AttributeName.TURNS_SLEEP -> turnsSleep
+            AttributeName.TURNS_SLEEP_MAXIMUM -> turnsSleepMaximum
+            AttributeName.TURNS_SLEEP_MINIMUM -> turnsSleepMinimum
+            AttributeName.TURNS_STOP_SPELL -> turnsStopSpell
+            AttributeName.TURNS_STOP_SPELL_MAXIMUM -> turnsStopSpellMaximum
+            AttributeName.TURNS_STOP_SPELL_MINIMUM -> turnsStopSpellMinimum
+            AttributeName.WEAPON_ATTACK -> weaponAttack
+            AttributeName.WEAPON_COUNT -> weaponCount
+        }
     }
 
     private fun getPercentage(value: Int, valueMaximum: Int): Int {
         return ((value.toDouble() / valueMaximum) * 100).toInt()
-    }
-
-    fun subtractItem(itemType: ItemType) {
-        this.items[itemType]?.let { itemCount ->
-            if (itemCount > 0) {
-                this.items[itemType] = itemCount - 1
-            }
-        }
-    }
-
-    fun takeTurn(otherActors: Collection<Actor>): Boolean {
-        val decision = getDecision(otherActors)
-        var decisionValue = false
-        logger.debug(
-            "$this: " +
-                    "decision.id=${decision?.id} " +
-                    "otherActors.size=${otherActors.size}"
-        )
-        if (decision != null) {
-            decisionValue = decision.ability.use(this, decision.targetSelection.actors)
-            logger.debug(
-                "$this: " +
-                        "decision.ability.id=${decision.ability.id} " +
-                        "decision.ability.name=${decision.ability.name} " +
-                        "decision.ability.use=$decisionValue " +
-                        "decision.id=${decision.id}"
-            )
-        }
-        return decisionValue
-    }
-
-    init {
-        this.hitPoints = maxOf(HIT_POINTS_MINIMUM, (hitPoints ?: this.hitPointsMaximum))
-        this.magicPoints = maxOf(MAGIC_POINTS_MINIMUM, (magicPoints ?: this.magicPointsMaximum))
-        this.turnsSleep = maxOf(0, turnsSleep ?: 0)
-        this.turnsStopSpell = maxOf(0, turnsStopSpell ?: 0)
-
-        logger.info(
-            "$this: " +
-                    "agility=${this.agility} " +
-                    "allegiance=${this.allegiance} " +
-                    "armor.name=${this.armor?.name} " +
-                    "breatheFireRangeMaximum=${this.breatheFireRangeMaximum} " +
-                    "breatheFireRangeMinimum=${this.breatheFireRangeMinimum} " +
-                    "breatheFireScale=${this.breatheFireScale} " +
-                    "breatheFireShift=${this.breatheFireShift} " +
-                    "damageResistance=${this.damageResistance} " +
-                    "decisions.size=${this.decisions.size} " +
-                    "excellentMoveChanceMaximum=${this.excellentMoveChanceMaximum} " +
-                    "excellentMoveChanceMinimum=${this.excellentMoveChanceMinimum} " +
-                    "healMoreScale=${this.healMoreScale} " +
-                    "healMoreShift=${this.healMoreShift} " +
-                    "healRangeMaximum=${this.healRangeMaximum} " +
-                    "healRangeMinimum=${this.healRangeMinimum} " +
-                    "healScale=${this.healScale} " +
-                    "healShift=${this.healShift} " +
-                    "herbCountMaximum=${this.herbCountMaximum} " +
-                    "herbScale=${this.herbScale} " +
-                    "herbShift=${this.herbShift} " +
-                    "hitPoints=${this.hitPoints} " +
-                    "hitPointsMaximum=${this.hitPointsMaximum} " +
-                    "hurtMoreScale=${this.hurtMoreScale} " +
-                    "hurtMoreShift=${this.hurtMoreShift} " +
-                    "hurtScale=${this.hurtScale} " +
-                    "hurtShift=${this.hurtShift} " +
-                    "items.size=${this.items.size} " +
-                    "magicPoints=${this.magicPoints} " +
-                    "magicPointsMaximum=${this.magicPointsMaximum} " +
-                    "magicPotionsCountMaximum=${this.magicPotionsCountMaximum} " +
-                    "name=${this.name} " +
-                    "shield.name=${this.shield?.name} " +
-                    "statusResistance=${this.statusResistance} " +
-                    "strength=${this.strength} " +
-                    "turnsSleep=${this.turnsSleep} " +
-                    "turnsSleepMaximum=${this.turnsSleepMaximum} " +
-                    "turnsSleepMinimum=${this.turnsSleepMinimum} " +
-                    "turnsStopSpell=${this.turnsStopSpell} " +
-                    "turnsStopSpellMaximum=${this.turnsStopSpellMaximum} " +
-                    "turnsStopSpellMinimum=${this.turnsStopSpellMinimum} " +
-                    "wakeUpChanceMaximum=${this.wakeUpChanceMaximum} " +
-                    "wakeUpChanceMinimum=${this.wakeUpChanceMinimum} " +
-                    "weapon.name=${this.weapon?.name}"
-        )
     }
 }

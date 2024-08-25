@@ -3,165 +3,183 @@ package dqbb
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-class BattleSystem(
-    actors: Collection<Actor>
-) : Runnable {
-
-    private val actors: MutableList<Actor> = actors.distinct().sortedByDescending { actor: Actor ->
-        actor.agility
-    }.toMutableList()
-
-    var isActive: Boolean = true
-
+class BattleSystem : Identifier,
+    Runnable,
+    TurnAccumulator {
+    val actors: MutableSet<Actor> = mutableSetOf()
+    private val allegiances: MutableSet<Int> = mutableSetOf()
+    var attributeName: AttributeName = AttributeName.AGILITY
+    private var isActive: Boolean = true
     private val logger: Logger = LogManager.getLogger(this::class.simpleName)
+    override var turn: Int = 0
 
-    val trail: MutableList<Trail> = mutableListOf()
-
-    var turns: Int = 0
-
-    private fun checkActor(actor: Actor, index: Int) {
+    private fun checkActorHitPoints(actor: Actor): Boolean {
         logger.debug(
-            "$this: " +
-                    "actor.agility=${actor.agility} " +
-                    "actor.allegiance=${actor.allegiance} " +
-                    "actor.armor.id=${actor.armor?.id} " +
-                    "actor.armor.name=${actor.armor?.name} " +
-                    "actor.damageResistance=${actor.damageResistance} " +
-                    "actor.hitPoints=${actor.hitPoints} " +
-                    "actor.hitPointsMaximum=${actor.hitPointsMaximum} " +
-                    "actor.id=${actor.id} " +
-                    "actor.magicPoints=${actor.magicPoints} " +
-                    "actor.magicPointsMaximum=${actor.magicPointsMaximum} " +
-                    "actor.name=${actor.name} " +
-                    "actor.shield=${actor.shield} " +
-                    "actor.statusResistance=${actor.statusResistance} " +
-                    "actor.strength=${actor.strength} " +
-                    "actor.turnsAlive=${actor.turnsAlive} " +
-                    "actor.turnsSleep=${actor.turnsSleep} " +
-                    "actor.turnsSleepMaximum=${actor.turnsSleepMaximum} " +
-                    "actor.turnsStopSpell=${actor.turnsStopSpell} " +
-                    "actor.turnsStopSpellMaximum=${actor.turnsStopSpellMaximum} " +
-                    "actor.weapon=${actor.weapon} " +
-                    "actors.size=${actors.size} " +
-                    "index=$index"
+            "actor.hitPoints={} actor.hitPointsMaximum={} actor.id={} id={} turn={}",
+            actor.hitPoints,
+            actor.hitPointsMaximum,
+            actor.id,
+            id,
+            turn
         )
-        if (!actor.isAlive) {
-            this.trail.addAll(actor.trail)
-            actor.trail.clear()
-            return
-        }
-        actor.turnsAlive = this.turns
-        val takeTurnResult = actor.takeTurn(this.actors)
-        logger.debug(
-            "$this: " +
-                    "actor.id=${actor.id} " +
-                    "actor.takeTurn=$takeTurnResult"
-        )
-        checkActorSleep(actor)
-        checkActorStopSpell(actor)
-        this.trail.addAll(actor.trail)
-        actor.trail.clear()
+        return actor.hitPoints > 0
     }
 
-    private fun checkActorSleep(actor: Actor) {
-        if (!actor.statusSleep) {
-            return
-        }
-        actor.turnsSleep += 1
-        if (actor.turnsSleep < actor.turnsSleepMinimum) {
-            return
-        }
-        val wakeUpChanceMaximum = actor.wakeUpChanceMaximum
-        val wakeUpChanceMinimum = actor.wakeUpChanceMinimum
-        val wakeUpRequirement = 0
-        val wakeUpScore = (wakeUpChanceMinimum..wakeUpChanceMaximum).random()
-        logger.debug(
-            "$this: " +
-                    "actor.id=${actor.id} " +
-                    "actor.wakeUpChanceMaximum=$wakeUpChanceMaximum " +
-                    "actor.wakeUpChanceMinimum=$wakeUpChanceMinimum " +
-                    "actor.wakeUpRequirement=$wakeUpRequirement " +
-                    "actor.wakeUpScore=$wakeUpScore"
-        )
-        val turnsSleep = if (wakeUpScore != wakeUpRequirement) (actor.turnsSleep + 1) else 0
-        logger.debug(
-            "$this: " +
-                    "actor.id=${actor.id} " +
-                    "turnsSleep=$turnsSleep"
-        )
-        actor.turnsSleep = turnsSleep
-        if (!actor.statusSleep) {
-            actor.trail.add(
-                Trail(
-                    "$actor WOKE UP"
-                )
-            )
-        }
+    private fun checkActorRemoval(actor: Actor): Boolean {
+        return !checkActorHitPoints(actor) || checkActorRunning(actor)
     }
 
-    private fun checkActorStopSpell(actor: Actor) {
-        if (!actor.statusStopSpell) {
-            return
-        }
-        actor.turnsStopSpell += 1
-        if (actor.turnsStopSpell < actor.turnsStopSpellMinimum) {
-            return
-        }
-        if (!actor.statusStopSpell) {
-            actor.trail.add(
-                Trail(
-                    "$actor SPELLS are no longer BLOCKED"
-                )
-            )
-        }
+    private fun checkActorRunning(actor: Actor): Boolean {
+        logger.debug(
+            "actor.id={} actor.isRunning={} id={} turn={}", actor.id, actor.isRunning, id, turn
+        )
+        return actor.isRunning
     }
 
-    private fun clearActors() {
-        val removeAllValue = this.actors.removeAll { actor ->
-            val isAlive = actor.isAlive
-            logger.debug(
-                "$this: " +
-                        "actor.allegiance=${actor.allegiance} " +
-                        "actor.hitPoints=${actor.hitPoints} " +
-                        "actor.id=${actor.id} " +
-                        "actor.isAlive=$isAlive"
-            )
-            !isAlive
-        }
-
+    private fun checkActorSleepResolution(actor: Actor): Boolean {
+        val sleepResolution = actor.sleepResolution
         logger.debug(
-            "$this: " +
-                    "actors.removeAll=$removeAllValue " +
-                    "actors.size=${actors.size}"
+            "actor.id={} actor.sleepResolution={} actor.sleepResolutionMaximum={} actor.sleepResolutionMinimum={} id={} turn={}",
+            actor.id,
+            sleepResolution,
+            actor.sleepResolutionMaximum,
+            actor.sleepResolutionMinimum,
+            id,
+            turn
         )
+        return sleepResolution == actor.sleepResolutionMaximum
+    }
+
+    private fun checkActorStopSpellResolution(actor: Actor): Boolean {
+        val stopSpellResolution = actor.stopSpellResolution
+        logger.debug(
+            "actor.id={} actor.stopSpellResolution={} actor.stopSpellResolutionMaximum={} actor.stopSpellResolutionMinimum={} id={} turn={}",
+            actor.id,
+            stopSpellResolution,
+            actor.stopSpellResolutionMaximum,
+            actor.stopSpellResolutionMinimum,
+            id,
+            turn
+        )
+        return stopSpellResolution == actor.stopSpellResolutionMaximum
+    }
+
+    private fun checkActorTurnsSleep(actor: Actor): Boolean {
+        logger.debug(
+            "actor.id={} actor.turnsSleep={} id={} turn={}", actor.id, actor.turnsSleep, id, turn
+        )
+        return actor.turnsSleep > 0
+    }
+
+    private fun checkActorTurnsSleepMinimum(actor: Actor): Boolean {
+        logger.debug(
+            "actor.id={} actor.turnsSleep={} actor.turnsSleepMinimum={} id={} turn={}",
+            actor.id,
+            actor.turnsSleep,
+            actor.turnsSleepMinimum,
+            id,
+            turn
+        )
+        return actor.turnsSleep > actor.turnsSleepMinimum
+    }
+
+    private fun checkActorTurnsStopSpell(actor: Actor): Boolean {
+        logger.debug(
+            "actor.id={} actor.turnsStopSpell={} id={} turn={}", actor.id, actor.turnsStopSpell, id, turn
+        )
+        return actor.turnsStopSpell > 0
+    }
+
+    private fun checkActorTurnsStopSpellMinimum(actor: Actor): Boolean {
+        logger.debug(
+            "actor.id={} actor.turnsStopSpell={} actor.turnsStopSpellMinimum={} id={} turn={}",
+            actor.id,
+            actor.turnsStopSpell,
+            actor.turnsStopSpellMinimum,
+            id,
+            turn
+        )
+        return actor.turnsStopSpell > actor.turnsStopSpellMinimum
+    }
+
+    private fun getActorOrder(actor: Actor): Int {
+        val attributeValue = actor.getAttribute(attributeName)
+        logger.debug(
+            "actor.id={} attributeName={} attributeValue={} id={} turn={}",
+            actor.id,
+            attributeName,
+            attributeValue,
+            id,
+            turn
+        )
+        return attributeValue
+    }
+
+    private fun handleActor(actor: Actor) {
+        handleActorSleep(actor)
+        handleActorStopSpell(actor)
+        handleActorAction(actor)
+    }
+
+    private fun handleActorAction(actor: Actor) {
+        val actionResult = actor.actions.any { it.use(actor, actors) }
+        logger.info(
+            "actionResult={} actor.id={} id={} turn={}", actionResult, actor.id, id, turn
+        )
+    }
+
+    private fun handleActorSleep(actor: Actor) {
+        if (checkActorTurnsSleep(actor)) {
+            actor.turnsSleep += 1
+            if (checkActorTurnsSleepMinimum(actor) && checkActorSleepResolution(actor)) {
+                actor.turnsSleep = 0
+            }
+        }
+        logger.info(
+            "actor.id={} actor.turnsSleep={} id={} turn={}", actor.id, actor.turnsSleep, id, turn
+        )
+    }
+
+    private fun handleActorStopSpell(actor: Actor) {
+        if (checkActorTurnsStopSpell(actor)) {
+            actor.turnsSleep += 1
+            if (checkActorTurnsStopSpellMinimum(actor) && checkActorStopSpellResolution(actor)) {
+                actor.turnsStopSpell = 0
+            }
+        }
+        logger.info(
+            "actor.id={} actor.turnsStopSpell={} id={} turn={}", actor.id, actor.turnsStopSpell, id, turn
+        )
+    }
+
+    fun hasNext(): Boolean {
+        return isActive
     }
 
     override fun run() {
-
-        this.turns += 1
-
-        println(
-            "$this: " +
-                    "actors.size=${actors.size} " +
-                    "isActive=${this.isActive} " +
-                    "turns=${this.turns}"
+        logger.info(
+            "actors.size={} allegiances.size={} id={} turn={}", actors.size, allegiances.size, id, turn,
         )
-
-        this.clearActors()
-
-        val allegiances = mutableSetOf<Int>()
-
-        this.actors.forEachIndexed { index, actor ->
-            allegiances.add(actor.allegiance)
-            checkActor(actor, index)
+        allegiances.clear()
+        actors.sortedByDescending { actor ->
+            getActorOrder(actor)
+        }.forEachIndexed { index, actor ->
+            actor.turn = turn
+            logger.debug(
+                "actor.id={} actor.turn={} id={} index={} turn={}", actor.id, actor.turn, id, index, turn
+            )
+            if (checkActorHitPoints(actor)) {
+                handleActor(actor)
+            }
         }
-
-        this.isActive = allegiances.size > 1
-
-        logger.debug(
-            "$this: " +
-                    "allegiances.size=${allegiances.size} " +
-                    "isActive=${this.isActive}"
-        )
+        actors.removeAll { actor ->
+            val removeActor = checkActorRemoval(actor)
+            if (!removeActor) {
+                allegiances.add(actor.allegiance)
+            }
+            removeActor
+        }
+        isActive = allegiances.size > 1
+        turn += 1
     }
 }
