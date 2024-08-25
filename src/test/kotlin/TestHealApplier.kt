@@ -42,6 +42,7 @@ internal class TestHealApplier {
             healApplier.healRangeMaximum = i
             assertContains((10..17), heal)
         }
+
         // Hero Heal
         healApplier.healScale = 0x14
         healApplier.healShift = 0x07
@@ -50,6 +51,5 @@ internal class TestHealApplier {
             healApplier.healRangeMaximum = i
             assertContains((20..27), heal)
         }
-
     }
 }
