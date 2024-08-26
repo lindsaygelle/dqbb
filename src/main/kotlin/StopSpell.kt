@@ -6,7 +6,9 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
     magicCost = magicCost
 ) {
     override fun applyEffect(invoker: A, receiver: B): Boolean {
-        receiver.turnsStopSpell = 1
+        if (!checkReceiverArmor(receiver)) {
+            receiver.turnsStopSpell = 1
+        }
         logger.info(
             "id={} invoker.id={} receiver.id={} receiver.turnsStopSpell={}",
             id,
@@ -18,7 +20,7 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
     }
 
     override fun checkReceiver(receiver: B): Boolean {
-        return (checkReceiverTurnsStopSpell(receiver) && checkReceiverArmor(receiver))
+        return checkReceiverHitPoints(receiver) && checkReceiverTurnsStopSpell(receiver)
     }
 
     private fun checkReceiverArmor(receiver: B): Boolean {
@@ -31,6 +33,13 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
             receiver.id,
         )
         return blocksStopSpell
+    }
+
+    private fun checkReceiverHitPoints(receiver: B): Boolean {
+        logger.debug(
+            "id={} receiver.hitPoints={} receiver.id={}", id, receiver.hitPoints, receiver.id
+        )
+        return receiver.hitPoints > 0
     }
 
     private fun checkReceiverTurnsStopSpell(receiver: B): Boolean {

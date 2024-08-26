@@ -6,7 +6,9 @@ class Sleep<A : SleepInvoker, B : SleepReceiver>(
     magicCost = magicCost
 ) {
     override fun applyEffect(invoker: A, receiver: B): Boolean {
-        receiver.turnsSleep = 1
+        if (!checkReceiverArmor(receiver)) {
+            receiver.turnsSleep = 1
+        }
         logger.info(
             "id={} invoker.id={} receiver.id={} receiver.turnsSleep={}",
             id,
@@ -18,7 +20,7 @@ class Sleep<A : SleepInvoker, B : SleepReceiver>(
     }
 
     override fun checkReceiver(receiver: B): Boolean {
-        return (checkReceiverTurnsSleep(receiver) && checkReceiverArmor(receiver))
+        return checkReceiverHitPoints(receiver) && checkReceiverTurnsSleep(receiver)
     }
 
     private fun checkReceiverArmor(receiver: B): Boolean {
@@ -31,6 +33,13 @@ class Sleep<A : SleepInvoker, B : SleepReceiver>(
             receiver.id,
         )
         return blocksSleep
+    }
+
+    private fun checkReceiverHitPoints(receiver: B): Boolean {
+        logger.debug(
+            "id={} receiver.hitPoints={} receiver.id={}", id, receiver.hitPoints, receiver.id
+        )
+        return receiver.hitPoints > 0
     }
 
     private fun checkReceiverTurnsSleep(receiver: B): Boolean {
