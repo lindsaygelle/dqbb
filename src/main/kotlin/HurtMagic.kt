@@ -9,9 +9,11 @@ abstract class HurtMagic<A, B : HurtReceiver>(
         val hitPoints = receiver.hitPoints
         val hurtPoints = maxOf(1, getHurtPoints(invoker))
         val hurtPointsReduction = maxOf(1, getHurtPointsReduction(receiver))
-        receiver.hitPoints -= hurtPoints / hurtPointsReduction
+        val damagePoints = getDamagePoints(hurtPoints, hurtPointsReduction)
+        receiver.hitPoints -= damagePoints
         logger.info(
-            "hurtPoints={} hurtPointsReduction={} id={} invoker.id={} receiver.hitPoints={} receiver.id={}",
+            "damagePoints={} hurtPoints={} hurtPointsReduction={} id={} invoker.id={} receiver.hitPoints={} receiver.id={}",
+            damagePoints,
             hurtPoints,
             hurtPointsReduction,
             id,
@@ -41,6 +43,10 @@ abstract class HurtMagic<A, B : HurtReceiver>(
             receiver.id
         )
         return hurtReduction
+    }
+
+    private fun getDamagePoints(hurtPoints: Int, hurtPointsReduction: Int): Int {
+        return (hurtPoints - (hurtPoints * (hurtPointsReduction.toDouble() / 100))).toInt()
     }
 
     override fun getRequirement(invoker: A): Int {

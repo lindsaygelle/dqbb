@@ -9,11 +9,13 @@ class BreatheFire<A : BreatheFireInvoker, B : BreatheFireReceiver>(
         val hitPoints = receiver.hitPoints
         val breatheFirePoints = maxOf(1, getBreatheFirePoints(invoker))
         val breatheFirePointsReduction = maxOf(1, getBreatheFirePointsReduction(receiver))
-        receiver.hitPoints -= breatheFirePoints / breatheFirePointsReduction
+        val damagePoints = getDamagePoints(breatheFirePoints, breatheFirePointsReduction)
+        receiver.hitPoints -= damagePoints
         logger.info(
-            "breatheFirePoints={} breatheFirePointsReduction={} id={} invoker.id={} receiver.hitPoints={} receiver.id={}",
+            "breatheFirePoints={} breatheFirePointsReduction={} damagePoints={} id={} invoker.id={} receiver.hitPoints={} receiver.id={}",
             breatheFirePoints,
             breatheFirePointsReduction,
+            damagePoints,
             id,
             invoker.id,
             receiver.hitPoints,
@@ -54,5 +56,9 @@ class BreatheFire<A : BreatheFireInvoker, B : BreatheFireReceiver>(
             receiver.id
         )
         return breatheFireReduction
+    }
+
+    private fun getDamagePoints(breatheFirePoints: Int, breatheFirePointsReduction: Int): Int {
+        return (breatheFirePoints - (breatheFirePoints * (breatheFirePointsReduction.toDouble() / 100))).toInt()
     }
 }
