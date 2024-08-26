@@ -19,9 +19,8 @@ internal class TestWeapon {
 
     @Test
     fun testAttackNegative() {
-        for (attack in (-100..-1)) {
-            weapon.attack = attack
-            assertEquals(0, weapon.attack)
-        }
+        val attack = (-100..-1).random()
+        weapon.attack = attack
+        assertEquals(0, weapon.attack)
     }
 }

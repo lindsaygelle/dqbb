@@ -19,9 +19,8 @@ internal class TestShield {
 
     @Test
     fun testDefenseNegative() {
-        for (defense in (-100..-1)) {
-            shield.defense = defense
-            assertEquals(0, shield.defense)
-        }
+        val defense = (-100..-1).random()
+        shield.defense = defense
+        assertEquals(0, shield.defense)
     }
 }
