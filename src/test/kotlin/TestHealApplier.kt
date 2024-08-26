@@ -33,8 +33,7 @@ internal class TestHealApplier {
     }
 
     @Test
-    fun testHeal() {
-        // Enemy Heal
+    fun testHealEnemy() {
         healApplier.healScale = 0x0A // 10
         healApplier.healShift = 0x07 // 7
         for (i in (0..255)) {
@@ -42,8 +41,10 @@ internal class TestHealApplier {
             healApplier.healRangeMaximum = i
             assertContains((10..17), heal)
         }
+    }
 
-        // Hero Heal
+    @Test
+    fun testHealHero() {
         healApplier.healScale = 0x14
         healApplier.healShift = 0x07
         for (i in (0..255)) {
