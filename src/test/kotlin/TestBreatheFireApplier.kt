@@ -33,8 +33,7 @@ internal class TestBreatheFireApplier {
     }
 
     @Test
-    fun testBreatheFire() {
-        // Weak
+    fun testBreatheFireWeak() {
         breatheFireApplier.breatheFireScale = 0x10
         breatheFireApplier.breatheFireShift = 0x07
         for (i in (0..255)) {
@@ -42,8 +41,10 @@ internal class TestBreatheFireApplier {
             breatheFireApplier.breatheFireRangeMaximum = i
             assertContains((16..23), breatheFire)
         }
+    }
 
-        // Strong
+    @Test
+    fun testBreatheFireStrong() {
         breatheFireApplier.breatheFireScale = 0x41
         breatheFireApplier.breatheFireShift = 0x07
         for (i in (0..255)) {
