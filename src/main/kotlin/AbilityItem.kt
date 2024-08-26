@@ -1,7 +1,7 @@
 package dqbb
 
 abstract class AbilityItem<A : ItemInvoker, B : Receiver>(
-    private val itemName: ItemName,
+    val itemName: ItemName,
 ) : Ability<A, B>() {
     final override fun checkInvoker(invoker: A): Boolean {
         return super.checkInvoker(invoker) && checkInvokerItem(invoker)
