@@ -12,15 +12,17 @@ internal class TestWeapon {
 
     @Test
     fun testAttack() {
-        val attack = (1..100).random()
-        weapon.attack = attack
-        assertEquals(attack, weapon.attack)
+        for (attack in (0..100)) {
+            weapon.attack = attack
+            assertEquals(attack, weapon.attack)
+        }
     }
 
     @Test
     fun testAttackNegative() {
-        val attack = (-100..-1).random()
-        weapon.attack = attack
-        assertEquals(0, weapon.attack)
+        for (attack in (-100..0)) {
+            weapon.attack = attack
+            assertEquals(0, weapon.attack)
+        }
     }
 }
