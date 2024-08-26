@@ -39,6 +39,12 @@ internal class TestAbilityMagic {
     }
 
     @Test
+    fun testTurnsStopSpell() {
+        magicInvoker.turnsStopSpell = 1
+        assertEquals(false, abilityMagic.use(magicInvoker, receiver))
+    }
+
+    @Test
     fun testMagicCost() {
         magicInvoker.magicPoints = abilityMagic.magicCost - 1
         assertEquals(false, abilityMagic.use(magicInvoker, receiver))
