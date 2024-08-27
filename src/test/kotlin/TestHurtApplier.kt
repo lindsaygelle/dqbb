@@ -20,16 +20,18 @@ internal class TestHurtApplier {
 
     @Test
     fun testHurtScale() {
-        val hurtScale = 0x03
-        hurtApplier.hurtScale = hurtScale
-        assertEquals(hurtScale, hurtApplier.hurtScale)
+        for (hurtScale in (0..0x03)) {
+            hurtApplier.hurtScale = hurtScale
+            assertEquals(hurtScale, hurtApplier.hurtScale)
+        }
     }
 
     @Test
     fun testHurtShift() {
-        val hurtShift = 0x07
-        hurtApplier.hurtShift = hurtShift
-        assertEquals(hurtShift, hurtApplier.hurtShift)
+        for (hurtShift in (0..0x07)) {
+            hurtApplier.hurtShift = hurtShift
+            assertEquals(hurtShift, hurtApplier.hurtShift)
+        }
     }
 
     @Test

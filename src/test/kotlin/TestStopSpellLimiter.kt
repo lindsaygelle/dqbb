@@ -17,15 +17,17 @@ internal class TestStopSpellLimiter {
 
     @Test
     fun testTurnsStopSpellMaximum() {
-        val turnsStopSpellMaximum = (0..100).random()
-        stopSpellLimiter.turnsStopSpellMaximum = turnsStopSpellMaximum
-        assertEquals(turnsStopSpellMaximum, stopSpellLimiter.turnsStopSpellMaximum)
+        for (turnsStopSpellMaximum in (0..100)) {
+            stopSpellLimiter.turnsStopSpellMaximum = turnsStopSpellMaximum
+            assertEquals(turnsStopSpellMaximum, stopSpellLimiter.turnsStopSpellMaximum)
+        }
     }
 
     @Test
     fun testTurnsStopSpellMinimum() {
-        val turnsStopSpellMinimum = (0..100).random()
-        stopSpellLimiter.turnsStopSpellMinimum = turnsStopSpellMinimum
-        assertEquals(turnsStopSpellMinimum, stopSpellLimiter.turnsStopSpellMinimum)
+        for (turnsStopSpellMinimum in (0..100)) {
+            stopSpellLimiter.turnsStopSpellMinimum = turnsStopSpellMinimum
+            assertEquals(turnsStopSpellMinimum, stopSpellLimiter.turnsStopSpellMinimum)
+        }
     }
 }

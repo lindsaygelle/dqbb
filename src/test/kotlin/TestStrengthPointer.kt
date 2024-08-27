@@ -7,17 +7,18 @@ internal class TestStrengthPointer {
         override var strength: Int = 0
     }
 
-    private lateinit var strengthAccumulator: dqbb.StrengthPointer
+    private lateinit var strengthPointer: dqbb.StrengthPointer
 
     @BeforeTest
     fun before() {
-        strengthAccumulator = StrengthPointer()
+        strengthPointer = StrengthPointer()
     }
 
     @Test
     fun test() {
-        val strength = (0..100).random()
-        strengthAccumulator.strength = strength
-        assertEquals(strength, strengthAccumulator.strength)
+        for (strength in (0..100)) {
+            strengthPointer.strength = strength
+            assertEquals(strength, strengthPointer.strength)
+        }
     }
 }

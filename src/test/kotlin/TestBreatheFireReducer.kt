@@ -16,8 +16,9 @@ internal class TestBreatheFireReducer {
 
     @Test
     fun test() {
-        val breatheFireReduction = (0..100).random()
-        breatheFireReducer.breatheFireReduction = breatheFireReduction
-        assertEquals(breatheFireReduction, breatheFireReducer.breatheFireReduction)
+        for (breatheFireReduction in (0..100)) {
+            breatheFireReducer.breatheFireReduction = breatheFireReduction
+            assertEquals(breatheFireReduction, breatheFireReducer.breatheFireReduction)
+        }
     }
 }

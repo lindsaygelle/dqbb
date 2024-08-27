@@ -18,9 +18,10 @@ internal class TestSleepRequester {
 
     @Test
     fun testSleepRequirementMaximum() {
-        val sleepRequirementMaximum = (0..100).random()
-        sleepRequester.sleepRequirementMaximum = sleepRequirementMaximum
-        assertEquals(sleepRequirementMaximum, sleepRequester.sleepRequirementMaximum)
+        for (sleepRequirementMaximum in (0..100)) {
+            sleepRequester.sleepRequirementMaximum = sleepRequirementMaximum
+            assertEquals(sleepRequirementMaximum, sleepRequester.sleepRequirementMaximum)
+        }
     }
 
     @Test

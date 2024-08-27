@@ -16,8 +16,9 @@ internal class TestTurnAccumulator {
 
     @Test
     fun test() {
-        val turn = (0..100).random()
-        turnAccumulator.turn = turn
-        assertEquals(turn, turnAccumulator.turn)
+        for (turn in (0..100)) {
+            turnAccumulator.turn = turn
+            assertEquals(turn, turnAccumulator.turn)
+        }
     }
 }

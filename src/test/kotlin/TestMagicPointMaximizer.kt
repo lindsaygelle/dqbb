@@ -16,8 +16,9 @@ internal class TestMagicPointMaximizer {
 
     @Test
     fun test() {
-        val magicPointsMaximum = (0..100).random()
-        magicPointMaximizer.magicPointsMaximum = magicPointsMaximum
-        assertEquals(magicPointsMaximum, magicPointMaximizer.magicPointsMaximum)
+        for (magicPointsMaximum in (0..100)) {
+            magicPointMaximizer.magicPointsMaximum = magicPointsMaximum
+            assertEquals(magicPointsMaximum, magicPointMaximizer.magicPointsMaximum)
+        }
     }
 }

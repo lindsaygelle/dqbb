@@ -20,16 +20,18 @@ internal class TestHerbApplier {
 
     @Test
     fun testHerbScale() {
-        val herbScale = 0x17
-        herbApplier.herbScale = herbScale
-        assertEquals(herbScale, herbApplier.herbScale)
+        for (herbScale in (0..0x17)) {
+            herbApplier.herbScale = herbScale
+            assertEquals(herbScale, herbApplier.herbScale)
+        }
     }
 
     @Test
     fun testHerbShift() {
-        val herbShift = 0x0F
-        herbApplier.herbShift = herbShift
-        assertEquals(herbShift, herbApplier.herbShift)
+        for (herbShift in (0..0x0F)) {
+            herbApplier.herbShift = herbShift
+            assertEquals(herbShift, herbApplier.herbShift)
+        }
     }
 
     @Test

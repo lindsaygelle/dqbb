@@ -20,16 +20,18 @@ internal class TestBreatheFireApplier {
 
     @Test
     fun testBreatheFireScale() {
-        val breatheFireScale = 0x10
-        breatheFireApplier.breatheFireScale = breatheFireScale
-        assertEquals(breatheFireScale, breatheFireApplier.breatheFireScale)
+        for (breatheFireScale in (0..0x10)) {
+            breatheFireApplier.breatheFireScale = breatheFireScale
+            assertEquals(breatheFireScale, breatheFireApplier.breatheFireScale)
+        }
     }
 
     @Test
     fun testBreatheFireShift() {
-        val breatheFireShift = 0x07
-        breatheFireApplier.breatheFireShift = breatheFireShift
-        assertEquals(breatheFireShift, breatheFireApplier.breatheFireShift)
+        for (breatheFireShift in (0..0x07)) {
+            breatheFireApplier.breatheFireShift = breatheFireShift
+            assertEquals(breatheFireShift, breatheFireApplier.breatheFireShift)
+        }
     }
 
     @Test

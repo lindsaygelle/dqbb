@@ -17,15 +17,17 @@ internal class TestSleepLimiter {
 
     @Test
     fun testTurnsSleepMaximum() {
-        val turnsSleepMaximum = (0..100).random()
-        sleepLimiter.turnsSleepMaximum = turnsSleepMaximum
-        assertEquals(turnsSleepMaximum, sleepLimiter.turnsSleepMaximum)
+        for (turnsSleepMaximum in (0..100)) {
+            sleepLimiter.turnsSleepMaximum = turnsSleepMaximum
+            assertEquals(turnsSleepMaximum, sleepLimiter.turnsSleepMaximum)
+        }
     }
 
     @Test
     fun testTurnsSleepMinimum() {
-        val turnsSleepMinimum = (0..100).random()
-        sleepLimiter.turnsSleepMinimum = turnsSleepMinimum
-        assertEquals(turnsSleepMinimum, sleepLimiter.turnsSleepMinimum)
+        for (turnsSleepMinimum in (0..100)) {
+            sleepLimiter.turnsSleepMinimum = turnsSleepMinimum
+            assertEquals(turnsSleepMinimum, sleepLimiter.turnsSleepMinimum)
+        }
     }
 }

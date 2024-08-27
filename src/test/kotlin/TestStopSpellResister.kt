@@ -18,16 +18,18 @@ internal class TestStopSpellResister {
 
     @Test
     fun testStopSpellResistanceMaximum() {
-        val stopSpellResistanceMaximum = (0..100).random()
-        stopSpellResister.stopSpellResistanceMaximum = stopSpellResistanceMaximum
-        assertEquals(stopSpellResistanceMaximum, stopSpellResister.stopSpellResistanceMaximum)
+        for (stopSpellResistanceMaximum in (0..100)) {
+            stopSpellResister.stopSpellResistanceMaximum = stopSpellResistanceMaximum
+            assertEquals(stopSpellResistanceMaximum, stopSpellResister.stopSpellResistanceMaximum)
+        }
     }
 
     @Test
     fun testStopSpellResistanceMinimum() {
-        val stopSpellResistanceMinimum = (0..100).random()
-        stopSpellResister.stopSpellResistanceMinimum = stopSpellResistanceMinimum
-        assertEquals(stopSpellResistanceMinimum, stopSpellResister.stopSpellResistanceMinimum)
+        for (stopSpellResistanceMinimum in (0..100)) {
+            stopSpellResister.stopSpellResistanceMinimum = stopSpellResistanceMinimum
+            assertEquals(stopSpellResistanceMinimum, stopSpellResister.stopSpellResistanceMinimum)
+        }
     }
 
     @Test

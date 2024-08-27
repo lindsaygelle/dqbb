@@ -16,8 +16,9 @@ internal class TestDefensePointer {
 
     @Test
     fun test() {
-        val defense = (0..100).random()
-        defensePointer.defense = defense
-        assertEquals(defense, defensePointer.defense)
+        for (defense in (0..100)) {
+            defensePointer.defense = defense
+            assertEquals(defense, defensePointer.defense)
+        }
     }
 }

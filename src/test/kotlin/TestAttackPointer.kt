@@ -7,17 +7,18 @@ internal class TestAttackPointer {
         override var attack: Int = 0
     }
 
-    private lateinit var attackAccumulator: dqbb.AttackPointer
+    private lateinit var attackPointer: dqbb.AttackPointer
 
     @BeforeTest
     fun before() {
-        attackAccumulator = AttackPointer()
+        attackPointer = AttackPointer()
     }
 
     @Test
     fun test() {
-        val attack = (0..100).random()
-        attackAccumulator.attack = attack
-        assertEquals(attack, attackAccumulator.attack)
+        for (attack in (0..100)) {
+            attackPointer.attack = attack
+            assertEquals(attack, attackPointer.attack)
+        }
     }
 }

@@ -16,8 +16,9 @@ internal class TestHitPointer {
 
     @Test
     fun test() {
-        val hitPoints = (0..100).random()
-        hitPointer.hitPoints = hitPoints
-        assertEquals(hitPoints, hitPointer.hitPoints)
+        for (hitPoints in (0..100)) {
+            hitPointer.hitPoints = hitPoints
+            assertEquals(hitPoints, hitPointer.hitPoints)
+        }
     }
 }

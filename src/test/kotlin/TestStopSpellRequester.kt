@@ -18,16 +18,18 @@ internal class TestStopSpellRequester {
 
     @Test
     fun testStopSpellRequirementMaximum() {
-        val stopSpellRequirementMaximum = (0..100).random()
-        stopSpellRequester.stopSpellRequirementMaximum = stopSpellRequirementMaximum
-        assertEquals(stopSpellRequirementMaximum, stopSpellRequester.stopSpellRequirementMaximum)
+        for (stopSpellRequirementMaximum in (0..100)) {
+            stopSpellRequester.stopSpellRequirementMaximum = stopSpellRequirementMaximum
+            assertEquals(stopSpellRequirementMaximum, stopSpellRequester.stopSpellRequirementMaximum)
+        }
     }
 
     @Test
     fun testStopSpellRequirementMinimum() {
-        val stopSpellRequirementMinimum = (0..100).random()
-        stopSpellRequester.stopSpellRequirementMinimum = stopSpellRequirementMinimum
-        assertEquals(stopSpellRequirementMinimum, stopSpellRequester.stopSpellRequirementMinimum)
+        for (stopSpellRequirementMinimum in (0..100)) {
+            stopSpellRequester.stopSpellRequirementMinimum = stopSpellRequirementMinimum
+            assertEquals(stopSpellRequirementMinimum, stopSpellRequester.stopSpellRequirementMinimum)
+        }
     }
 
     @Test

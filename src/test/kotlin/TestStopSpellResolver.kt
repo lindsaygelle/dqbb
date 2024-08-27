@@ -18,16 +18,18 @@ internal class TestStopSpellResolver {
 
     @Test
     fun testStopSpellResolutionMaximum() {
-        val stopSpellResolutionMaximum = (0..100).random()
-        stopSpellResolver.stopSpellResolutionMaximum = stopSpellResolutionMaximum
-        assertEquals(stopSpellResolutionMaximum, stopSpellResolver.stopSpellResolutionMaximum)
+        for (stopSpellResolutionMaximum  in (0..100)) {
+            stopSpellResolver.stopSpellResolutionMaximum = stopSpellResolutionMaximum
+            assertEquals(stopSpellResolutionMaximum, stopSpellResolver.stopSpellResolutionMaximum)
+        }
     }
 
     @Test
     fun testStopSpellResolutionMinimum() {
-        val stopSpellResolutionMinimum = (0..100).random()
-        stopSpellResolver.stopSpellResolutionMinimum = stopSpellResolutionMinimum
-        assertEquals(stopSpellResolutionMinimum, stopSpellResolver.stopSpellResolutionMinimum)
+        for (stopSpellResolutionMinimum in (0..100)) {
+            stopSpellResolver.stopSpellResolutionMinimum = stopSpellResolutionMinimum
+            assertEquals(stopSpellResolutionMinimum, stopSpellResolver.stopSpellResolutionMinimum)
+        }
     }
 
     @Test

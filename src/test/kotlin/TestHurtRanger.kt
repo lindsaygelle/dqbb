@@ -19,16 +19,18 @@ internal class TestHurtRanger {
 
     @Test
     fun testHurtRangeMaximum() {
-        val hurtRangeMaximum = (0..100).random()
-        hurtRanger.hurtRangeMaximum = hurtRangeMaximum
-        assertEquals(hurtRangeMaximum, hurtRanger.hurtRangeMaximum)
+        for (hurtRangeMaximum in (0..100)) {
+            hurtRanger.hurtRangeMaximum = hurtRangeMaximum
+            assertEquals(hurtRangeMaximum, hurtRanger.hurtRangeMaximum)
+        }
     }
 
     @Test
     fun testHurtRangeMinimum() {
-        val hurtRangeMinimum = (0..100).random()
-        hurtRanger.hurtRangeMinimum = hurtRangeMinimum
-        assertEquals(hurtRangeMinimum, hurtRanger.hurtRangeMinimum)
+        for (hurtRangeMinimum in (0..100)) {
+            hurtRanger.hurtRangeMinimum = hurtRangeMinimum
+            assertEquals(hurtRangeMinimum, hurtRanger.hurtRangeMinimum)
+        }
     }
 
     @Test

@@ -16,8 +16,9 @@ internal class TestSleepBlocker {
 
     @Test
     fun test() {
-        val blocksSleep = listOf(true, false).random()
-        sleepBlocker.blocksSleep = blocksSleep
-        assertEquals(blocksSleep, sleepBlocker.blocksSleep)
+        for (blocksSleep in listOf(true, false)) {
+            sleepBlocker.blocksSleep = blocksSleep
+            assertEquals(blocksSleep, sleepBlocker.blocksSleep)
+        }
     }
 }

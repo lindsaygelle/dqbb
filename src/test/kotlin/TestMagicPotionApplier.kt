@@ -20,16 +20,18 @@ internal class TestMagicPotionApplier {
 
     @Test
     fun testMagicPotionScale() {
-        val magicPotionScale = 0x0A // 10
-        magicPotionApplier.magicPotionScale = magicPotionScale
-        assertEquals(magicPotionScale, magicPotionApplier.magicPotionScale)
+        for (magicPotionScale in (0..0x0A)) {
+            magicPotionApplier.magicPotionScale = magicPotionScale
+            assertEquals(magicPotionScale, magicPotionApplier.magicPotionScale)
+        }
     }
 
     @Test
     fun testMagicPotionShift() {
-        val magicPotionShift = 0x07 // 7
-        magicPotionApplier.magicPotionShift = magicPotionShift
-        assertEquals(magicPotionShift, magicPotionApplier.magicPotionShift)
+        for (magicPotionShift in (0..0x07) {
+            magicPotionApplier.magicPotionShift = magicPotionShift
+            assertEquals(magicPotionShift, magicPotionApplier.magicPotionShift)
+        }
     }
 
     @Test

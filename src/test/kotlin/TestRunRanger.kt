@@ -19,16 +19,18 @@ internal class TestRunRanger {
 
     @Test
     fun testRunRangeMaximum() {
-        val runRangeMaximum = (0..100).random()
-        runRanger.runRangeMaximum = runRangeMaximum
-        assertEquals(runRangeMaximum, runRanger.runRangeMaximum)
+        for (runRangeMaximum in (0..100)) {
+            runRanger.runRangeMaximum = runRangeMaximum
+            assertEquals(runRangeMaximum, runRanger.runRangeMaximum)
+        }
     }
 
     @Test
     fun testRunRangeMinimum() {
-        val runRangeMinimum = (0..100).random()
-        runRanger.runRangeMinimum = runRangeMinimum
-        assertEquals(runRangeMinimum, runRanger.runRangeMinimum)
+        for (runRangeMinimum in (0..100)) {
+            runRanger.runRangeMinimum = runRangeMinimum
+            assertEquals(runRangeMinimum, runRanger.runRangeMinimum)
+        }
     }
 
     @Test
