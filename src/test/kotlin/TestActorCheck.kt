@@ -8,7 +8,6 @@ import kotlin.test.assertEquals
 
 internal class TestActorCheck {
     private lateinit var actor: Actor
-    private lateinit var actorCheck: ActorCheck
 
     @BeforeTest
     fun before() {
@@ -18,7 +17,7 @@ internal class TestActorCheck {
     @Test
     fun testEqual() {
         val agility = 1
-        actorCheck = ActorCheck(
+        val actorCheck = ActorCheck(
             attributeName = AttributeName.AGILITY,
             operatorType = OperatorType.EQUAL,
             value = agility
@@ -30,7 +29,7 @@ internal class TestActorCheck {
     @Test
     fun testGreaterThan() {
         val agility = 1
-        actorCheck = ActorCheck(
+        val actorCheck = ActorCheck(
             attributeName = AttributeName.AGILITY,
             operatorType = OperatorType.GREATER_THAN,
             value = agility
@@ -42,7 +41,7 @@ internal class TestActorCheck {
     @Test
     fun testGreaterThanEqual() {
         val agility = 1
-        actorCheck = ActorCheck(
+        val actorCheck = ActorCheck(
             attributeName = AttributeName.AGILITY,
             operatorType = OperatorType.GREATER_THAN_EQUAL,
             value = agility
@@ -56,7 +55,7 @@ internal class TestActorCheck {
     @Test
     fun testLessThan() {
         val agility = 1
-        actorCheck = ActorCheck(
+        val actorCheck = ActorCheck(
             attributeName = AttributeName.AGILITY,
             operatorType = OperatorType.LESS_THAN,
             value = agility
@@ -68,7 +67,7 @@ internal class TestActorCheck {
     @Test
     fun testLessThanEqual() {
         val agility = 1
-        actorCheck = ActorCheck(
+        val actorCheck = ActorCheck(
             attributeName = AttributeName.AGILITY,
             operatorType = OperatorType.LESS_THAN_EQUAL,
             value = agility
@@ -82,7 +81,7 @@ internal class TestActorCheck {
     @Test
     fun testNot() {
         val agility = 1
-        actorCheck = ActorCheck(
+        val actorCheck = ActorCheck(
             attributeName = AttributeName.AGILITY,
             operatorType = OperatorType.NOT,
             value = agility
