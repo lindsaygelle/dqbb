@@ -19,16 +19,18 @@ internal class TestHealRanger {
 
     @Test
     fun testHealRangeMaximum() {
-        val healRangeMaximum = (0..100).random()
-        healRanger.healRangeMaximum = healRangeMaximum
-        assertEquals(healRangeMaximum, healRanger.healRangeMaximum)
+        for (healRangeMaximum in (0..100)) {
+            healRanger.healRangeMaximum = healRangeMaximum
+            assertEquals(healRangeMaximum, healRanger.healRangeMaximum)
+        }
     }
 
     @Test
     fun testHealRangeMinimum() {
-        val healRangeMinimum = (0..100).random()
-        healRanger.healRangeMinimum = healRangeMinimum
-        assertEquals(healRangeMinimum, healRanger.healRangeMinimum)
+        for (healRangeMinimum in (0..100)) {
+            healRanger.healRangeMinimum = healRangeMinimum
+            assertEquals(healRangeMinimum, healRanger.healRangeMinimum)
+        }
     }
 
     @Test

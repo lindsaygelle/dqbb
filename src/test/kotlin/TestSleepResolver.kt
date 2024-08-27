@@ -18,16 +18,18 @@ internal class TestSleepResolver {
 
     @Test
     fun testSleepResolutionMaximum() {
-        val sleepResolutionMaximum = (0..100).random()
-        sleepResolver.sleepResolutionMaximum = sleepResolutionMaximum
-        assertEquals(sleepResolutionMaximum, sleepResolver.sleepResolutionMaximum)
+        for (sleepResolutionMaximum in (0..100)) {
+            sleepResolver.sleepResolutionMaximum = sleepResolutionMaximum
+            assertEquals(sleepResolutionMaximum, sleepResolver.sleepResolutionMaximum)
+        }
     }
 
     @Test
     fun testSleepResolutionMinimum() {
-        val sleepResolutionMinimum = (0..100).random()
-        sleepResolver.sleepResolutionMinimum = sleepResolutionMinimum
-        assertEquals(sleepResolutionMinimum, sleepResolver.sleepResolutionMinimum)
+        for (sleepResolutionMinimum in (0..100)) {
+            sleepResolver.sleepResolutionMinimum = sleepResolutionMinimum
+            assertEquals(sleepResolutionMinimum, sleepResolver.sleepResolutionMinimum)
+        }
     }
 
     @Test

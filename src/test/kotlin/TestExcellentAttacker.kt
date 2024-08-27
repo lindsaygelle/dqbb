@@ -18,16 +18,18 @@ internal class TestExcellentAttacker {
 
     @Test
     fun testExcellentAttackRequirementMaximum() {
-        val excellentAttackRequirementMaximum = (0..100).random()
-        excellentAttacker.excellentAttackRequirementMaximum = excellentAttackRequirementMaximum
-        assertEquals(excellentAttackRequirementMaximum, excellentAttacker.excellentAttackRequirementMaximum)
+        for (excellentAttackRequirementMaximum in (0..100)) {
+            excellentAttacker.excellentAttackRequirementMaximum = excellentAttackRequirementMaximum
+            assertEquals(excellentAttackRequirementMaximum, excellentAttacker.excellentAttackRequirementMaximum)
+        }
     }
 
     @Test
     fun testExcellentAttackRequirementMinimum() {
-        val excellentAttackRequirementMinimum = (0..100).random()
-        excellentAttacker.excellentAttackRequirementMinimum = excellentAttackRequirementMinimum
-        assertEquals(excellentAttackRequirementMinimum, excellentAttacker.excellentAttackRequirementMinimum)
+        for (excellentAttackRequirementMinimum in (0..100)) {
+            excellentAttacker.excellentAttackRequirementMinimum = excellentAttackRequirementMinimum
+            assertEquals(excellentAttackRequirementMinimum, excellentAttacker.excellentAttackRequirementMinimum)
+        }
     }
 
     @Test

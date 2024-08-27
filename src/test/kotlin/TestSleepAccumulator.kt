@@ -16,8 +16,9 @@ internal class TestSleepAccumulator {
 
     @Test
     fun test() {
-        val turnsSleep = (0..100).random()
-        sleepAccumulator.turnsSleep = turnsSleep
-        assertEquals(turnsSleep, sleepAccumulator.turnsSleep)
+        for (turnsSleep in (0..100)) {
+            sleepAccumulator.turnsSleep = turnsSleep
+            assertEquals(turnsSleep, sleepAccumulator.turnsSleep)
+        }
     }
 }

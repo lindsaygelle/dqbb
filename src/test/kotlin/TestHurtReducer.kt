@@ -16,8 +16,9 @@ internal class TestHurtReducer {
 
     @Test
     fun test() {
-        val hurtReduction = (0..100).random()
-        hurtReducer.hurtReduction = hurtReduction
-        assertEquals(hurtReduction, hurtReducer.hurtReduction)
+        for (hurtReduction in (0..100)) {
+            hurtReducer.hurtReduction = hurtReduction
+            assertEquals(hurtReduction, hurtReducer.hurtReduction)
+        }
     }
 }

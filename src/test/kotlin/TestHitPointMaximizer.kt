@@ -16,8 +16,9 @@ internal class TestHitPointMaximizer {
 
     @Test
     fun test() {
-        val hitPointsMaximum = (0..100).random()
-        hitPointMaximizer.hitPointsMaximum = hitPointsMaximum
-        assertEquals(hitPointsMaximum, hitPointMaximizer.hitPointsMaximum)
+        for (hitPointsMaximum in (0..100)) {
+            hitPointMaximizer.hitPointsMaximum = hitPointsMaximum
+            assertEquals(hitPointsMaximum, hitPointMaximizer.hitPointsMaximum)
+        }
     }
 }

@@ -18,16 +18,18 @@ internal class TestHurtRequester {
 
     @Test
     fun testHurtRequirementMaximum() {
-        val hurtRequirementMaximum = (0..100).random()
-        hurtRequester.hurtRequirementMaximum = hurtRequirementMaximum
-        assertEquals(hurtRequirementMaximum, hurtRequester.hurtRequirementMaximum)
+        for (hurtRequirementMaximum in (0..100)) {
+            hurtRequester.hurtRequirementMaximum = hurtRequirementMaximum
+            assertEquals(hurtRequirementMaximum, hurtRequester.hurtRequirementMaximum)
+        }
     }
 
     @Test
     fun testHurtRequirementMinimum() {
-        val hurtRequirementMinimum = (0..100).random()
-        hurtRequester.hurtRequirementMinimum = hurtRequirementMinimum
-        assertEquals(hurtRequirementMinimum, hurtRequester.hurtRequirementMinimum)
+        for (hurtRequirementMinimum in (0..100)) {
+            hurtRequester.hurtRequirementMinimum = hurtRequirementMinimum
+            assertEquals(hurtRequirementMinimum, hurtRequester.hurtRequirementMinimum)
+        }
     }
 
     @Test

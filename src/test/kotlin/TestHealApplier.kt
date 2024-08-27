@@ -20,16 +20,18 @@ internal class TestHealApplier {
 
     @Test
     fun testHealScale() {
-        val healScale = 0x0A // 10
-        healApplier.healScale = healScale
-        assertEquals(healScale, healApplier.healScale)
+        for (healScale in (0..0x0A)) {
+            healApplier.healScale = healScale
+            assertEquals(healScale, healApplier.healScale)
+        }
     }
 
     @Test
     fun testHealShift() {
-        val healShift = 0x07 // 7
-        healApplier.healShift = healShift
-        assertEquals(healShift, healApplier.healShift)
+        for (healShift in (0..0x07)) {
+            healApplier.healShift = healShift
+            assertEquals(healShift, healApplier.healShift)
+        }
     }
 
     @Test

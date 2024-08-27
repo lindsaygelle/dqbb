@@ -18,16 +18,18 @@ internal class TestSleepResister {
 
     @Test
     fun testSleepResistanceMaximum() {
-        val sleepResistanceMaximum = (0..100).random()
-        sleepResister.sleepResistanceMaximum = sleepResistanceMaximum
-        assertEquals(sleepResistanceMaximum, sleepResister.sleepResistanceMaximum)
+        for (sleepResistanceMaximum in (0..100)) {
+            sleepResister.sleepResistanceMaximum = sleepResistanceMaximum
+            assertEquals(sleepResistanceMaximum, sleepResister.sleepResistanceMaximum)
+        }
     }
 
     @Test
     fun testSleepResistanceMinimum() {
-        val sleepResistanceMinimum = (0..100).random()
-        sleepResister.sleepResistanceMinimum = sleepResistanceMinimum
-        assertEquals(sleepResistanceMinimum, sleepResister.sleepResistanceMinimum)
+        for (sleepResistanceMinimum in (0..100)) {
+            sleepResister.sleepResistanceMinimum = sleepResistanceMinimum
+            assertEquals(sleepResistanceMinimum, sleepResister.sleepResistanceMinimum)
+        }
     }
 
     @Test

@@ -16,8 +16,9 @@ internal class TestStopSpellBlocker {
 
     @Test
     fun test() {
-        val blocksStopSpell = listOf(true, false).random()
-        stopSpellBlocker.blocksStopSpell = blocksStopSpell
-        assertEquals(blocksStopSpell, stopSpellBlocker.blocksStopSpell)
+        for (blocksStopSpell in listOf(true, false)) {
+            stopSpellBlocker.blocksStopSpell = blocksStopSpell
+            assertEquals(blocksStopSpell, stopSpellBlocker.blocksStopSpell)
+        }
     }
 }

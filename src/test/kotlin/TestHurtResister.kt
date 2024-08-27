@@ -18,16 +18,18 @@ internal class TestHurtResister {
 
     @Test
     fun testHurtResistanceMaximum() {
-        val hurtResistanceMaximum = (0..100).random()
-        hurtResister.hurtResistanceMaximum = hurtResistanceMaximum
-        assertEquals(hurtResistanceMaximum, hurtResister.hurtResistanceMaximum)
+        for (hurtResistanceMaximum in (0..100)) {
+            hurtResister.hurtResistanceMaximum = hurtResistanceMaximum
+            assertEquals(hurtResistanceMaximum, hurtResister.hurtResistanceMaximum)
+        }
     }
 
     @Test
     fun testHurtResistanceMinimum() {
-        val hurtResistanceMinimum = (0..100).random()
-        hurtResister.hurtResistanceMinimum = hurtResistanceMinimum
-        assertEquals(hurtResistanceMinimum, hurtResister.hurtResistanceMinimum)
+        for (hurtResistanceMinimum in (0..100)) {
+            hurtResister.hurtResistanceMinimum = hurtResistanceMinimum
+            assertEquals(hurtResistanceMinimum, hurtResister.hurtResistanceMinimum)
+        }
     }
 
     @Test

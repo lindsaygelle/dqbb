@@ -16,8 +16,9 @@ internal class TestMagicPointer {
 
     @Test
     fun test() {
-        val magicPoints = (0..100).random()
-        magicPointer.magicPoints = magicPoints
-        assertEquals(magicPoints, magicPointer.magicPoints)
+        for (magicPoints in (0..100)) {
+            magicPointer.magicPoints = magicPoints
+            assertEquals(magicPoints, magicPointer.magicPoints)
+        }
     }
 }
