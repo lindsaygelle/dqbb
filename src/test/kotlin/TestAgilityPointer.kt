@@ -16,8 +16,9 @@ internal class TestAgilityPointer {
 
     @Test
     fun test() {
-        val agility = (0..100).random()
-        agilityAccumulator.agility = agility
-        assertEquals(agility, agilityAccumulator.agility)
+        for (agility in (0..100)) {
+            agilityAccumulator.agility = agility
+            assertEquals(agility, agilityAccumulator.agility)
+        }
     }
 }

@@ -28,7 +28,7 @@ internal class TestMagicPotionApplier {
 
     @Test
     fun testMagicPotionShift() {
-        for (magicPotionShift in (0..0x07) {
+        for (magicPotionShift in (0..0x07)) {
             magicPotionApplier.magicPotionShift = magicPotionShift
             assertEquals(magicPotionShift, magicPotionApplier.magicPotionShift)
         }

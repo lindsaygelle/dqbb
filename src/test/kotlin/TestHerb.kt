@@ -1,4 +1,3 @@
-
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -32,13 +31,13 @@ internal class TestHerb {
 
     @Test
     fun test() {
-        healReceiver.hitPoints = 1
-        healReceiver.hitPointsMaximum = 100
         herbInvoker.herbRangeMaximum = 1
         herbInvoker.herbRangeMinimum = herbInvoker.herbRangeMaximum
         herbInvoker.herbScale = 0x17
         herbInvoker.herbShift = 0x0F
         herbInvoker.items[dqbb.ItemName.HERB] = 1
+        healReceiver.hitPoints = 1
+        healReceiver.hitPointsMaximum = 100
         assertEquals(true, herb.use(herbInvoker, healReceiver))
         assertEquals(25, healReceiver.hitPoints)
     }

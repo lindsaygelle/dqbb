@@ -4,7 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 internal class TestAbilityItem {
-    private class AbilityItem(itemName: dqbb.ItemName) : dqbb.AbilityItem<dqbb.ItemInvoker, dqbb.Receiver>(itemName) {
+    private class AbilityItem(itemName: ItemName) : dqbb.AbilityItem<dqbb.ItemInvoker, dqbb.Receiver>(itemName) {
         override fun apply(invoker: dqbb.ItemInvoker, receiver: dqbb.Receiver): Boolean {
             return true
         }
@@ -27,7 +27,7 @@ internal class TestAbilityItem {
 
     @BeforeTest
     fun before() {
-        abilityItem = AbilityItem(dqbb.ItemName.entries.random())
+        abilityItem = AbilityItem(ItemName.entries.random())
         itemInvoker = ItemInvoker()
         receiver = Receiver()
     }

@@ -7,8 +7,8 @@ class BreatheFire<A : BreatheFireInvoker, B : BreatheFireReceiver>(
 ) {
     override fun apply(invoker: A, receiver: B): Boolean {
         val hitPoints = receiver.hitPoints
-        val breatheFirePoints = maxOf(1, getBreatheFirePoints(invoker))
-        val breatheFirePointsReduction = maxOf(1, getBreatheFirePointsReduction(receiver))
+        val breatheFirePoints = maxOf(0, getBreatheFirePoints(invoker))
+        val breatheFirePointsReduction = maxOf(0, getBreatheFirePointsReduction(receiver))
         val damagePoints = getDamagePoints(breatheFirePoints, breatheFirePointsReduction)
         receiver.hitPoints -= damagePoints
         logger.info(

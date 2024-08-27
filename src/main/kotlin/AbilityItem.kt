@@ -30,7 +30,7 @@ abstract class AbilityItem<A : ItemInvoker, B : Receiver>(
     private fun reduceInvokerItemCount(invoker: A) {
         invoker.items[itemName] = invoker.items.getOrDefault(itemName, 1) - 1
         logger.info(
-            "id={} invoker.id={} invoker.items.{}={}", id, invoker.id, itemName, invoker.items.get(itemName)
+            "id={} invoker.id={} invoker.items.{}={}", id, invoker.id, itemName, invoker.items[itemName]
         )
     }
 
