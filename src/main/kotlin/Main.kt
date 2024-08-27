@@ -1,7 +1,7 @@
 package dqbb
 
 fun main() {
-
+/*
     val attackHero = AttackHero<Actor, Actor>()
     val breatheFire = BreatheFire<Actor, Actor>(magicCost = 20)
     val heal = Heal<Actor, Actor>(magicCost = 2)
@@ -583,4 +583,6 @@ fun main() {
     while (battleSystem.hasNext()) {
         battleSystem.run()
     }
+
+ */
 }

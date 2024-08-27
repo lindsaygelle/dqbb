@@ -5,7 +5,7 @@ class Herb<A : HerbInvoker, B : HealReceiver> : AbilityItem<A, B>(
 ) {
     override fun apply(invoker: A, receiver: B): Boolean {
         val hitPoints = receiver.hitPoints
-        val herbPoints = getHerbPoints(invoker)
+        val herbPoints = maxOf(0, getHerbPoints(invoker))
         receiver.hitPoints += herbPoints
         logger.info(
             "herbPoints={} id={} invoker.id={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={}",

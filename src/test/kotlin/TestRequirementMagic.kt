@@ -36,15 +36,15 @@ internal class TestRequirementMagic {
 
     private class Receiver : dqbb.Receiver
 
-    private lateinit var requirementMagic: RequirementMagic
     private lateinit var magicInvoker: dqbb.MagicInvoker
     private lateinit var receiver: dqbb.Receiver
+    private lateinit var requirementMagic: RequirementMagic
 
     @BeforeTest
     fun before() {
-        requirementMagic = RequirementMagic((1..100).random())
         magicInvoker = MagicInvoker()
         receiver = Receiver()
+        requirementMagic = RequirementMagic((1..100).random())
     }
 
 

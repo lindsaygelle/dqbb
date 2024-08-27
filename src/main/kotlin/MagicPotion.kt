@@ -5,7 +5,7 @@ class MagicPotion<A : MagicPotionInvoker, B : MagicReceiver> : AbilityItem<A, B>
 ) {
     override fun apply(invoker: A, receiver: B): Boolean {
         val magicPoints = receiver.magicPoints
-        val magicPotionPoints = getInvokerMagicPotionPoints(invoker)
+        val magicPotionPoints = maxOf(0, getInvokerMagicPotionPoints(invoker))
         receiver.magicPoints += magicPotionPoints
         logger.debug(
             "id={} magicPotionPoints={} receiver.id={} receiver.magicPoints={} receiver.magicPointsMaximum={}",

@@ -7,8 +7,8 @@ abstract class HurtMagic<A, B : HurtReceiver>(
 ) where A : HurtRanger, A : HurtRequester, A : MagicInvoker {
     final override fun applyEffect(invoker: A, receiver: B): Boolean {
         val hitPoints = receiver.hitPoints
-        val hurtPoints = maxOf(1, getHurtPoints(invoker))
-        val hurtPointsReduction = maxOf(1, getHurtPointsReduction(receiver))
+        val hurtPoints = maxOf(0, getHurtPoints(invoker))
+        val hurtPointsReduction = maxOf(0, getHurtPointsReduction(receiver))
         val damagePoints = getDamagePoints(hurtPoints, hurtPointsReduction)
         receiver.hitPoints -= damagePoints
         logger.info(
