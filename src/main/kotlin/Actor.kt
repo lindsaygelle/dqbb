@@ -4,554 +4,607 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 class Actor : AbilityInvoker,
+    AttributeProvider,
     BattleReceiver,
-    Identifier,
     Nameable {
-    var actions: List<Action> = listOf()
-        set(value) {
-            field = value.sortedByDescending { action -> action.priorityType.ordinal }
-            logger.debug(
-                "id={} actions.size={}", id, field.size
-            )
-        }
+    var actions: Collection<Action> = emptyList()
+
     override var agility: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} agility={}", id, field
+                "agility={} id={} simpleName={}", field, id, simpleName
             )
         }
-    var allegiance: Int = 0
+
+    override var allegiance: Int = 0
         set(value) {
             field = value
             logger.debug(
-                "id={} allegiance={}", id, field
+                "allegiance={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var armor: Armor? = null
         set(value) {
             field = value
             logger.debug(
-                "id={} armor.id={}", id, field?.id
+                "armor.blocksSleep={} armor.blocksStopSpell={} armor.breatheFireReduction={} armor.defense={} armor.hurtReduction={} armor.id={} id={} simpleName={}",
+                field?.blocksSleep,
+                field?.blocksStopSpell,
+                field?.breatheFireReduction,
+                field?.defense,
+                field?.hurtReduction,
+                field?.id,
+                id,
+                simpleName
             )
         }
+
     private val armorCount: Int
         get() = if (armor != null) 1 else 0
+
     private val armorDefense: Int
         get() = (armor?.defense ?: 0)
+
     private val blocksSleep: Boolean
         get() = armor?.blocksSleep == true
+
     private val blocksStopSpell: Boolean
         get() = armor?.blocksStopSpell == true
+
     override var breatheFireRangeMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} breatheFireRangeMaximum={}", id, field
+                "breatheFireRangeMaximum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var breatheFireRangeMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(breatheFireRangeMaximum, value))
             logger.debug(
-                "id={} breatheFireRangeMinimum={}", id, field
+                "breatheFireRangeMinimum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var breatheFireScale: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} breatheFireScale={}", id, field
+                "breatheFireScale={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var breatheFireShift: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} breatheFireShift={}", id, field
+                "breatheFireShift={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var canReceiveExcellentAttack: Boolean = true
         set(value) {
             field = value
             logger.debug(
-                "id={} canReceiveExcellentAttack={}", id, field
+                "canReceiveExcellentAttack={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     private val defenseCount: Int
         get() = armorCount + shieldCount
+
     override var evasionRequirementMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} evasionRequirementMaximum={}", id, field
+                "evasionRequirementMaximum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var evasionRequirementMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(evasionRequirementMaximum, value))
             logger.debug(
-                "id={} evasionRequirementMinimum={}", id, field
+                "evasionRequirementMinimum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var excellentAttackRequirementMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} excellentAttackRequirementMaximum={}", id, field
+                "excellentAttackRequirementMaximum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var excellentAttackRequirementMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(excellentAttackRequirementMaximum, value))
             logger.debug(
-                "id={} excellentAttackRequirementMinimum={}", id, field
+                "excellentAttackRequirementMinimum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var healMoreScale: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} healMoreScale={}", id, field
+                "healMoreScale={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var healMoreShift: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} healMoreShift={}", id, field
+                "healMoreShift={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var healRangeMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} healRangeMaximum={}", id, field
+                "healRangeMaximum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var healRangeMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(healRangeMaximum, value))
             logger.debug(
-                "id={} healRangeMinimum={}", id, field
+                "healRangeMinimum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     private val herbCount: Int
         get() = items.getOrDefault(ItemName.HERB, 0)
+
     override var healScale: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} healScale={}", id, field
+                "healScale={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var healShift: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} healShift={}", id, field
+                "healShift={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var herbRangeMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} herbRangeMaximum={}", id, field
+                "herbRangeMaximum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var herbRangeMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(herbRangeMaximum, value))
             logger.debug(
-                "id={} herbRangeMinimum={}", id, field
+                "herbRangeMinimum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var herbScale: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} herbScale={}", id, field
+                "herbScale={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var herbShift: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} herbShift={}", id, field
+                "herbShift={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var hitPoints: Int = 0
         set(value) {
-            if (value > field) {
-                hitPointsReceived += value
-            } else {
-                hitPointsReduced += value
-            }
             field = maxOf(0, minOf(hitPointsMaximum, value))
             logger.debug(
-                "id={} hitPoints={}", id, field
+                "hitPoints={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var hitPointsMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} hitPointsMaximum={}", id, field
+                "hitPointsMaximum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     private val hitPointsPercentage: Int
-        get() = getPercentage(magicPoints, magicPointsMaximum)
-    var hitPointsReceived: Int = 0
-        set(value) {
-            field = value
-            logger.debug(
-                "id={} hitPointsReceived={}", id, field
-            )
-        }
-    var hitPointsReduced: Int = 0
-        set(value) {
-            field = value
-            logger.debug(
-                "id={} hitPointsReduced={}", id, field
-            )
-        }
+        get() = getPercentage(hitPoints, hitPointsMaximum)
+
     override var hurtMoreScale: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} hurtMoreScale={}", id, field
+                "hurtMoreScale={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var hurtMoreShift: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} hurtMoreShift={}", id, field
+                "hurtMoreShift={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var hurtRangeMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} hurtRangeMaximum={}", id, field
+                "hurtRangeMaximum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var hurtRangeMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(hurtRangeMaximum, value))
             logger.debug(
-                "id={} hurtRangeMinimum={}", id, field
+                "hurtRangeMinimum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var hurtRequirementMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} hurtRequirementMaximum={}", id, field
+                "hurtRequirementMaximum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var hurtRequirementMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(hurtRequirementMaximum, value))
             logger.debug(
-                "id={} hurtRequirementMinimum={}", id, field
+                "hurtRequirementMinimum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var hurtResistanceMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} hurtResistanceMaximum={}", id, field
+                "hurtResistanceMaximum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var hurtResistanceMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(hurtResistanceMaximum, value))
             logger.debug(
-                "id={} hurtResistanceMinimum={}", id, field
+                "hurtResistanceMinimum={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var hurtScale: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} hurtScale={}", id, field
+                "hurtScale={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var hurtShift: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} hurtShift={}", id, field
+                "hurtShift={} id={} simpleName={}", field, id, simpleName
             )
         }
+
     override var isRunning: Boolean = false
         set(value) {
             field = value
             logger.debug(
-                "id={} isRunning={}", id, field
+                "id={} isRunning={} simpleName={}", id, field, simpleName
             )
         }
+
     override val items: MutableMap<ItemName, Int> = mutableMapOf()
+
+    var index: Int? = null
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} index={} simpleName={}", id, field, simpleName
+            )
+        }
+
     private val logger: Logger = LogManager.getLogger(this::class.simpleName)
+
     override var magicPoints: Int = 0
         set(value) {
-            if (value > field) {
-                magicPointsReceived += value
-            } else {
-                magicPointsReduced += value
-            }
             field = maxOf(0, minOf(magicPointsMaximum, value))
             logger.debug(
-                "id={} magicPoints={}", id, field
+                "id={} magicPoints={} simpleName={}", id, field, simpleName
             )
         }
+
     override var magicPointsMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} magicPointsMaximum={}", id, field
+                "id={} magicPointsMaximum={} simpleName={}", id, field, simpleName
             )
         }
-    var magicPointsReceived: Int = 0
-        set(value) {
-            field = value
-            logger.debug(
-                "id={} magicPointsReceived={}", id, field
-            )
-        }
-    var magicPointsReduced: Int = 0
-        set(value) {
-            field = value
-            logger.debug(
-                "id={} magicPointsReduced={}", id, field
-            )
-        }
+
+    private val magicPointsPercentage: Int
+        get() = getPercentage(magicPoints, magicPointsMaximum)
+
     private val magicPotionCount: Int
         get() = items.getOrDefault(ItemName.MAGIC_POTION, 0)
+
     override var magicPotionRangeMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} magicPotionRangeMaximum={}", id, field
+                "id={} magicPotionRangeMaximum={} simpleName={}", id, field, simpleName
             )
         }
-    private val magicPointsPercentage: Int
-        get() = getPercentage(magicPoints, magicPointsMaximum)
     override var magicPotionRangeMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(magicPotionRangeMaximum, value))
             logger.debug(
-                "id={} magicPotionRangeMinimum={}", id, field
+                "id={} magicPotionRangeMinimum={} simpleName={}", id, field, simpleName
             )
         }
+
     override var magicPotionScale: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} magicPotionScale={}", id, field
+                "id={} magicPotionScale={} simpleName={}", id, field, simpleName
             )
         }
+
     override var magicPotionShift: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} magicPotionShift={}", id, field
+                "id={} magicPotionShift={} simpleName={}", id, field, simpleName
             )
         }
+
     override var name: String? = null
         set(value) {
             field = value
             logger.debug(
-                "id={} name={}", id, field
+                "id={} name={} simpleName={}", id, field, simpleName
             )
         }
+
     override var runRangeMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} runRangeMaximum={}", id, field
+                "id={} runRangeMaximum={} simpleName={}", id, field, simpleName
             )
         }
+
     override var runRangeMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(runRangeMaximum, value))
             logger.debug(
-                "id={} runRangeMinimum={}", id, field
+                "id={} runRangeMinimum={} simpleName={}", id, field, simpleName
             )
         }
+
     override var runShift: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} runShift={}", id, field
+                "id={} runShift={} simpleName={}", id, field, simpleName
             )
         }
+
     override var shield: Shield? = null
         set(value) {
             field = value
             logger.debug(
-                "id={} shield.id={}", id, field?.id
+                "id={} shield.defense={} shield.id={} simpleName={}", id, field?.defense, field?.id, simpleName
             )
         }
+
     private val shieldCount: Int
         get() = if (shield != null) 1 else 0
+
     private val shieldDefense: Int
         get() = shield?.defense ?: 0
+
     override var sleepRequirementMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} sleepRequirementMaximum={}", id, field
+                "id={} simpleName={} sleepRequirementMaximum={}", id, simpleName, field
             )
         }
+
     override var sleepRequirementMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(sleepRequirementMaximum, value))
             logger.debug(
-                "id={} sleepRequirementMinimum={}", id, field
+                "id={} simpleName={} sleepRequirementMinimum={}", id, simpleName, field
             )
         }
+
     override var sleepResistanceMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} sleepResistanceMaximum={}", id, field
+                "id={} simpleName={} sleepResistanceMaximum={}", id, simpleName, field
             )
         }
+
     override var sleepResistanceMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(sleepResistanceMaximum, value))
             logger.debug(
-                "id={} sleepResistanceMinimum={}", id, field
+                "id={} simpleName={} sleepResistanceMinimum={}", id, simpleName, field
             )
         }
+
     override var sleepResolutionMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} sleepResolutionMaximum={}", id, field
+                "id={} simpleName={} sleepResolutionMaximum={}", id, simpleName, field
             )
         }
+
     override var sleepResolutionMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(sleepResolutionMaximum, value))
             logger.debug(
-                "id={} sleepResolutionMinimum={}", id, field
+                "id={} simpleName={} sleepResolutionMinimum={}", id, simpleName, field
             )
         }
+
     override var stopSpellRequirementMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} stopSpellRequirementMaximum={}", id, field
+                "id={} simpleName={} stopSpellRequirementMaximum={}", id, simpleName, field
             )
         }
+
     override var stopSpellRequirementMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(stopSpellRequirementMaximum, value))
             logger.debug(
-                "id={} stopSpellRequirementMinimum={}", id, field
+                "id={} simpleName={} stopSpellRequirementMinimum={}", id, simpleName, field
             )
         }
+
     override var stopSpellResistanceMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} stopSpellResistanceMaximum={}", id, field
+                "id={} simpleName={} stopSpellResistanceMaximum={}", id, simpleName, field
             )
         }
+
     override var stopSpellResistanceMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(stopSpellResistanceMaximum, value))
             logger.debug(
-                "id={} stopSpellResistanceMinimum={}", id, field
+                "id={} simpleName={} stopSpellResistanceMinimum={}", id, simpleName, field
             )
         }
+
     override var stopSpellResolutionMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} stopSpellResolutionMaximum={}", id, field
+                "id={} simpleName={} stopSpellResolutionMaximum={}", id, simpleName, field
             )
         }
+
     override var stopSpellResolutionMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(stopSpellResolutionMaximum, value))
             logger.debug(
-                "id={} stopSpellResolutionMinimum={}", id, field
+                "id={} simpleName={} stopSpellResolutionMinimum={}", id, simpleName, field
             )
         }
+
     override var strength: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} strength={}", id, field
+                "id={} simpleName={} strength={}", id, simpleName, field
             )
         }
+
     override var turn: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} turn={}", id, field
+                "id={} simpleName={} turn={}", id, simpleName, field
             )
         }
+
     override var turnsSleep: Int = 0
         set(value) {
             field = maxOf(0, minOf(turnsSleepMaximum, value))
             logger.debug(
-                "id={} turnsSleep={}", id, field
+                "id={} simpleName={} turnsSleep={}", id, simpleName, field
             )
         }
+
     override var turnsSleepMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} turnsSleepMaximum={}", id, field
+                "id={} simpleName={} turnsSleepMaximum={}", id, simpleName, field
             )
         }
+
     override var turnsSleepMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(turnsSleepMaximum, value))
             logger.debug(
-                "id={} turnsSleepMinimum={}", id, field
+                "id={} simpleName={} turnsSleepMinimum={}", id, simpleName, field
             )
         }
+
     override var turnsStopSpell: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} turnsStopSpell={}", id, field
+                "id={} simpleName={} turnsStopSpell={}", id, simpleName, field
             )
         }
+
     override var turnsStopSpellMaximum: Int = 0
         set(value) {
             field = maxOf(0, value)
             logger.debug(
-                "id={} turnsStopSpellMaximum={}", id, field
+                "id={} simpleName={} turnsStopSpellMaximum={}", id, simpleName, field
             )
         }
+
     override var turnsStopSpellMinimum: Int = 0
         set(value) {
             field = maxOf(0, minOf(turnsStopSpellMaximum, value))
             logger.debug(
-                "id={} turnsStopSpellMinimum={}", id, field
+                "id={} simpleName={} turnsStopSpellMinimum={}", id, simpleName, field
             )
         }
+
     override var weapon: Weapon? = null
         set(value) {
             field = value
             logger.debug(
-                "id={} weapon.id={}", id, field?.id
+                "id={} simpleName={} weapon.attack={} weapon.id={}", id, simpleName, field?.attack, field?.id
             )
         }
+
     private val weaponAttack: Int
         get() = weapon?.attack ?: 0
+
     private val weaponCount: Int
         get() = if (weapon != null) 1 else 0
 
-    fun getAttribute(attributeName: AttributeName): Int {
-        return when (attributeName) {
+    override fun getAttribute(attributeName: AttributeName): Int {
+        val attributeValue = when (attributeName) {
             AttributeName.ACTION_COUNT -> actions.size
             AttributeName.AGILITY -> agility
             AttributeName.ALLEGIANCE -> allegiance
@@ -568,6 +621,7 @@ class Actor : AbilityInvoker,
             AttributeName.EVASION_REQUIREMENT_MINIMUM -> evasionRequirementMinimum
             AttributeName.EXCELLENT_ATTACK_REQUIREMENT_MAXIMUM -> excellentAttackRequirementMaximum
             AttributeName.EXCELLENT_ATTACK_REQUIREMENT_MINIMUM -> excellentAttackRequirementMinimum
+            AttributeName.HASH_CODE -> id
             AttributeName.HEAL_MORE_SCALE -> healMoreScale
             AttributeName.HEAL_MORE_SHIFT -> healMoreShift
             AttributeName.HEAL_RANGE_MAXIMUM -> healRangeMaximum
@@ -629,9 +683,16 @@ class Actor : AbilityInvoker,
             AttributeName.WEAPON_ATTACK -> weaponAttack
             AttributeName.WEAPON_COUNT -> weaponCount
         }
+        logger.info(
+            "attributeName={} attributeValue={} id={} simpleName={}", attributeName, attributeValue, id, simpleName
+        )
+        return attributeValue
     }
 
     private fun getPercentage(value: Int, valueMaximum: Int): Int {
+        logger.trace(
+            "id={} simpleName={} value={} valueMaximum={}", id, simpleName, value, valueMaximum
+        )
         return ((value.toDouble() / valueMaximum) * 100).toInt()
     }
 }

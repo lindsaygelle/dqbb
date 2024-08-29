@@ -10,35 +10,52 @@ abstract class HealMagic<A, B : HealReceiver>(
         val hitPoints = receiver.hitPoints
         receiver.hitPoints += healPoints
         logger.info(
-            "healPoints={} id={} invoker.id={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={}",
+            "healPoints={} id={} invoker.id={} invoker.simpleName={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={} receiver.simpleName={} simpleName={}",
             healPoints,
             id,
             invoker.id,
+            invoker.simpleName,
             receiver.hitPoints,
             receiver.hitPointsMaximum,
-            receiver.id
+            receiver.id,
+            receiver.simpleName,
+            simpleName
         )
         return receiver.hitPoints > hitPoints
     }
 
     final override fun checkReceiver(receiver: B): Boolean {
+        logger.trace(
+            "id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            id,
+            receiver.id,
+            receiver.simpleName,
+            simpleName
+        )
         return checkReceiverHitPoints(receiver) && checkReceiverHitPointsMaximum(receiver)
     }
 
     private fun checkReceiverHitPoints(receiver: B): Boolean {
-        logger.debug(
-            "id={} receiver.hitPoints={} receiver.id={}", id, receiver.hitPoints, receiver.id,
+        logger.info(
+            "id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            id,
+            receiver.hitPoints,
+            receiver.id,
+            receiver.simpleName,
+            simpleName
         )
         return receiver.hitPoints > 0
     }
 
     private fun checkReceiverHitPointsMaximum(receiver: B): Boolean {
-        logger.debug(
-            "id={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={}",
+        logger.info(
+            "id={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={} receiver.simpleName={} simpleName={}",
             id,
             receiver.hitPoints,
             receiver.hitPointsMaximum,
             receiver.id,
+            receiver.simpleName,
+            simpleName
         )
         return receiver.hitPoints < receiver.hitPointsMaximum
     }

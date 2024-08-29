@@ -7,15 +7,17 @@ class HurtMore<A : HurtMoreInvoker, B : HurtReceiver>(
 ) {
     override fun getHurtPoints(invoker: A): Int {
         val hurtMore = invoker.hurtMore
-        logger.debug(
-            "id={} invoker.hurtMoreScale={} invoker.hurtMoreShift={} invoker.hurtShift={} invoker.hurtRangeMaximum={} invoker.hurtRangeMinimum={} invoker.id={}",
+        logger.info(
+            "id={} invoker.hurtMoreScale={} invoker.hurtMoreShift={} invoker.hurtShift={} invoker.hurtRangeMaximum={} invoker.hurtRangeMinimum={} invoker.id={} invoker.simpleName={} simpleName={}",
             id,
             hurtMore,
             invoker.hurtMoreScale,
             invoker.hurtMoreShift,
             invoker.hurtRangeMaximum,
             invoker.hurtRangeMinimum,
-            invoker.id
+            invoker.id,
+            invoker.simpleName,
+            simpleName
         )
         return hurtMore
     }

@@ -10,67 +10,93 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
             receiver.turnsStopSpell = 1
         }
         logger.info(
-            "id={} invoker.id={} receiver.id={} receiver.turnsStopSpell={}",
+            "id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} receiver.turnsStopSpell={} simpleName={}",
             id,
             invoker.id,
+            invoker.simpleName,
             receiver.id,
-            receiver.turnsStopSpell
+            receiver.simpleName,
+            receiver.turnsStopSpell,
+            simpleName
         )
         return receiver.turnsStopSpell > 0
     }
 
     override fun checkReceiver(receiver: B): Boolean {
+        logger.trace(
+            "id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            id,
+            receiver.id,
+            receiver.simpleName,
+            simpleName
+        )
         return checkReceiverHitPoints(receiver) && checkReceiverTurnsStopSpell(receiver)
     }
 
     private fun checkReceiverArmor(receiver: B): Boolean {
         val blocksStopSpell = receiver.armor?.blocksStopSpell ?: false
-        logger.debug(
-            "id={} receiver.armor.blocksStopSpell={} receiver.armor.id={} receiver.id={}",
+        logger.info(
+            "id={} receiver.armor.blocksStopSpell={} receiver.armor.id={} receiver.id={} receiver.simpleName={} simpleName={}",
             id,
             blocksStopSpell,
             receiver.armor?.id,
             receiver.id,
+            receiver.simpleName,
+            simpleName
         )
         return blocksStopSpell
     }
 
     private fun checkReceiverHitPoints(receiver: B): Boolean {
-        logger.debug(
-            "id={} receiver.hitPoints={} receiver.id={}", id, receiver.hitPoints, receiver.id
+        logger.info(
+            "id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            id,
+            receiver.hitPoints,
+            receiver.id,
+            receiver.simpleName,
+            simpleName
         )
         return receiver.hitPoints > 0
     }
 
     private fun checkReceiverTurnsStopSpell(receiver: B): Boolean {
-        logger.debug(
-            "id={} receiver.id={} receiver.turnsStopSpell={}", id, receiver.id, receiver.turnsStopSpell
+        logger.info(
+            "id={} receiver.id={} receiver.simpleName={} receiver.turnsStopSpell={} simpleName={}",
+            id,
+            receiver.id,
+            receiver.simpleName,
+            receiver.turnsStopSpell,
+            simpleName
         )
         return receiver.turnsStopSpell == 0
     }
 
     override fun getRequirement(invoker: A): Int {
         val stopSpellRequirement = invoker.stopSpellRequirement
-        logger.debug(
-            "id={} invoker.id={} invoker.stopSpellRequirement={} invoker.stopSpellRequirementMaximum={} invoker.stopSpellRequirementMaximum={}",
+        logger.info(
+            "id={} invoker.id={} invoker.simpleName={} invoker.stopSpellRequirement={} invoker.stopSpellRequirementMaximum={} invoker.stopSpellRequirementMaximum={} simpleName={}",
             id,
             invoker.id,
+            invoker.simpleName,
             invoker.stopSpellRequirement,
             invoker.stopSpellRequirementMaximum,
-            invoker.stopSpellRequirementMinimum
+            invoker.stopSpellRequirementMinimum,
+            simpleName
         )
         return stopSpellRequirement
     }
 
     override fun getResistance(receiver: B): Int {
         val stopSpellResistance = receiver.stopSpellResistance
-        logger.debug(
-            "id={} receiver.id={} receiver.stopSpellResistance={} receiver.stopSpellResistanceMaximum={} receiver.stopSpellResistanceMinimum={}",
+        logger.info(
+            "id={} receiver.id={} receiver.simpleName={} receiver.stopSpellResistance={} receiver.stopSpellResistanceMaximum={} receiver.stopSpellResistanceMinimum={} simpleName={}",
             id,
             stopSpellResistance,
             receiver.id,
+            receiver.simpleName,
             receiver.stopSpellResistanceMaximum,
-            receiver.stopSpellResistanceMinimum
+            receiver.stopSpellResistanceMinimum,
+            simpleName
         )
         return stopSpellResistance
     }

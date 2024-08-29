@@ -7,14 +7,44 @@ class BattleSystem : Identifier,
     Runnable,
     TurnAccumulator {
     val actors: MutableSet<Actor> = mutableSetOf()
+
     private val allegiances: MutableSet<Int> = mutableSetOf()
-    var attributeName: AttributeName = AttributeName.AGILITY
+
+    private var attributeName: AttributeName = AttributeName.AGILITY
+        set(value) {
+            field = value
+            logger.debug(
+                "attributeName={} id={}", field, id
+            )
+        }
+
     private var isActive: Boolean = true
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} isActive={}", id, field
+            )
+        }
+
     private val logger: Logger = LogManager.getLogger(this::class.simpleName)
+
     override var turn: Int = 0
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} turn={}", id, field
+            )
+        }
+
+    private fun checkActorActions(actor: Actor): Boolean {
+        logger.info(
+            "actor.actions.size={} actor.id={} id={} turn={}", actor.actions.size, actor.id, id, turn
+        )
+        return actor.actions.isNotEmpty()
+    }
 
     private fun checkActorHitPoints(actor: Actor): Boolean {
-        logger.debug(
+        logger.info(
             "actor.hitPoints={} actor.hitPointsMaximum={} actor.id={} id={} turn={}",
             actor.hitPoints,
             actor.hitPointsMaximum,
@@ -26,11 +56,11 @@ class BattleSystem : Identifier,
     }
 
     private fun checkActorRemoval(actor: Actor): Boolean {
-        return !checkActorHitPoints(actor) || checkActorRunning(actor)
+        return !checkActorActions(actor) || !checkActorHitPoints(actor) || checkActorRunning(actor)
     }
 
     private fun checkActorRunning(actor: Actor): Boolean {
-        logger.debug(
+        logger.info(
             "actor.id={} actor.isRunning={} id={} turn={}", actor.id, actor.isRunning, id, turn
         )
         return actor.isRunning
@@ -38,7 +68,7 @@ class BattleSystem : Identifier,
 
     private fun checkActorSleepResolution(actor: Actor): Boolean {
         val sleepResolution = actor.sleepResolution
-        logger.debug(
+        logger.info(
             "actor.id={} actor.sleepResolution={} actor.sleepResolutionMaximum={} actor.sleepResolutionMinimum={} id={} turn={}",
             actor.id,
             sleepResolution,
@@ -52,7 +82,7 @@ class BattleSystem : Identifier,
 
     private fun checkActorStopSpellResolution(actor: Actor): Boolean {
         val stopSpellResolution = actor.stopSpellResolution
-        logger.debug(
+        logger.info(
             "actor.id={} actor.stopSpellResolution={} actor.stopSpellResolutionMaximum={} actor.stopSpellResolutionMinimum={} id={} turn={}",
             actor.id,
             stopSpellResolution,
@@ -65,14 +95,14 @@ class BattleSystem : Identifier,
     }
 
     private fun checkActorTurnsSleep(actor: Actor): Boolean {
-        logger.debug(
+        logger.info(
             "actor.id={} actor.turnsSleep={} id={} turn={}", actor.id, actor.turnsSleep, id, turn
         )
         return actor.turnsSleep > 0
     }
 
     private fun checkActorTurnsSleepMinimum(actor: Actor): Boolean {
-        logger.debug(
+        logger.info(
             "actor.id={} actor.turnsSleep={} actor.turnsSleepMinimum={} id={} turn={}",
             actor.id,
             actor.turnsSleep,
@@ -84,14 +114,14 @@ class BattleSystem : Identifier,
     }
 
     private fun checkActorTurnsStopSpell(actor: Actor): Boolean {
-        logger.debug(
+        logger.info(
             "actor.id={} actor.turnsStopSpell={} id={} turn={}", actor.id, actor.turnsStopSpell, id, turn
         )
         return actor.turnsStopSpell > 0
     }
 
     private fun checkActorTurnsStopSpellMinimum(actor: Actor): Boolean {
-        logger.debug(
+        logger.info(
             "actor.id={} actor.turnsStopSpell={} actor.turnsStopSpellMinimum={} id={} turn={}",
             actor.id,
             actor.turnsStopSpell,
@@ -102,9 +132,9 @@ class BattleSystem : Identifier,
         return actor.turnsStopSpell > actor.turnsStopSpellMinimum
     }
 
-    private fun getActorOrder(actor: Actor): Int {
+    private fun getActorOrder(actor: Actor): Int? {
         val attributeValue = actor.getAttribute(attributeName)
-        logger.debug(
+        logger.info(
             "actor.id={} attributeName={} attributeValue={} id={} turn={}",
             actor.id,
             attributeName,
@@ -115,17 +145,38 @@ class BattleSystem : Identifier,
         return attributeValue
     }
 
-    private fun handleActor(actor: Actor) {
+    private fun handleActor(actor: Actor, actors: Collection<Actor>, index: Int) {
+        logger.info(
+            "actor.id={} actors.size={} id={} index={} turn={}", actor.id, actors.size, id, index, turn
+        )
+        actor.index = index
         handleActorSleep(actor)
         handleActorStopSpell(actor)
-        handleActorAction(actor)
+        handleActorActions(actor, actors)
     }
 
-    private fun handleActorAction(actor: Actor) {
-        val actionResult = actor.actions.any { it.use(actor, actors) }
+    private fun handleActors(actors: Collection<Actor>) {
+        actors.forEachIndexed { index, actor ->
+            handleActor(actor, actors, index)
+        }
+    }
+
+    private fun handleActorAction(action: Action, actor: Actor, actors: Collection<Actor>, index: Int) {
         logger.info(
-            "actionResult={} actor.id={} id={} turn={}", actionResult, actor.id, id, turn
+            "action.id={} actor.id={} actors.size={} id={} index={} turn={}",
+            action.id,
+            actor.id,
+            actors.size,
+            id,
+            index,
+            turn
         )
+    }
+
+    private fun handleActorActions(actor: Actor, actors: Collection<Actor>) {
+        actor.actions.forEachIndexed { index, action ->
+            handleActorAction(action, actor, actors, index)
+        }
     }
 
     private fun handleActorSleep(actor: Actor) {
@@ -135,9 +186,6 @@ class BattleSystem : Identifier,
                 actor.turnsSleep = 0
             }
         }
-        logger.info(
-            "actor.id={} actor.turnsSleep={} id={} turn={}", actor.id, actor.turnsSleep, id, turn
-        )
     }
 
     private fun handleActorStopSpell(actor: Actor) {
@@ -147,9 +195,6 @@ class BattleSystem : Identifier,
                 actor.turnsStopSpell = 0
             }
         }
-        logger.info(
-            "actor.id={} actor.turnsStopSpell={} id={} turn={}", actor.id, actor.turnsStopSpell, id, turn
-        )
     }
 
     fun hasNext(): Boolean {
@@ -161,25 +206,25 @@ class BattleSystem : Identifier,
             "actors.size={} allegiances.size={} id={} turn={}", actors.size, allegiances.size, id, turn,
         )
         allegiances.clear()
-        actors.sortedByDescending { actor ->
-            getActorOrder(actor)
-        }.forEachIndexed { index, actor ->
-            actor.turn = turn
-            logger.debug(
-                "actor.id={} actor.turn={} id={} index={} turn={}", actor.id, actor.turn, id, index, turn
-            )
-            if (checkActorHitPoints(actor)) {
-                handleActor(actor)
-            }
-        }
-        actors.removeAll { actor ->
+        handleActors(sortActors(actors))
+        removeActors(actors, allegiances)
+        isActive = allegiances.size > 1
+        turn += 1
+    }
+
+    private fun removeActors(actors: MutableSet<Actor>, allegiances: MutableSet<Int>) {
+        actors.removeAll { actor: Actor ->
             val removeActor = checkActorRemoval(actor)
             if (!removeActor) {
                 allegiances.add(actor.allegiance)
             }
             removeActor
         }
-        isActive = allegiances.size > 1
-        turn += 1
+    }
+
+    private fun sortActors(actors: Collection<Actor>): Collection<Actor> {
+        return actors.sortedByDescending { actor: Actor ->
+            getActorOrder(actor)
+        }
     }
 }

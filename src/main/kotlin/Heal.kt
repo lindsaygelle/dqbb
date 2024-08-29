@@ -7,15 +7,17 @@ class Heal<A : HealInvoker, B : HealReceiver>(
 ) {
     override fun getHealPoints(invoker: A): Int {
         val heal = invoker.heal
-        logger.debug(
-            "id={} invoker.heal={} invoker.healRangeMaximum={} invoker.healRangeMinimum={} invoker.healScale={} invoker.healShift={} invoker.id={}",
+        logger.info(
+            "id={} invoker.heal={} invoker.healRangeMaximum={} invoker.healRangeMinimum={} invoker.healScale={} invoker.healShift={} invoker.id={} invoker.simpleName={} simpleName={}",
             id,
             heal,
             invoker.healRangeMaximum,
             invoker.healRangeMinimum,
             invoker.healScale,
             invoker.healShift,
-            invoker.id
+            invoker.id,
+            invoker.simpleName,
+            simpleName
         )
         return heal
     }
