@@ -6,6 +6,15 @@ abstract class RequirementMagic<A : MagicInvoker, B : Receiver>(
     magicCost = magicCost,
 ) {
     final override fun apply(invoker: A, receiver: B): Boolean {
+        logger.info(
+            "id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
+            id,
+            invoker.id,
+            invoker.simpleName,
+            receiver.id,
+            receiver.simpleName,
+            simpleName
+        )
         if (!checkRequirement(invoker, receiver)) {
             return false
         }
@@ -15,6 +24,15 @@ abstract class RequirementMagic<A : MagicInvoker, B : Receiver>(
     protected abstract fun applyEffect(invoker: A, receiver: B): Boolean
 
     private fun checkRequirement(invoker: A, receiver: B): Boolean {
+        logger.trace(
+            "id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
+            id,
+            invoker.id,
+            invoker.simpleName,
+            receiver.id,
+            receiver.simpleName,
+            simpleName
+        )
         return getRequirement(invoker) > getResistance(receiver)
     }
 

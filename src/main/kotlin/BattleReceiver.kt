@@ -1,6 +1,7 @@
 package dqbb
 
 interface BattleReceiver : AbilityReceiver,
+    AllegianceKeeper,
     SleepLimiter,
     SleepResolver,
     StopSpellLimiter,

@@ -8,50 +8,69 @@ class Herb<A : HerbInvoker, B : HealReceiver> : AbilityItem<A, B>(
         val herbPoints = maxOf(0, getHerbPoints(invoker))
         receiver.hitPoints += herbPoints
         logger.info(
-            "herbPoints={} id={} invoker.id={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={}",
+            "herbPoints={} id={} invoker.id={} invoker.simpleName={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={} receiver.simpleName={} simpleName={}",
             herbPoints,
             id,
             invoker.id,
+            invoker.simpleName,
             receiver.hitPoints,
             receiver.hitPointsMaximum,
-            receiver.id
+            receiver.id,
+            receiver.simpleName,
+            simpleName
         )
         return receiver.hitPoints > hitPoints
     }
 
     override fun checkReceiver(receiver: B): Boolean {
+        logger.trace(
+            "id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            id,
+            receiver.id,
+            receiver.simpleName,
+            simpleName
+        )
         return checkReceiverHitPoints(receiver) && checkReceiverHitPointsMaximum(receiver)
     }
 
     private fun checkReceiverHitPoints(receiver: B): Boolean {
-        logger.debug(
-            "id={} receiver.hitPoints={} receiver.id={}", id, receiver.hitPoints, receiver.id,
+        logger.info(
+            "id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            id,
+            receiver.hitPoints,
+            receiver.id,
+            receiver.simpleName,
+            simpleName
         )
         return receiver.hitPoints > 0
     }
 
     private fun checkReceiverHitPointsMaximum(receiver: B): Boolean {
-        logger.debug(
-            "id={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={}",
+        logger.info(
+            "id={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={} receiver.simpleName={} simpleName={}",
             id,
             receiver.hitPoints,
             receiver.hitPointsMaximum,
             receiver.id,
+            receiver.simpleName,
+            simpleName
         )
         return receiver.hitPoints < receiver.hitPointsMaximum
     }
-    
+
     private fun getHerbPoints(invoker: A): Int {
         val herb = invoker.herb
-        logger.debug(
-            "id={} invoker.herb={} invoker.herbRangeMaximum={} invoker.herbRangeMinimum={} invoker.herbScale={} invoker.herbShift={} invoker.id={}",
+        logger.info(
+            "id={} invoker.herb={} invoker.herbRangeMaximum={} invoker.herbRangeMinimum={} invoker.herbScale={} invoker.herbShift={} invoker.id={} invoker.simpleName={} simpleName={}",
             id,
             herb,
             invoker.herbRangeMaximum,
             invoker.herbRangeMinimum,
             invoker.herbScale,
             invoker.herbShift,
-            invoker.id
+            invoker.id,
+            invoker.simpleName,
+            simpleName
         )
         return herb
     }

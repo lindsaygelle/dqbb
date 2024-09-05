@@ -12,21 +12,40 @@ abstract class HurtMagic<A, B : HurtReceiver>(
         val damagePoints = getDamagePoints(hurtPoints, hurtPointsReduction)
         receiver.hitPoints -= damagePoints
         logger.info(
-            "damagePoints={} hurtPoints={} hurtPointsReduction={} id={} invoker.id={} receiver.hitPoints={} receiver.id={}",
+            "damagePoints={} hurtPoints={} hurtPointsReduction={} id={} invoker.id={} invoker.simpleName={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
             damagePoints,
             hurtPoints,
             hurtPointsReduction,
             id,
             invoker.id,
+            invoker.simpleName,
             receiver.hitPoints,
-            receiver.id
+            receiver.id,
+            receiver.simpleName,
+            simpleName
         )
         return receiver.hitPoints < hitPoints
     }
 
     final override fun checkReceiver(receiver: B): Boolean {
-        logger.debug(
-            "id={} receiver.hitPoints={} receiver.id={}", id, receiver.hitPoints, receiver.id
+        logger.trace(
+            "id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            id,
+            receiver.id,
+            receiver.simpleName,
+            simpleName
+        )
+        return checkReceiverHitPoints(receiver)
+    }
+
+    private fun checkReceiverHitPoints(receiver: B): Boolean {
+        logger.info(
+            "id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            id,
+            receiver.hitPoints,
+            receiver.id,
+            receiver.simpleName,
+            simpleName
         )
         return receiver.hitPoints > 0
     }
@@ -35,43 +54,49 @@ abstract class HurtMagic<A, B : HurtReceiver>(
 
     private fun getHurtPointsReduction(receiver: B): Int {
         val hurtReduction = receiver.armor?.hurtReduction ?: 0
-        logger.debug(
-            "id={} receiver.armor.id={} receiver.armor.hurtReduction={} receiver.id={}",
+        logger.info(
+            "id={} receiver.armor.id={} receiver.armor.hurtReduction={} receiver.id={} receiver.simpleName={}",
             id,
             receiver.armor?.id,
             receiver.armor?.hurtReduction,
-            receiver.id
+            receiver.id,
+            receiver.simpleName
         )
         return hurtReduction
     }
 
     private fun getDamagePoints(hurtPoints: Int, hurtPointsReduction: Int): Int {
+        logger.trace(
+            "hurtPoints={} hurtPointsReduction={} id={} simpleName={}", hurtPoints, hurtPointsReduction, id, simpleName
+        )
         return (hurtPoints - (hurtPoints * (hurtPointsReduction.toDouble() / 100))).toInt()
     }
 
     override fun getRequirement(invoker: A): Int {
         val hurtRequirement = invoker.hurtRequirement
-        logger.debug(
-            "id={} invoker.id={} invoker.hurtRequirement={} invoker.hurtRequirementMaximum={} invoker.hurtRequirementMaximum={}",
+        logger.info(
+            "id={} invoker.id={} invoker.hurtRequirement={} invoker.hurtRequirementMaximum={} invoker.hurtRequirementMaximum={} invoker.simpleName={}",
             id,
             invoker.id,
             hurtRequirement,
             invoker.hurtRequirementMaximum,
-            invoker.hurtRequirementMinimum
-        )
+            invoker.hurtRequirementMinimum,
+            invoker.simpleName
+            )
         return hurtRequirement
     }
 
     override fun getResistance(receiver: B): Int {
         val hurtResistance = receiver.hurtResistance
-        logger.debug(
-            "id={} receiver.id={} receiver.hurtResistance={} receiver.hurtResistanceMaximum={} receiver.hurtResistanceMinimum={}",
+        logger.info(
+            "id={} receiver.id={} receiver.hurtResistance={} receiver.hurtResistanceMaximum={} receiver.hurtResistanceMinimum={} receiver.simpleName={}",
             id,
             receiver.id,
             hurtResistance,
             receiver.hurtResistanceMaximum,
-            receiver.hurtResistanceMinimum
-        )
+            receiver.hurtResistanceMinimum,
+            receiver.simpleName
+            )
         return hurtResistance
     }
 }
