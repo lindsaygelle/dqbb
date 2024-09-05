@@ -80,7 +80,7 @@ class AttributeComparison<T : AttributeProvider>() : Identifier,
             value,
         )
         val checkValue = attributeValue?.let {
-            checkValue(it)
+            compareAttribute(it)
         }
         logger.info(
             "checkValue={} id={} simpleName={}", checkValue, id, simpleName
@@ -88,7 +88,7 @@ class AttributeComparison<T : AttributeProvider>() : Identifier,
         return checkValue ?: false
     }
 
-    private fun checkValue(attributeValue: Int): Boolean {
+    private fun compareAttribute(attributeValue: Int): Boolean {
         logger.info(
             "attributeValue={} id={} simpleName={} value={}", attributeValue, id, simpleName, value
         )

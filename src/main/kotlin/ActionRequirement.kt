@@ -3,8 +3,8 @@ package dqbb
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-open class ActionRequirement<A, B> : Identifier,
-    Nameable where A : AbilityInvoker, A : AllegianceKeeper, A : AttributeProvider, B : AbilityReceiver, B : AllegianceKeeper, B : AttributeProvider {
+open class ActionRequirement<A : ActionInvoker, B : ActionReceiver> : Identifier,
+    Nameable {
     var attributeCriteria: Collection<AttributeCriterion<B>> = emptyList()
         set(value) {
             field = value.filter { attributeCriterion: AttributeCriterion<B> ->
@@ -35,168 +35,174 @@ open class ActionRequirement<A, B> : Identifier,
             )
         }
 
-    private fun checkAllegiance(invoker: A, receiver: B): Boolean {
+    private fun checkAllegiance(actionInvoker: A, actionReceiver: B): Boolean {
         logger.trace(
-            "id={} invoker.id={} invoker.simpleName={} operation=checkAllegiance receiver.id={} receiver.simpleName={} simpleName={}",
+            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} id={} operation=checkAllegiance simpleName={}",
+            actionInvoker.id,
+            actionInvoker.simpleName,
+            actionReceiver.id,
+            actionReceiver.simpleName,
             id,
-            invoker.id,
-            invoker.simpleName,
-            receiver.id,
-            receiver.simpleName,
             simpleName
         )
-        return getInvokerAllegiance(invoker) == getReceiverAllegiance(receiver)
+        return getActionInvokerAllegiance(actionInvoker) == getActionReceiverAllegiance(actionReceiver)
     }
 
-    private fun checkHashCode(invoker: A, receiver: B): Boolean {
+    private fun checkHashCode(actionInvoker: A, actionReceiver: B): Boolean {
         logger.trace(
-            "id={} invoker.id={} invoker.simpleName={} operation=checkHashCode receiver.id={} receiver.simpleName={} simpleName={}",
+            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} id={} operation=checkHashCode simpleName={}",
+            actionInvoker.id,
+            actionInvoker.simpleName,
+            actionReceiver.id,
+            actionReceiver.simpleName,
             id,
-            invoker.id,
-            invoker.simpleName,
-            receiver.id,
-            receiver.simpleName,
             simpleName
         )
-        return getInvokerHashCode(invoker) == getReceiverHashCode(receiver)
+        return getActionInvokerHashCode(actionInvoker) == getActionReceiverHashCode(actionReceiver)
     }
 
-    protected fun checkSelectionType(invoker: A, index: Int, receiver: B): Boolean {
+    protected fun checkSelectionType(actionInvoker: A, index: Int, actionReceiver: B): Boolean {
         val checkValue = when (selectionType) {
             SelectionType.ANY ->
                 true
 
             SelectionType.ALLY ->
-                checkSelectionTypeAlly(invoker, receiver)
+                checkSelectionTypeAlly(actionInvoker, actionReceiver)
 
             SelectionType.ENEMY ->
-                checkSelectionTypeEnemy(invoker, receiver)
+                checkSelectionTypeEnemy(actionInvoker, actionReceiver)
 
             SelectionType.SELF ->
-                checkSelectionTypeSelf(invoker, receiver)
+                checkSelectionTypeSelf(actionInvoker, actionReceiver)
         }
         logger.info(
-            "checkValue={} id={} index={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} selectionType={} simpleName={}",
+            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} checkValue={} id={} index={} selectionType={} simpleName={}",
+            actionInvoker.id,
+            actionInvoker.simpleName,
+            actionReceiver.id,
+            actionReceiver.simpleName,
             checkValue,
             id,
             index,
-            invoker.id,
-            invoker.simpleName,
-            receiver.id,
-            receiver.simpleName,
             selectionType,
             simpleName
         )
         return checkValue
     }
 
-    private fun checkSelectionTypeAlly(invoker: A, receiver: B): Boolean {
+    private fun checkSelectionTypeAlly(actionInvoker: A, actionReceiver: B): Boolean {
         logger.trace(
-            "id={} invoker.id={} invoker.simpleName={} operation=checkSelectionTypeAlly receiver.id={} receiver.simpleName={} simpleName={}",
+            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} id={} operation=checkSelectionTypeAlly simpleName={}",
+            actionInvoker.id,
+            actionInvoker.simpleName,
+            actionReceiver.id,
+            actionReceiver.simpleName,
             id,
-            invoker.id,
-            invoker.simpleName,
-            receiver.id,
-            receiver.simpleName,
             simpleName
         )
-        return !checkHashCode(invoker, receiver) && checkAllegiance(invoker, receiver)
+        return !checkHashCode(actionInvoker, actionReceiver) && checkAllegiance(actionInvoker, actionReceiver)
     }
 
-    private fun checkSelectionTypeEnemy(invoker: A, receiver: B): Boolean {
+    private fun checkSelectionTypeEnemy(actionInvoker: A, actionReceiver: B): Boolean {
         logger.trace(
-            "id={} invoker.id={} invoker.simpleName={} operation=checkSelectionTypeEnemy receiver.id={} receiver.simpleName={} simpleName={}",
+            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} id={} operation=checkSelectionTypeEnemy simpleName={}",
+            actionInvoker.id,
+            actionInvoker.simpleName,
+            actionReceiver.id,
+            actionReceiver.simpleName,
             id,
-            invoker.id,
-            invoker.simpleName,
-            receiver.id,
-            receiver.simpleName,
             simpleName
         )
-        return !checkHashCode(invoker, receiver) && !checkAllegiance(invoker, receiver)
+        return !checkHashCode(actionInvoker, actionReceiver) && !checkAllegiance(actionInvoker, actionReceiver)
     }
 
-    private fun checkSelectionTypeSelf(invoker: A, receiver: B): Boolean {
+    private fun checkSelectionTypeSelf(actionInvoker: A, actionReceiver: B): Boolean {
         logger.trace(
-            "id={} invoker.id={} invoker.simpleName={} operation=checkSelectionTypeSelf receiver.id={} receiver.simpleName={} simpleName={}",
+            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} id={} operation=checkSelectionTypeSelf simpleName={}",
+            actionInvoker.id,
+            actionInvoker.simpleName,
+            actionReceiver.id,
+            actionReceiver.simpleName,
             id,
-            invoker.id,
-            invoker.simpleName,
-            receiver.id,
-            receiver.simpleName,
             simpleName
         )
-        return checkHashCode(invoker, receiver)
+        return checkHashCode(actionInvoker, actionReceiver)
     }
 
-    protected fun checkAttributeCriteria(index: Int, receiver: B): Boolean {
+    protected fun checkAttributeCriteria(index: Int, actionReceiver: B): Boolean {
         logger.info(
-            "id={} index={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "actionReceiver.id={} actionReceiver.simpleName={} id={} index={} simpleName={}",
+            actionReceiver.id,
+            actionReceiver.simpleName,
             id,
             index,
-            receiver.id,
-            receiver.simpleName,
             simpleName
         )
         return attributeCriteria.withIndex().all { (index: Int, attributeCriterion: AttributeCriterion<B>) ->
-            checkAttributeCriterion(attributeCriterion, index, receiver)
+            checkAttributeCriterion(attributeCriterion, index, actionReceiver)
         }
     }
 
-    private fun checkAttributeCriterion(attributeCriterion: AttributeCriterion<B>, index: Int, receiver: B): Boolean {
+    private fun checkAttributeCriterion(
+        attributeCriterion: AttributeCriterion<B>, index: Int, actionReceiver: B,
+    ): Boolean {
         logger.info(
-            "attributeCriterion.id={} id={} index={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "actionReceiver.id={} actionReceiver.simpleName={} attributeCriterion.id={} id={} index={} simpleName={}",
+            actionReceiver.id,
+            actionReceiver.simpleName,
             attributeCriterion.id,
             id,
             index,
-            receiver.id,
-            receiver.simpleName,
             simpleName
         )
-        return attributeCriterion.check(receiver)
+        return attributeCriterion.check(actionReceiver)
     }
 
-    private fun getInvokerAllegiance(invoker: A): Int {
+    private fun getActionInvokerAllegiance(actionInvoker: A): Int {
         logger.info(
-            "id={} invoker.allegiance={} invoker.id={} invoker.simpleName={} simpleName={}",
+            "actionInvoker.allegiance={} actionInvoker.id={} actionInvoker.simpleName={} id={} simpleName={}",
+            actionInvoker.allegiance,
+            actionInvoker.id,
+            actionInvoker.simpleName,
             id,
-            invoker.allegiance,
-            invoker.id,
-            invoker.simpleName,
             simpleName
         )
-        return invoker.allegiance
+        return actionInvoker.allegiance
     }
 
-    private fun getInvokerHashCode(invoker: A): Int {
-        val hashCode = invoker.id
+    private fun getActionInvokerHashCode(actionInvoker: A): Int {
+        val hashCode = actionInvoker.id
         logger.info(
-            "id={} invoker.hashCode={} invoker.simpleName={}", id, hashCode, invoker.simpleName
+            "actionInvoker.hashCode={} actionInvoker.simpleName={} id={}", id, hashCode, actionInvoker.simpleName
         )
         return hashCode
     }
 
-    private fun getReceiverAllegiance(receiver: B): Int {
+    private fun getActionReceiverAllegiance(actionReceiver: B): Int {
         logger.info(
-            "id={} receiver.allegiance={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "actionReceiver.allegiance={} actionReceiver.id={} actionReceiver.simpleName={} id={} simpleName={}",
+            actionReceiver.allegiance,
+            actionReceiver.id,
+            actionReceiver.simpleName,
             id,
-            receiver.allegiance,
-            receiver.id,
-            receiver.simpleName,
             simpleName
         )
-        return receiver.allegiance
+        return actionReceiver.allegiance
     }
 
-    private fun getReceiverHashCode(receiver: B): Int {
-        val hashCode = receiver.id
+    private fun getActionReceiverHashCode(actionReceiver: B): Int {
+        val hashCode = actionReceiver.id
         logger.info(
-            "id={} receiver.hashCode={} receiver.simpleName={} simpleName={}",
-            id,
+            "actionReceiver.hashCode={} actionReceiver.simpleName={} id={} simpleName={}",
             hashCode,
-            receiver.simpleName,
+            actionReceiver.simpleName,
+            id,
             simpleName
         )
         return hashCode
+    }
+
+    override fun toString(): String {
+        return "attributeCriteria.size=${attributeCriteria} id=$id name=$name selectionType=$selectionType simpleName=$simpleName"
     }
 }

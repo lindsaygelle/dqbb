@@ -99,4 +99,8 @@ class AttributeSort<T : AttributeProvider>() : Identifier,
             (checkAttributeProvider(attributeProvider) ?: Int.MIN_VALUE)
         }
     }
+
+    override fun toString(): String {
+        return "attributeName=$attributeName id=$id name=$name simpleName=$simpleName sortType$sortType"
+    }
 }

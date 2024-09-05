@@ -3,11 +3,20 @@ package dqbb
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-class Actor : AbilityInvoker,
-    AttributeProvider,
+class Actor : ActionInvoker,
     BattleReceiver,
     Nameable {
-    var actions: Collection<Action> = emptyList()
+    var actions: Collection<Action<Actor, Actor>> = emptyList()
+        set(value) {
+            field = value.filter { action: Action<Actor, Actor> ->
+                action.actionCondition != null && action.actionTarget != null
+            }.sortedByDescending { action: Action<Actor, Actor> ->
+                action.priorityType.ordinal
+            }
+            logger.debug(
+                "actions.size={} id={} simpleName={}", actions.size, id, simpleName
+            )
+        }
 
     override var agility: Int = 0
         set(value) {
