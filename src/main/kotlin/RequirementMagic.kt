@@ -33,10 +33,10 @@ abstract class RequirementMagic<A : MagicInvoker, B : Receiver>(
             receiver.simpleName,
             simpleName
         )
-        return getRequirement(invoker) > getResistance(receiver)
+        return getInvokerRequirement(invoker) > getReceiverResistance(receiver)
     }
 
-    protected abstract fun getRequirement(invoker: A): Int
+    protected abstract fun getInvokerRequirement(invoker: A): Int
 
-    protected abstract fun getResistance(receiver: B): Int
+    protected abstract fun getReceiverResistance(receiver: B): Int
 }

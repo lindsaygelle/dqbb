@@ -71,7 +71,7 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
         return receiver.turnsStopSpell == 0
     }
 
-    override fun getRequirement(invoker: A): Int {
+    override fun getInvokerRequirement(invoker: A): Int {
         val stopSpellRequirement = invoker.stopSpellRequirement
         logger.info(
             "id={} invoker.id={} invoker.simpleName={} invoker.stopSpellRequirement={} invoker.stopSpellRequirementMaximum={} invoker.stopSpellRequirementMaximum={} simpleName={}",
@@ -86,7 +86,7 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
         return stopSpellRequirement
     }
 
-    override fun getResistance(receiver: B): Int {
+    override fun getReceiverResistance(receiver: B): Int {
         val stopSpellResistance = receiver.stopSpellResistance
         logger.info(
             "id={} receiver.id={} receiver.simpleName={} receiver.stopSpellResistance={} receiver.stopSpellResistanceMaximum={} receiver.stopSpellResistanceMinimum={} simpleName={}",

@@ -1,6 +1,6 @@
 package dqbb
 
-class ActionTarget<A, B>() : ActionRequirement<A, B>() where A : AbilityInvoker, A : AllegianceKeeper, A : AttributeProvider, B : AbilityReceiver, B : AllegianceKeeper, B : AttributeProvider {
+class ActionTarget<A : ActionInvoker, B : ActionReceiver>() : ActionRequirement<A, B>() {
     constructor(
         attributeCriteria: Collection<AttributeCriterion<B>>,
         name: String? = null,
@@ -11,25 +11,35 @@ class ActionTarget<A, B>() : ActionRequirement<A, B>() where A : AbilityInvoker,
         this.selectionType = selectionType
     }
 
-    private fun filterReceiver(invoker: A, index: Int, receiver: B): Boolean {
-        return checkSelectionType(invoker, index, receiver) && checkAttributeCriteria(index, receiver)
-    }
-
-    fun target(invoker: A, receivers: Collection<B>): Collection<B> {
-        logger.info(
-            "id={} invoker.id={} invoker.simpleName={} receivers.size={} simpleName={}",
+    private fun filterReceiver(actionInvoker: A, index: Int, actionReceiver: B): Boolean {
+        logger.trace(
+            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} id={} index={} simpleName={}",
+            actionInvoker.id,
+            actionInvoker.simpleName,
+            actionReceiver.id,
+            actionReceiver.simpleName,
             id,
-            invoker.id,
-            invoker.simpleName,
-            receivers.size,
+            index,
             simpleName
         )
-        val filteredReceivers = receivers.filterIndexed { index: Int, receiver: B ->
-            filterReceiver(invoker, index, receiver)
+        return checkSelectionType(actionInvoker, index, actionReceiver) && checkAttributeCriteria(index, actionReceiver)
+    }
+
+    fun target(actionInvoker: A, actionReceivers: Collection<B>): Collection<B> {
+        logger.info(
+            "actionInvoker.id={} actionInvoker.simpleName={} actionReceivers.size={} id={} simpleName={}",
+            actionInvoker.id,
+            actionInvoker.simpleName,
+            actionReceivers.size,
+            id,
+            simpleName
+        )
+        val filteredActionReceivers = actionReceivers.filterIndexed { index: Int, actionReceiver: B ->
+            filterReceiver(actionInvoker, index, actionReceiver)
         }
         logger.info(
-            "filteredReceivers.size={} id={} simpleName={}", filteredReceivers.size, id, simpleName
+            "filteredActionReceivers.size={} id={} simpleName={}", filteredActionReceivers.size, id, simpleName
         )
-        return filteredReceivers
+        return filteredActionReceivers
     }
 }

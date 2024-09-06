@@ -3,9 +3,9 @@ package dqbb
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-class Action() : Identifier,
+class Action<A : ActionInvoker, B : ActionReceiver>() : Identifier,
     Prioritized {
-    var ability: Ability<Actor, Actor>? = null
+    var ability: Ability<A, B>? = null
         set(value) {
             field = value
             logger.debug(
@@ -13,7 +13,7 @@ class Action() : Identifier,
             )
         }
 
-    var actionCondition: ActionCondition<Actor, Actor>? = null
+    var actionCondition: ActionCondition<A, B>? = null
         set(value) {
             field = value
             logger.debug(
@@ -21,7 +21,7 @@ class Action() : Identifier,
             )
         }
 
-    var actionTarget: ActionTarget<Actor, Actor>? = null
+    var actionTarget: ActionTarget<A, B>? = null
         set(value) {
             field = value
             logger.debug(
@@ -29,7 +29,7 @@ class Action() : Identifier,
             )
         }
 
-    var attributeSort: AttributeSort<Actor>? = null
+    var attributeSort: AttributeSort<B>? = null
         set(value) {
             field = value
             logger.debug(
@@ -48,10 +48,10 @@ class Action() : Identifier,
         }
 
     constructor(
-        ability: Ability<Actor, Actor>,
-        actionCondition: ActionCondition<Actor, Actor>,
-        actionTarget: ActionTarget<Actor, Actor>,
-        attributeSort: AttributeSort<Actor>? = null,
+        ability: Ability<A, B>,
+        actionCondition: ActionCondition<A, B>,
+        actionTarget: ActionTarget<A, B>,
+        attributeSort: AttributeSort<B>? = null,
         priorityType: PriorityType = PriorityType.EQUAL,
     ) : this() {
         this.ability = ability
@@ -61,59 +61,64 @@ class Action() : Identifier,
         this.priorityType = priorityType
     }
 
-    private fun checkAbility(actor: Actor, actors: Collection<Actor>): Boolean {
+    private fun checkAbility(actionInvoker: A, actionReceivers: Collection<B>): Boolean {
         logger.info(
-            "actor.id={} actors.size={} id={} attributeSort.id={} simpleName={}",
-            actor.id,
-            actors.size,
+            "actionInvoker.id={} actionReceivers.size={} id={} attributeSort.id={} simpleName={}",
+            actionInvoker.id,
+            actionReceivers.size,
             id,
             attributeSort?.id,
             simpleName
         )
-        val sortedActors = (attributeSort?.sort(actors) ?: actors)
-        if (sortedActors.isEmpty()) {
+        val sortedActionInvokers = (attributeSort?.sort(actionReceivers) ?: actionReceivers)
+        if (sortedActionInvokers.isEmpty()) {
             return false
         }
-        return ability?.use(actor, sortedActors.first()) ?: false
+        return ability?.use(actionInvoker, sortedActionInvokers.first()) ?: false
     }
 
-    private fun checkActionCondition(actor: Actor, actors: Collection<Actor>): Boolean {
+    private fun checkActionCondition(actionInvoker: A, actionReceivers: Collection<B>): Boolean {
         logger.info(
-            "actionCondition.id={} actor.id={} actors.size={} id={} simpleName={}",
+            "actionCondition.id={} actionInvoker.id={} actionReceivers.size={} id={} simpleName={}",
             actionCondition?.id,
-            actor.id,
-            actors.size,
+            actionInvoker.id,
+            actionReceivers.size,
             id,
             simpleName
         )
-        return actionCondition?.check(actor, actors) ?: false
+        return actionCondition?.check(actionInvoker, actionReceivers) ?: false
     }
 
-    private fun checkActionTarget(actor: Actor, actors: Collection<Actor>): Boolean {
+    private fun checkActionTarget(actionInvoker: A, actionReceivers: Collection<B>): Boolean {
         logger.info(
-            "actionTarget.id={} actor.id={} actors.size={} id={} simpleName={}",
+            "actionTarget.id={} actionInvoker.id={} actionReceivers.size={} id={} simpleName={}",
             actionTarget?.id,
-            actor.id,
-            actors.size,
+            actionInvoker.id,
+            actionReceivers.size,
             id,
             simpleName
         )
-        val targetedActors = actionTarget?.target(actor, actors)
-        if (targetedActors.isNullOrEmpty()) {
+        val targetedActionInvokers = actionTarget?.target(actionInvoker, actionReceivers)
+        if (targetedActionInvokers.isNullOrEmpty()) {
             return false
         }
-        return checkAbility(actor, targetedActors)
+        return checkAbility(actionInvoker, targetedActionInvokers)
     }
 
-    fun use(actor: Actor, actors: Collection<Actor>): Boolean {
+    fun use(actionInvoker: A, actionReceivers: Collection<B>): Boolean {
         logger.info(
-            "actor.id={} actors.size={} id={} priorityType={} simpleName={}",
-            actor.id,
-            actors.size,
+            "actionInvoker.id={} actionReceivers.size={} id={} priorityType={} simpleName={}",
+            actionInvoker.id,
+            actionReceivers.size,
             id,
             priorityType,
             simpleName
         )
-        return checkActionCondition(actor, actors) && checkActionTarget(actor, actors)
+        val checkValue =
+            checkActionCondition(actionInvoker, actionReceivers) && checkActionTarget(actionInvoker, actionReceivers)
+        logger.info(
+            "checkValue={} id={} simpleName={}", checkValue, id, simpleName
+        )
+        return checkValue
     }
 }

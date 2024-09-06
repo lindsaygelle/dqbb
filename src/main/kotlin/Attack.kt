@@ -124,8 +124,8 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
     }
 
     protected fun getAttackPointsStandardRange(invoker: A, receiver: B): IntRange {
-        val attackPointsStandardRangeMaximum = getAttackPointsStandardRangeMaximum(invoker, receiver)
-        val attackPointsStandardRangeMinimum = getAttackPointsStandardRangeMinimum(invoker, receiver)
+        val attackPointsStandardRangeMaximum = maxOf(1, getAttackPointsStandardRangeMaximum(invoker, receiver))
+        val attackPointsStandardRangeMinimum = minOf(0, getAttackPointsStandardRangeMinimum(invoker, receiver))
         logger.info(
             "attackPointsStandardRangeMaximum={} attackPointsStandardRangeMinimum={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
             attackPointsStandardRangeMaximum,

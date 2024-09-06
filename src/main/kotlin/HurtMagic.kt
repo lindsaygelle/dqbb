@@ -72,7 +72,7 @@ abstract class HurtMagic<A, B : HurtReceiver>(
         return (hurtPoints - (hurtPoints * (hurtPointsReduction.toDouble() / 100))).toInt()
     }
 
-    override fun getRequirement(invoker: A): Int {
+    override fun getInvokerRequirement(invoker: A): Int {
         val hurtRequirement = invoker.hurtRequirement
         logger.info(
             "id={} invoker.id={} invoker.hurtRequirement={} invoker.hurtRequirementMaximum={} invoker.hurtRequirementMaximum={} invoker.simpleName={}",
@@ -86,7 +86,7 @@ abstract class HurtMagic<A, B : HurtReceiver>(
         return hurtRequirement
     }
 
-    override fun getResistance(receiver: B): Int {
+    override fun getReceiverResistance(receiver: B): Int {
         val hurtResistance = receiver.hurtResistance
         logger.info(
             "id={} receiver.id={} receiver.hurtResistance={} receiver.hurtResistanceMaximum={} receiver.hurtResistanceMinimum={} receiver.simpleName={}",

@@ -70,7 +70,7 @@ class Sleep<A : SleepInvoker, B : SleepReceiver>(
         return receiver.turnsSleep == 0
     }
 
-    override fun getRequirement(invoker: A): Int {
+    override fun getInvokerRequirement(invoker: A): Int {
         val sleepRequirement = invoker.sleepRequirement
         logger.info(
             "id={} invoker.id={} invoker.simpleName={} invoker.sleepRequirement={} invoker.sleepRequirementMaximum={} invoker.sleepRequirementMaximum={} simpleName={}",
@@ -85,7 +85,7 @@ class Sleep<A : SleepInvoker, B : SleepReceiver>(
         return sleepRequirement
     }
 
-    override fun getResistance(receiver: B): Int {
+    override fun getReceiverResistance(receiver: B): Int {
         val sleepResistance = receiver.sleepResistance
         logger.info(
             "id={} receiver.id={} receiver.simpleName={} receiver.sleepResistance={} receiver.sleepResistanceMaximum={} receiver.sleepResistanceMinimum={} simpleName={}",

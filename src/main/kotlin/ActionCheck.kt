@@ -1,7 +1,7 @@
 package dqbb
 
-class ActionCheck<A, B>() : ActionRequirement<A, B>(),
-    Prioritized where A : AbilityInvoker, A : AllegianceKeeper, A : AttributeProvider, B : AbilityReceiver, B : AllegianceKeeper, B : AttributeProvider {
+class ActionCheck<A : ActionInvoker, B : ActionReceiver>() : ActionRequirement<A, B>(),
+    Prioritized {
     override var priorityType: PriorityType = PriorityType.EQUAL
         set(value) {
             field = value
@@ -18,19 +18,19 @@ class ActionCheck<A, B>() : ActionRequirement<A, B>(),
         this.selectionType = selectionType
     }
 
-    fun check(invoker: A, receivers: Collection<B>): Boolean {
+    fun check(actionInvoker: A, actionReceivers: Collection<B>): Boolean {
         logger.info(
-            "attributeCriteria.size={} id={} invoker.id={} invoker.simpleName={} receivers.size={} selectionType={} simpleName={}",
+            "actionInvoker.id={} actionInvoker.simpleName={} actionReceivers.size={} attributeCriteria.size={} id={} selectionType={} simpleName={}",
+            actionInvoker.id,
+            actionInvoker.simpleName,
+            actionReceivers.size,
             attributeCriteria.size,
             id,
-            invoker.id,
-            invoker.simpleName,
-            receivers.size,
             selectionType,
             simpleName
         )
-        val checkValue = receivers.filterIndexed { index: Int, receiver: B ->
-            checkSelectionType(invoker, index, receiver)
+        val checkValue = actionReceivers.filterIndexed { index: Int, receiver: B ->
+            checkSelectionType(actionInvoker, index, receiver)
         }.withIndex().all { (index: Int, receiver: B) ->
             checkAttributeCriteria(index, receiver)
         }
@@ -38,5 +38,9 @@ class ActionCheck<A, B>() : ActionRequirement<A, B>(),
             "checkValue={} id={} simpleName={}", checkValue, id, simpleName
         )
         return checkValue
+    }
+
+    override fun toString(): String {
+        return "attributeCriteria.size=${attributeCriteria.size} id=$id name=$name priorityType=$priorityType selectionType=$selectionType simpleName=$simpleName"
     }
 }
