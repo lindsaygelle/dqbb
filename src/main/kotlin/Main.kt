@@ -1,13 +1,42 @@
 package dqbb
 
+import java.awt.BorderLayout
+import java.awt.image.BufferedImage
+import java.io.File
+import java.net.URL
+import javax.imageio.ImageIO
+import javax.swing.JFrame
+
+
+abstract class Resource<T> {
+    abstract fun get(name: String): T?
+    protected fun getResource(name: String): URL? {
+        return javaClass.getResource(name)
+    }
+}
+
+object Directory : Resource<File>() {
+    override fun get(name: String): File? {
+        return getResource(if (name.startsWith("/")) name else "/$name")?.toURI()?.let { File(it) }
+    }
+}
+
+object Image : Resource<BufferedImage>() {
+    override fun get(name: String): BufferedImage? {
+        return getResource(name)?.let { ImageIO.read(it) }
+    }
+}
+
 fun main() {
 
     val attackEnemy = AttackEnemy<Actor, Actor>()
     val attackHero = AttackHero<Actor, Actor>()
+    val breatheFire = BreatheFire<Actor, Actor>(20)
     val heal = Heal<Actor, Actor>(2)
     val healMore = HealMore<Actor, Actor>(10)
     val herb = Herb<Actor, Actor>()
     val hurt = Hurt<Actor, Actor>(2)
+    val hurtMore = HurtMore<Actor, Actor>(4)
     val run = Run<Actor, Actor>()
     val sleep = Sleep<Actor, Actor>(2)
     val stopSpell = StopSpell<Actor, Actor>(2)
@@ -92,6 +121,71 @@ fun main() {
             sortType = SortType.DESCENDING
         ),
         priorityType = PriorityType.LOW
+    )
+
+    val actionBreatheFire = Action(
+        ability = breatheFire,
+        actionCondition = ActionCondition(
+            actionChecks = listOf(
+                ActionCheck(
+                    attributeCriteria = listOf(
+                        AttributeCriterion(
+                            attributeComparisons = listOf(
+                                AttributeComparison(
+                                    attributeName = AttributeName.HIT_POINTS_PERCENTAGE,
+                                    operatorType = OperatorType.GREATER_THAN,
+                                    value = 25
+                                ),
+                                AttributeComparison(
+                                    attributeName = AttributeName.MAGIC_POINTS,
+                                    operatorType = OperatorType.GREATER_THAN_EQUAL,
+                                    value = breatheFire.magicCost
+                                ),
+                                AttributeComparison(
+                                    attributeName = AttributeName.TURNS_STOP_SPELL,
+                                    operatorType = OperatorType.EQUAL,
+                                    value = 0
+                                )
+                            )
+                        )
+                    ),
+                    selectionType = SelectionType.SELF
+                ),
+                ActionCheck(
+                    attributeCriteria = listOf(
+                        AttributeCriterion(
+                            attributeComparisons = listOf(
+                                AttributeComparison(
+                                    attributeName = AttributeName.HIT_POINTS,
+                                    operatorType = OperatorType.GREATER_THAN_EQUAL,
+                                    value = 1
+                                )
+                            )
+                        )
+                    ),
+                    selectionType = SelectionType.ENEMY
+                )
+            )
+        ),
+        actionTarget = ActionTarget(
+            attributeCriteria = listOf(
+                AttributeCriterion(
+                    attributeComparisons = listOf(
+                        AttributeComparison(
+                            attributeName = AttributeName.HIT_POINTS,
+                            operatorType = OperatorType.GREATER_THAN_EQUAL,
+                            value = 1
+                        )
+                    )
+                )
+            ),
+            selectionType = SelectionType.ENEMY
+        ),
+        attributeSort = AttributeSort(
+            attributeName = AttributeName.HIT_POINTS,
+            sortType = SortType.DESCENDING
+        ),
+        priorityType = PriorityType.entries.random()
     )
 
     val actionHeal = Action(
@@ -192,7 +286,8 @@ fun main() {
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = 1
                                 )
-                            )
+                            ),
+                            matchType = MatchType.ALL
                         )
                     ),
                     selectionType = SelectionType.SELF
@@ -325,7 +420,72 @@ fun main() {
                                 AttributeComparison(
                                     attributeName = AttributeName.MAGIC_POINTS,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
-                                    value = 2
+                                    value = hurt.magicCost
+                                ),
+                                AttributeComparison(
+                                    attributeName = AttributeName.TURNS_STOP_SPELL,
+                                    operatorType = OperatorType.EQUAL,
+                                    value = 0
+                                )
+                            )
+                        )
+                    ),
+                    selectionType = SelectionType.SELF
+                ),
+                ActionCheck(
+                    attributeCriteria = listOf(
+                        AttributeCriterion(
+                            attributeComparisons = listOf(
+                                AttributeComparison(
+                                    attributeName = AttributeName.HIT_POINTS,
+                                    operatorType = OperatorType.GREATER_THAN_EQUAL,
+                                    value = 1
+                                )
+                            )
+                        )
+                    ),
+                    selectionType = SelectionType.ENEMY
+                )
+            )
+        ),
+        actionTarget = ActionTarget(
+            attributeCriteria = listOf(
+                AttributeCriterion(
+                    attributeComparisons = listOf(
+                        AttributeComparison(
+                            attributeName = AttributeName.HIT_POINTS,
+                            operatorType = OperatorType.GREATER_THAN_EQUAL,
+                            value = 1
+                        )
+                    )
+                )
+            ),
+            selectionType = SelectionType.ENEMY
+        ),
+        attributeSort = AttributeSort(
+            attributeName = AttributeName.HIT_POINTS,
+            sortType = SortType.DESCENDING
+        ),
+        priorityType = PriorityType.entries.random()
+    )
+
+    val actionHurtMore = Action(
+        ability = hurtMore,
+        actionCondition = ActionCondition(
+            actionChecks = listOf(
+                ActionCheck(
+                    attributeCriteria = listOf(
+                        AttributeCriterion(
+                            attributeComparisons = listOf(
+                                AttributeComparison(
+                                    attributeName = AttributeName.HIT_POINTS_PERCENTAGE,
+                                    operatorType = OperatorType.GREATER_THAN,
+                                    value = 25
+                                ),
+                                AttributeComparison(
+                                    attributeName = AttributeName.MAGIC_POINTS,
+                                    operatorType = OperatorType.GREATER_THAN_EQUAL,
+                                    value = hurtMore.magicCost
                                 ),
                                 AttributeComparison(
                                     attributeName = AttributeName.TURNS_STOP_SPELL,
@@ -579,30 +739,68 @@ fun main() {
         priorityType = PriorityType.entries.random()
     )
 
+
     val actors = mutableListOf<Actor>()
 
     for (i in (0..4)) {
-        val actor = Actor()
-        actor.actions = listOf(
-            listOf(actionAttackEnemy, actionAttackHero).random(),
-            listOf(actionHeal, actionHealMore).random(),
-            actionHerb,
-            actionHurt,
-            actionRun,
-            actionSleep,
-            actionStopSpell
+
+        val d = Directory.get("sprites")?.listFiles()?.random()
+        val bufferedImage = ImageIO.read(d)
+
+        val actions = mutableListOf(
+            listOf(actionAttackEnemy, actionAttackHero, actionRun).random(),
         )
+
+
+        var action = listOf(actionHeal, actionHealMore, actionHerb, null).random()
+        if (action != null) {
+            actions.add(action)
+        }
+
+
+
+        action = listOf(actionBreatheFire, actionHurt, actionHurtMore, null).random()
+
+        if (action != null) {
+            actions.add(action)
+        }
+
+        action = listOf(actionSleep, actionStopSpell, null).random()
+        if (action != null) {
+            actions.add(action)
+        }
+
+        val actor = Actor()
+        actor.actions = actions
         actor.allegiance = i % 2
         actor.agility = (0..10).random()
+        if ((0..3).random() == 0) {
+            val armor = Armor(
+                blocksSleep = listOf(true, false).random(),
+                blocksStopSpell = listOf(true, false).random(),
+                breatheFireReduction = (0..30).random(),
+                defense = (1..40).random(),
+                hurtReduction = (0..30).random(),
+            )
+            actor.armor = armor
+        }
+        actor.breatheFireRangeMaximum = 255
+        actor.breatheFireScale = 0x10
+        actor.breatheFireShift = 0x07
+        actor.bufferedImage = bufferedImage
         actor.evasionRequirementMaximum = 32
+        actor.healMoreScale = 0x55 // 10
+        actor.healMoreShift = 0x0F //
         actor.healRangeMaximum = (10..100).random()
         actor.healScale = 7
         actor.healShift = 3
         actor.herbRangeMaximum = (10..50).random()
         actor.herbScale = 3
         actor.herbShift = 7
-        actor.hitPointsMaximum = (10..100).random()
+        actor.hitPointsMaximum = (10..30).random()
         actor.hitPoints = actor.hitPointsMaximum
+        actor.hurtMoreScale = listOf(0x1E, 0x3A).random()
+        actor.hurtMoreShift = listOf(0x0F, 0x07).random()
         actor.hurtRangeMaximum = (0..255).random()
         actor.hurtRequirementMaximum = (0..16).random()
         actor.hurtResistanceMaximum = (0..16).random()
@@ -622,9 +820,17 @@ fun main() {
         actors.add(actor)
     }
 
-    val battleSystem = BattleSystem()
-    battleSystem.actors.addAll(actors)
-    while (battleSystem.hasNext()) {
-        battleSystem.run()
+    val panelBattle = PanelBattle(actors)
+
+    val frame = Frame()
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+    frame.layout = BorderLayout()
+    frame.add(panelBattle, BorderLayout.CENTER)
+    frame.pack()
+    frame.setResizable(false)
+    frame.setLocationRelativeTo(null)
+    frame.setVisible(true)
+    while (true) {
+        panelBattle.run()
     }
 }

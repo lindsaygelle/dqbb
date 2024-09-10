@@ -67,7 +67,7 @@ class AttributeCriterion<T : AttributeProvider>() : Identifier,
             priorityType,
             simpleName
         )
-        val checkValue = checkMatchType(attributeProvider)
+        val checkValue: Boolean = checkMatchType(attributeProvider)
         logger.info(
             "checkValue={} id={} simpleName={}", checkValue, id, simpleName
         )

@@ -17,7 +17,11 @@ class Action<A : ActionInvoker, B : ActionReceiver>() : Identifier,
         set(value) {
             field = value
             logger.debug(
-                "actionCondition.id={} id={} simpleName={}", field?.id, id, simpleName
+                "actionCondition.actionChecks.size={} actionCondition.id={} id={} simpleName={}",
+                field?.actionChecks?.size,
+                field?.id,
+                id,
+                simpleName
             )
         }
 
@@ -25,7 +29,11 @@ class Action<A : ActionInvoker, B : ActionReceiver>() : Identifier,
         set(value) {
             field = value
             logger.debug(
-                "actionTarget.id={} id={} simpleName={}", field?.id, id, simpleName
+                "actionTarget.attributeCriteria={} actionTarget.id={} id={} simpleName={}",
+                field?.attributeCriteria,
+                field?.id,
+                id,
+                simpleName
             )
         }
 
@@ -33,7 +41,11 @@ class Action<A : ActionInvoker, B : ActionReceiver>() : Identifier,
         set(value) {
             field = value
             logger.debug(
-                "attributeSort.id={} id={} simpleName={}", field?.id, id, simpleName
+                "attributeSort.id={} attributeSort.sortType={} id={} simpleName={}",
+                field?.id,
+                field?.sortType,
+                id,
+                simpleName
             )
         }
 
@@ -59,66 +71,5 @@ class Action<A : ActionInvoker, B : ActionReceiver>() : Identifier,
         this.actionTarget = actionTarget
         this.attributeSort = attributeSort
         this.priorityType = priorityType
-    }
-
-    private fun checkAbility(actionInvoker: A, actionReceivers: Collection<B>): Boolean {
-        logger.info(
-            "actionInvoker.id={} actionReceivers.size={} id={} attributeSort.id={} simpleName={}",
-            actionInvoker.id,
-            actionReceivers.size,
-            id,
-            attributeSort?.id,
-            simpleName
-        )
-        val sortedActionInvokers = (attributeSort?.sort(actionReceivers) ?: actionReceivers)
-        if (sortedActionInvokers.isEmpty()) {
-            return false
-        }
-        return ability?.use(actionInvoker, sortedActionInvokers.first()) ?: false
-    }
-
-    private fun checkActionCondition(actionInvoker: A, actionReceivers: Collection<B>): Boolean {
-        logger.info(
-            "actionCondition.id={} actionInvoker.id={} actionReceivers.size={} id={} simpleName={}",
-            actionCondition?.id,
-            actionInvoker.id,
-            actionReceivers.size,
-            id,
-            simpleName
-        )
-        return actionCondition?.check(actionInvoker, actionReceivers) ?: false
-    }
-
-    private fun checkActionTarget(actionInvoker: A, actionReceivers: Collection<B>): Boolean {
-        logger.info(
-            "actionTarget.id={} actionInvoker.id={} actionReceivers.size={} id={} simpleName={}",
-            actionTarget?.id,
-            actionInvoker.id,
-            actionReceivers.size,
-            id,
-            simpleName
-        )
-        val targetedActionInvokers = actionTarget?.target(actionInvoker, actionReceivers)
-        if (targetedActionInvokers.isNullOrEmpty()) {
-            return false
-        }
-        return checkAbility(actionInvoker, targetedActionInvokers)
-    }
-
-    fun use(actionInvoker: A, actionReceivers: Collection<B>): Boolean {
-        logger.info(
-            "actionInvoker.id={} actionReceivers.size={} id={} priorityType={} simpleName={}",
-            actionInvoker.id,
-            actionReceivers.size,
-            id,
-            priorityType,
-            simpleName
-        )
-        val checkValue =
-            checkActionCondition(actionInvoker, actionReceivers) && checkActionTarget(actionInvoker, actionReceivers)
-        logger.info(
-            "checkValue={} id={} simpleName={}", checkValue, id, simpleName
-        )
-        return checkValue
     }
 }

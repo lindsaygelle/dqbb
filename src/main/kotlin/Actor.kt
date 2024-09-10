@@ -2,6 +2,7 @@ package dqbb
 
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import java.awt.image.BufferedImage
 
 class Actor : ActionInvoker,
     BattleReceiver,
@@ -38,13 +39,14 @@ class Actor : ActionInvoker,
         set(value) {
             field = value
             logger.debug(
-                "armor.blocksSleep={} armor.blocksStopSpell={} armor.breatheFireReduction={} armor.defense={} armor.hurtReduction={} armor.id={} id={} simpleName={}",
+                "armor.blocksSleep={} armor.blocksStopSpell={} armor.breatheFireReduction={} armor.defense={} armor.hurtReduction={} armor.id={} armor.name={} id={} simpleName={}",
                 field?.blocksSleep,
                 field?.blocksStopSpell,
                 field?.breatheFireReduction,
                 field?.defense,
                 field?.hurtReduction,
                 field?.id,
+                field?.name,
                 id,
                 simpleName
             )
@@ -93,6 +95,26 @@ class Actor : ActionInvoker,
                 "breatheFireShift={} id={} simpleName={}", field, id, simpleName
             )
         }
+
+    var bufferedImage: BufferedImage? = null
+        set(value) {
+            field = value
+            logger.debug(
+                "bufferedImage={} id={} simpleName={}", bufferedImage, id, simpleName
+            )
+        }
+
+    val bufferedImageHeight: Int
+        get() = bufferedImage?.height ?: 0
+
+    val bufferedImageHeightCenter: Int
+        get() = bufferedImageHeight / 2
+
+    val bufferedImageWidth: Int
+        get() = bufferedImage?.width ?: 0
+
+    val bufferedImageWidthCenter: Int
+        get() = bufferedImageWidth / 2
 
     override var canReceiveExcellentAttack: Boolean = true
         set(value) {
@@ -428,7 +450,12 @@ class Actor : ActionInvoker,
         set(value) {
             field = value
             logger.debug(
-                "id={} shield.defense={} shield.id={} simpleName={}", id, field?.defense, field?.id, simpleName
+                "id={} shield.defense={} shield.id={} shield.name={} simpleName={}",
+                id,
+                field?.defense,
+                field?.id,
+                field?.name,
+                simpleName
             )
         }
 
@@ -602,7 +629,12 @@ class Actor : ActionInvoker,
         set(value) {
             field = value
             logger.debug(
-                "id={} simpleName={} weapon.attack={} weapon.id={}", id, simpleName, field?.attack, field?.id
+                "id={} simpleName={} weapon.attack={} weapon.id={} weapon.name={}",
+                id,
+                simpleName,
+                field?.attack,
+                field?.id,
+                field?.name
             )
         }
 

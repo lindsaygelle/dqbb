@@ -36,33 +36,37 @@ open class ActionRequirement<A : ActionInvoker, B : ActionReceiver> : Identifier
         }
 
     private fun checkAllegiance(actionInvoker: A, actionReceiver: B): Boolean {
+        val checkValue: Boolean = getActionInvokerAllegiance(actionInvoker) == getActionReceiverAllegiance(actionReceiver)
         logger.trace(
-            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} id={} operation=checkAllegiance simpleName={}",
+            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} checkValue={} id={} operation=checkAllegiance simpleName={}",
             actionInvoker.id,
             actionInvoker.simpleName,
             actionReceiver.id,
             actionReceiver.simpleName,
+            checkValue,
             id,
             simpleName
         )
-        return getActionInvokerAllegiance(actionInvoker) == getActionReceiverAllegiance(actionReceiver)
+        return checkValue
     }
 
     private fun checkHashCode(actionInvoker: A, actionReceiver: B): Boolean {
+        val checkValue: Boolean = getActionInvokerHashCode(actionInvoker) == getActionReceiverHashCode(actionReceiver)
         logger.trace(
-            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} id={} operation=checkHashCode simpleName={}",
+            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} checkValue={} id={} operation=checkHashCode simpleName={}",
             actionInvoker.id,
             actionInvoker.simpleName,
             actionReceiver.id,
             actionReceiver.simpleName,
+            checkValue,
             id,
             simpleName
         )
-        return getActionInvokerHashCode(actionInvoker) == getActionReceiverHashCode(actionReceiver)
+        return checkValue
     }
 
     protected fun checkSelectionType(actionInvoker: A, index: Int, actionReceiver: B): Boolean {
-        val checkValue = when (selectionType) {
+        val checkValue: Boolean = when (selectionType) {
             SelectionType.ANY ->
                 true
 
@@ -91,42 +95,48 @@ open class ActionRequirement<A : ActionInvoker, B : ActionReceiver> : Identifier
     }
 
     private fun checkSelectionTypeAlly(actionInvoker: A, actionReceiver: B): Boolean {
+        val checkValue: Boolean = !checkHashCode(actionInvoker, actionReceiver) && checkAllegiance(actionInvoker, actionReceiver)
         logger.trace(
-            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} id={} operation=checkSelectionTypeAlly simpleName={}",
+            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} checkValue={} id={} operation=checkSelectionTypeAlly simpleName={}",
             actionInvoker.id,
             actionInvoker.simpleName,
             actionReceiver.id,
             actionReceiver.simpleName,
+            checkValue,
             id,
             simpleName
         )
-        return !checkHashCode(actionInvoker, actionReceiver) && checkAllegiance(actionInvoker, actionReceiver)
+        return checkValue
     }
 
     private fun checkSelectionTypeEnemy(actionInvoker: A, actionReceiver: B): Boolean {
+        val checkValue: Boolean = !checkHashCode(actionInvoker, actionReceiver) && !checkAllegiance(actionInvoker, actionReceiver)
         logger.trace(
-            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} id={} operation=checkSelectionTypeEnemy simpleName={}",
+            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} checkValue={} id={} operation=checkSelectionTypeEnemy simpleName={}",
             actionInvoker.id,
             actionInvoker.simpleName,
             actionReceiver.id,
             actionReceiver.simpleName,
+            checkValue,
             id,
             simpleName
         )
-        return !checkHashCode(actionInvoker, actionReceiver) && !checkAllegiance(actionInvoker, actionReceiver)
+        return checkValue
     }
 
     private fun checkSelectionTypeSelf(actionInvoker: A, actionReceiver: B): Boolean {
+        val checkValue: Boolean = checkHashCode(actionInvoker, actionReceiver)
         logger.trace(
-            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} id={} operation=checkSelectionTypeSelf simpleName={}",
+            "actionInvoker.id={} actionInvoker.simpleName={} actionReceiver.id={} actionReceiver.simpleName={} checkValue={} id={} operation=checkSelectionTypeSelf simpleName={}",
             actionInvoker.id,
             actionInvoker.simpleName,
             actionReceiver.id,
             actionReceiver.simpleName,
+            checkValue,
             id,
             simpleName
         )
-        return checkHashCode(actionInvoker, actionReceiver)
+        return checkValue
     }
 
     protected fun checkAttributeCriteria(index: Int, actionReceiver: B): Boolean {
@@ -171,7 +181,7 @@ open class ActionRequirement<A : ActionInvoker, B : ActionReceiver> : Identifier
     }
 
     private fun getActionInvokerHashCode(actionInvoker: A): Int {
-        val hashCode = actionInvoker.id
+        val hashCode: Int = actionInvoker.id
         logger.info(
             "actionInvoker.hashCode={} actionInvoker.simpleName={} id={}", id, hashCode, actionInvoker.simpleName
         )
@@ -191,7 +201,7 @@ open class ActionRequirement<A : ActionInvoker, B : ActionReceiver> : Identifier
     }
 
     private fun getActionReceiverHashCode(actionReceiver: B): Int {
-        val hashCode = actionReceiver.id
+        val hashCode: Int = actionReceiver.id
         logger.info(
             "actionReceiver.hashCode={} actionReceiver.simpleName={} id={} simpleName={}",
             hashCode,

@@ -15,17 +15,16 @@ abstract class RequirementMagic<A : MagicInvoker, B : Receiver>(
             receiver.simpleName,
             simpleName
         )
-        if (!checkRequirement(invoker, receiver)) {
-            return false
-        }
-        return applyEffect(invoker, receiver)
+        return checkRequirement(invoker, receiver) && applyEffect(invoker, receiver)
     }
 
     protected abstract fun applyEffect(invoker: A, receiver: B): Boolean
 
     private fun checkRequirement(invoker: A, receiver: B): Boolean {
-        logger.trace(
-            "id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
+        val checkValue: Boolean = getInvokerRequirement(invoker) > getReceiverResistance(receiver)
+        logger.info(
+            "checkValue={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             invoker.id,
             invoker.simpleName,
@@ -33,7 +32,7 @@ abstract class RequirementMagic<A : MagicInvoker, B : Receiver>(
             receiver.simpleName,
             simpleName
         )
-        return getInvokerRequirement(invoker) > getReceiverResistance(receiver)
+        return checkValue
     }
 
     protected abstract fun getInvokerRequirement(invoker: A): Int

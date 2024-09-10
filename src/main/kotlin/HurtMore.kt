@@ -6,7 +6,7 @@ class HurtMore<A : HurtMoreInvoker, B : HurtReceiver>(
     magicCost = magicCost
 ) {
     override fun getHurtPoints(invoker: A): Int {
-        val hurtMore = invoker.hurtMore
+        val hurtMore: Int = invoker.hurtMore
         logger.info(
             "id={} invoker.hurtMoreScale={} invoker.hurtMoreShift={} invoker.hurtShift={} invoker.hurtRangeMaximum={} invoker.hurtRangeMinimum={} invoker.id={} invoker.simpleName={} simpleName={}",
             id,

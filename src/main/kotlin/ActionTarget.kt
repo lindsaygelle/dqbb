@@ -34,7 +34,7 @@ class ActionTarget<A : ActionInvoker, B : ActionReceiver>() : ActionRequirement<
             id,
             simpleName
         )
-        val filteredActionReceivers = actionReceivers.filterIndexed { index: Int, actionReceiver: B ->
+        val filteredActionReceivers: Collection<B> = actionReceivers.filterIndexed { index: Int, actionReceiver: B ->
             filterReceiver(actionInvoker, index, actionReceiver)
         }
         logger.info(

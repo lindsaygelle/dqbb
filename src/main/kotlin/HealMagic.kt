@@ -6,11 +6,13 @@ abstract class HealMagic<A, B : HealReceiver>(
     magicCost = magicCost
 ) where A : HealRanger, A : MagicInvoker {
     final override fun apply(invoker: A, receiver: B): Boolean {
-        val healPoints = getHealPoints(invoker)
-        val hitPoints = receiver.hitPoints
+        val healPoints: Int = getHealPoints(invoker)
+        val hitPoints: Int = receiver.hitPoints
         receiver.hitPoints += healPoints
+        val checkValue: Boolean = receiver.hitPoints > hitPoints
         logger.info(
-            "healPoints={} id={} invoker.id={} invoker.simpleName={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "checkValue={} healPoints={} id={} invoker.id={} invoker.simpleName={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             healPoints,
             id,
             invoker.id,
@@ -21,35 +23,41 @@ abstract class HealMagic<A, B : HealReceiver>(
             receiver.simpleName,
             simpleName
         )
-        return receiver.hitPoints > hitPoints
+        return checkValue
     }
 
     final override fun checkReceiver(receiver: B): Boolean {
-        logger.trace(
-            "id={} receiver.id={} receiver.simpleName={} simpleName={}",
+        val checkValue: Boolean = checkReceiverHitPoints(receiver) && checkReceiverHitPointsMaximum(receiver)
+        logger.info(
+            "checkValue={} id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return checkReceiverHitPoints(receiver) && checkReceiverHitPointsMaximum(receiver)
+        return checkValue
     }
 
     private fun checkReceiverHitPoints(receiver: B): Boolean {
+        val checkValue: Boolean = receiver.hitPoints > 0
         logger.info(
-            "id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "checkValue={} id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             receiver.hitPoints,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return receiver.hitPoints > 0
+        return checkValue
     }
 
     private fun checkReceiverHitPointsMaximum(receiver: B): Boolean {
+        val checkValue: Boolean = receiver.hitPoints < receiver.hitPointsMaximum
         logger.info(
-            "id={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "checkValue={} id={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             receiver.hitPoints,
             receiver.hitPointsMaximum,
@@ -57,7 +65,7 @@ abstract class HealMagic<A, B : HealReceiver>(
             receiver.simpleName,
             simpleName
         )
-        return receiver.hitPoints < receiver.hitPointsMaximum
+        return checkValue
     }
 
     protected abstract fun getHealPoints(invoker: A): Int

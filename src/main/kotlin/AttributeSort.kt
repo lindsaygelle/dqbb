@@ -42,7 +42,7 @@ class AttributeSort<T : AttributeProvider>() : Identifier,
     }
 
     private fun checkAttributeProvider(attributeProvider: T): Int? {
-        val attributeValue = attributeName?.let {
+        val attributeValue: Int? = attributeName?.let {
             attributeProvider.getAttribute(it)
         }
         logger.info(
@@ -69,8 +69,11 @@ class AttributeSort<T : AttributeProvider>() : Identifier,
             sortType
         )
         return when (sortType) {
-            SortType.ASCENDING -> sortAscending(attributeProviders)
-            SortType.DESCENDING -> sortDescending(attributeProviders)
+            SortType.ASCENDING ->
+                sortAscending(attributeProviders)
+
+            SortType.DESCENDING ->
+                sortDescending(attributeProviders)
         }
     }
 

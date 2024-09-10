@@ -9,22 +9,30 @@ abstract class Ability<A : Invoker, B : Receiver> : Identifier {
     protected abstract fun apply(invoker: A, receiver: B): Boolean
 
     protected open fun checkInvoker(invoker: A): Boolean {
-        logger.trace(
-            "id={} invoker.id={} invoker.simpleName={} simpleName={}", id, invoker.id, invoker.simpleName, simpleName,
+        val checkValue: Boolean = checkInvokerTurnsSleep(invoker)
+        logger.info(
+            "checkValue={} id={} invoker.id={} invoker.simpleName={} simpleName={}",
+            checkValue,
+            id,
+            invoker.id,
+            invoker.simpleName,
+            simpleName,
         )
-        return checkInvokerTurnsSleep(invoker)
+        return checkValue
     }
 
     private fun checkInvokerTurnsSleep(invoker: A): Boolean {
+        val checkValue: Boolean = invoker.turnsSleep == 0
         logger.info(
-            "id={} invoker.id={} invoker.simpleName={} invoker.turnsSleep={} simpleName={}",
+            "checkValue={} id={} invoker.id={} invoker.simpleName={} invoker.turnsSleep={} simpleName={}",
+            checkValue,
             id,
             invoker.id,
             invoker.simpleName,
             invoker.turnsSleep,
             simpleName
         )
-        return invoker.turnsSleep == 0
+        return checkValue
     }
 
     protected abstract fun checkReceiver(receiver: B): Boolean
