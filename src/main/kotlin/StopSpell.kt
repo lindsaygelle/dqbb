@@ -6,11 +6,11 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
     magicCost = magicCost
 ) {
     override fun applyEffect(invoker: A, receiver: B): Boolean {
-        if (!checkReceiverArmor(receiver)) {
-            receiver.turnsStopSpell = 1
-        }
+        receiver.turnsStopSpell = if (!checkReceiverArmor(receiver)) 1 else 0
+        val checkValue: Boolean = receiver.turnsStopSpell > 0
         logger.info(
-            "id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} receiver.turnsStopSpell={} simpleName={}",
+            "checkValue={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} receiver.turnsStopSpell={} simpleName={}",
+            checkValue,
             id,
             invoker.id,
             invoker.simpleName,
@@ -19,60 +19,67 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
             receiver.turnsStopSpell,
             simpleName
         )
-        return receiver.turnsStopSpell > 0
+        return checkValue
     }
 
     override fun checkReceiver(receiver: B): Boolean {
-        logger.trace(
-            "id={} receiver.id={} receiver.simpleName={} simpleName={}",
+        val checkValue: Boolean = checkReceiverHitPoints(receiver) && checkReceiverTurnsStopSpell(receiver)
+        logger.info(
+            "checkValue={} id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return checkReceiverHitPoints(receiver) && checkReceiverTurnsStopSpell(receiver)
+        return checkValue
     }
 
     private fun checkReceiverArmor(receiver: B): Boolean {
-        val blocksStopSpell = receiver.armor?.blocksStopSpell ?: false
+        val checkValue: Boolean = receiver.armor?.blocksStopSpell ?: false
         logger.info(
-            "id={} receiver.armor.blocksStopSpell={} receiver.armor.id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "checkValue={} id={} receiver.armor.blocksStopSpell={} receiver.armor.id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
-            blocksStopSpell,
+            receiver.armor?.blocksStopSpell,
             receiver.armor?.id,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return blocksStopSpell
+        return checkValue
     }
 
     private fun checkReceiverHitPoints(receiver: B): Boolean {
+        val checkValue: Boolean = receiver.hitPoints > 0
         logger.info(
-            "id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "checkValue={} id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             receiver.hitPoints,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return receiver.hitPoints > 0
+        return checkValue
     }
 
     private fun checkReceiverTurnsStopSpell(receiver: B): Boolean {
+        val checkValue: Boolean = receiver.turnsStopSpell == 0
         logger.info(
-            "id={} receiver.id={} receiver.simpleName={} receiver.turnsStopSpell={} simpleName={}",
+            "checkValue={} id={} receiver.id={} receiver.simpleName={} receiver.turnsStopSpell={} simpleName={}",
+            checkValue,
             id,
             receiver.id,
             receiver.simpleName,
             receiver.turnsStopSpell,
             simpleName
         )
-        return receiver.turnsStopSpell == 0
+        return checkValue
     }
 
     override fun getInvokerRequirement(invoker: A): Int {
-        val stopSpellRequirement = invoker.stopSpellRequirement
+        val stopSpellRequirement: Int = invoker.stopSpellRequirement
         logger.info(
             "id={} invoker.id={} invoker.simpleName={} invoker.stopSpellRequirement={} invoker.stopSpellRequirementMaximum={} invoker.stopSpellRequirementMaximum={} simpleName={}",
             id,
@@ -87,7 +94,7 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
     }
 
     override fun getReceiverResistance(receiver: B): Int {
-        val stopSpellResistance = receiver.stopSpellResistance
+        val stopSpellResistance: Int = receiver.stopSpellResistance
         logger.info(
             "id={} receiver.id={} receiver.simpleName={} receiver.stopSpellResistance={} receiver.stopSpellResistanceMaximum={} receiver.stopSpellResistanceMinimum={} simpleName={}",
             id,

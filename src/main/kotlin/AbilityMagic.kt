@@ -16,8 +16,10 @@ abstract class AbilityMagic<A : MagicInvoker, B : Receiver>(
     }
 
     private fun checkInvokerMagicCost(invoker: A): Boolean {
+        val checkValue: Boolean = (invoker.magicPoints - magicCost) >= 0
         logger.info(
-            "id={} invoker.id={} invoker.magicPoints={} invoker.simpleName={} magicCost={} simpleName={}",
+            "checkValue={} id={} invoker.id={} invoker.magicPoints={} invoker.simpleName={} magicCost={} simpleName={}",
+            checkValue,
             id,
             invoker.id,
             invoker.magicPoints,
@@ -25,19 +27,21 @@ abstract class AbilityMagic<A : MagicInvoker, B : Receiver>(
             magicCost,
             simpleName
         )
-        return (invoker.magicPoints - magicCost) >= 0
+        return checkValue
     }
 
     private fun checkInvokerTurnsStopSpell(invoker: A): Boolean {
+        val checkValue: Boolean = invoker.turnsStopSpell == 0
         logger.info(
-            "id={} invoker.id={} invoker.simpleName={} invoker.turnsStopSpell={} simpleName={}",
+            "checkValue={} id={} invoker.id={} invoker.simpleName={} invoker.turnsStopSpell={} simpleName={}",
+            checkValue,
             id,
             invoker.id,
             invoker.simpleName,
             invoker.turnsStopSpell,
             simpleName
         )
-        return invoker.turnsStopSpell == 0
+        return checkValue
     }
 
     private fun reduceInvokerMagicPoints(invoker: A) {

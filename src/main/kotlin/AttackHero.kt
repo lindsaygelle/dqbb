@@ -2,8 +2,8 @@ package dqbb
 
 class AttackHero<A : AttackInvoker, B : AttackReceiver> : Attack<A, B>() {
     override fun getAttackPoints(invoker: A, receiver: B): Int {
-        val attackPointsRange = getAttackPointsRange(invoker, receiver)
-        val attackPoints = attackPointsRange.random()
+        val attackPointsRange: IntRange = getAttackPointsRange(invoker, receiver)
+        val attackPoints: Int = attackPointsRange.random()
         logger.info(
             "attackPoints={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
             attackPoints,
@@ -34,8 +34,8 @@ class AttackHero<A : AttackInvoker, B : AttackReceiver> : Attack<A, B>() {
     }
 
     private fun getAttackPointsWeakRange(receiver: B): IntRange {
-        val attackPointsWeakRangeMaximum = getAttackPointsWeakRangeMaximum(receiver)
-        val attackPointsWeakRangeMinimum = getAttackPointsWeakRangeMinimum(receiver)
+        val attackPointsWeakRangeMaximum: Int = getAttackPointsWeakRangeMaximum(receiver)
+        val attackPointsWeakRangeMinimum: Int = getAttackPointsWeakRangeMinimum(receiver)
         logger.info(
             "attackPointsWeakRangeMaximum={} attackPointsWeakRangeMinimum={} id={} receiver.id={} receiver.simpleName={} simpleName={}",
             attackPointsWeakRangeMaximum,
@@ -49,7 +49,7 @@ class AttackHero<A : AttackInvoker, B : AttackReceiver> : Attack<A, B>() {
     }
 
     private fun getAttackPointsWeakRangeMaximum(receiver: B): Int {
-        val attackPointsWeakRangeMaximum = (receiver.strength + 4) / 6
+        val attackPointsWeakRangeMaximum: Int = (receiver.strength + 4) / 6
         logger.info(
             "attackPointsWeakRangeMaximum={} id={} receiver.id={} receiver.simpleName={} simpleName={}",
             attackPointsWeakRangeMaximum,

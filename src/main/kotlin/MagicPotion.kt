@@ -4,11 +4,13 @@ class MagicPotion<A : MagicPotionInvoker, B : MagicReceiver> : AbilityItem<A, B>
     itemName = ItemName.MAGIC_POTION
 ) {
     override fun apply(invoker: A, receiver: B): Boolean {
-        val magicPoints = receiver.magicPoints
-        val magicPotionPoints = maxOf(0, getInvokerMagicPotionPoints(invoker))
+        val magicPoints: Int = receiver.magicPoints
+        val magicPotionPoints: Int = maxOf(0, getInvokerMagicPotionPoints(invoker))
         receiver.magicPoints += magicPotionPoints
+        val checkValue: Boolean = receiver.magicPoints > magicPoints
         logger.info(
-            "id={} invoker.id={} invoker.simpleName={} magicPotionPoints={} receiver.id={} receiver.magicPoints={} receiver.magicPointsMaximum={} receiver.simpleName={} simpleName={}",
+            "checkValue={} id={} invoker.id={} invoker.simpleName={} magicPotionPoints={} receiver.id={} receiver.magicPoints={} receiver.magicPointsMaximum={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             invoker.id,
             invoker.simpleName,
@@ -19,35 +21,41 @@ class MagicPotion<A : MagicPotionInvoker, B : MagicReceiver> : AbilityItem<A, B>
             receiver.simpleName,
             simpleName
         )
-        return receiver.magicPoints > magicPoints
+        return checkValue
     }
 
     override fun checkReceiver(receiver: B): Boolean {
-        logger.trace(
-            "id={} receiver.id={} receiver.simpleName={} simpleName={}",
+        val checkValue: Boolean = checkReceiverHitPoints(receiver) && checkInvokerMagicPoints(receiver)
+        logger.info(
+            "checkValue={} id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return checkReceiverHitPoints(receiver) && checkInvokerMagicPoints(receiver)
+        return checkValue
     }
 
     private fun checkReceiverHitPoints(receiver: B): Boolean {
+        val checkValue: Boolean = receiver.hitPoints > 0
         logger.info(
-            "id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "checkValue={} id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             receiver.hitPoints,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return receiver.hitPoints > 0
+        return checkValue
     }
 
     private fun checkInvokerMagicPoints(receiver: B): Boolean {
+        val checkValue: Boolean = receiver.magicPoints < receiver.magicPointsMaximum
         logger.info(
-            "id={} receiver.id={} receiver.magicPoints={} receiver.magicPointsMaximum={} receiver.simpleName={} simpleName={}",
+            "checkValue={} id={} receiver.id={} receiver.magicPoints={} receiver.magicPointsMaximum={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             receiver.id,
             receiver.magicPoints,
@@ -55,11 +63,11 @@ class MagicPotion<A : MagicPotionInvoker, B : MagicReceiver> : AbilityItem<A, B>
             receiver.simpleName,
             simpleName,
         )
-        return receiver.magicPoints < receiver.magicPointsMaximum
+        return checkValue
     }
 
     private fun getInvokerMagicPotionPoints(invoker: A): Int {
-        val magicPotion = invoker.magicPotion
+        val magicPotion: Int = invoker.magicPotion
         logger.info(
             "id={} invoker.id={} invoker.magicPotion={} invoker.magicPotionRangeMaximum={} invoker.magicPotionRangeMinimum={} invoker.magicPotionScale={} invoker.magicPotionShift={} invoker.simpleName={} simpleName={}",
             id,

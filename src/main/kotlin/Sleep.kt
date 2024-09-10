@@ -6,11 +6,11 @@ class Sleep<A : SleepInvoker, B : SleepReceiver>(
     magicCost = magicCost
 ) {
     override fun applyEffect(invoker: A, receiver: B): Boolean {
-        if (!checkReceiverArmor(receiver)) {
-            receiver.turnsSleep = 1
-        }
+        receiver.turnsSleep = if (!checkReceiverArmor(receiver)) 1 else 0
+        val checkValue: Boolean = receiver.turnsSleep > 0
         logger.info(
-            "id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} receiver.turnsSleep={}",
+            "checkValue={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} receiver.turnsSleep={}",
+            checkValue,
             id,
             invoker.id,
             invoker.simpleName,
@@ -18,60 +18,67 @@ class Sleep<A : SleepInvoker, B : SleepReceiver>(
             receiver.simpleName,
             receiver.turnsSleep
         )
-        return receiver.turnsSleep > 0
+        return checkValue
     }
 
     override fun checkReceiver(receiver: B): Boolean {
-        logger.trace(
-            "id={} receiver.id={} receiver.simpleName={} simpleName={}",
+        val checkValue: Boolean = checkReceiverHitPoints(receiver) && checkReceiverTurnsSleep(receiver)
+        logger.info(
+            "checkValue={} id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return checkReceiverHitPoints(receiver) && checkReceiverTurnsSleep(receiver)
+        return checkValue
     }
 
     private fun checkReceiverArmor(receiver: B): Boolean {
-        val blocksSleep = receiver.armor?.blocksSleep ?: false
+        val checkValue: Boolean = receiver.armor?.blocksSleep ?: false
         logger.info(
-            "id={} receiver.armor.blocksSleep={} receiver.armor.id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "checkValue={} id={} receiver.armor.blocksSleep={} receiver.armor.id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
-            blocksSleep,
+            receiver.armor?.blocksSleep,
             receiver.armor?.id,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return blocksSleep
+        return checkValue
     }
 
     private fun checkReceiverHitPoints(receiver: B): Boolean {
+        val checkValue: Boolean = receiver.hitPoints > 0
         logger.info(
-            "id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "checkValue={} id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             receiver.hitPoints,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return receiver.hitPoints > 0
+        return checkValue
     }
 
     private fun checkReceiverTurnsSleep(receiver: B): Boolean {
+        val checkValue: Boolean = receiver.turnsSleep == 0
         logger.info(
-            "id={} receiver.id={} receiver.simpleName={} receiver.turnsSleep={} simpleName={}",
+            "checkValue={} id={} receiver.id={} receiver.simpleName={} receiver.turnsSleep={} simpleName={}",
+            checkValue,
             id,
             receiver.id,
             receiver.simpleName,
             receiver.turnsSleep,
             simpleName
         )
-        return receiver.turnsSleep == 0
+        return checkValue
     }
 
     override fun getInvokerRequirement(invoker: A): Int {
-        val sleepRequirement = invoker.sleepRequirement
+        val sleepRequirement: Int = invoker.sleepRequirement
         logger.info(
             "id={} invoker.id={} invoker.simpleName={} invoker.sleepRequirement={} invoker.sleepRequirementMaximum={} invoker.sleepRequirementMaximum={} simpleName={}",
             id,
@@ -86,7 +93,7 @@ class Sleep<A : SleepInvoker, B : SleepReceiver>(
     }
 
     override fun getReceiverResistance(receiver: B): Int {
-        val sleepResistance = receiver.sleepResistance
+        val sleepResistance: Int = receiver.sleepResistance
         logger.info(
             "id={} receiver.id={} receiver.simpleName={} receiver.sleepResistance={} receiver.sleepResistanceMaximum={} receiver.sleepResistanceMinimum={} simpleName={}",
             id,

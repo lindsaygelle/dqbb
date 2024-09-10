@@ -63,7 +63,7 @@ class AttributeComparison<T : AttributeProvider>() : Identifier,
     }
 
     fun check(attributeProvider: T): Boolean {
-        val attributeValue = attributeName?.let {
+        val attributeValue: Int? = attributeName?.let {
             attributeProvider.getAttribute(it)
         }
         logger.info(
@@ -79,7 +79,7 @@ class AttributeComparison<T : AttributeProvider>() : Identifier,
             simpleName,
             value,
         )
-        val checkValue = attributeValue?.let {
+        val checkValue: Boolean? = attributeValue?.let {
             compareAttribute(it)
         }
         logger.info(
@@ -89,10 +89,7 @@ class AttributeComparison<T : AttributeProvider>() : Identifier,
     }
 
     private fun compareAttribute(attributeValue: Int): Boolean {
-        logger.info(
-            "attributeValue={} id={} simpleName={} value={}", attributeValue, id, simpleName, value
-        )
-        return when (operatorType) {
+        val checkValue: Boolean = when (operatorType) {
             OperatorType.EQUAL -> attributeValue == (value ?: return false)
             OperatorType.GREATER_THAN -> attributeValue > (value ?: return false)
             OperatorType.GREATER_THAN_EQUAL -> attributeValue >= (value ?: return false)
@@ -101,6 +98,15 @@ class AttributeComparison<T : AttributeProvider>() : Identifier,
             OperatorType.NOT -> attributeValue != (value ?: return false)
             else -> false
         }
+        logger.info(
+            "attributeValue={} checkValue={} id={} simpleName={} value={}",
+            attributeValue,
+            checkValue,
+            id,
+            simpleName,
+            value
+        )
+        return checkValue
     }
 
     override fun toString(): String {

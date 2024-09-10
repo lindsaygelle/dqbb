@@ -6,11 +6,12 @@ class BreatheFire<A : BreatheFireInvoker, B : BreatheFireReceiver>(
     magicCost = magicCost
 ) {
     override fun apply(invoker: A, receiver: B): Boolean {
-        val hitPoints = receiver.hitPoints
-        val breatheFirePoints = maxOf(0, getBreatheFirePoints(invoker))
-        val breatheFirePointsReduction = maxOf(0, getBreatheFirePointsReduction(receiver))
-        val damagePoints = getDamagePoints(breatheFirePoints, breatheFirePointsReduction)
+        val hitPoints: Int = receiver.hitPoints
+        val breatheFirePoints: Int = maxOf(0, getBreatheFirePoints(invoker))
+        val breatheFirePointsReduction: Int = maxOf(0, getBreatheFirePointsReduction(receiver))
+        val damagePoints: Int = getDamagePoints(breatheFirePoints, breatheFirePointsReduction)
         receiver.hitPoints -= damagePoints
+        val checkValue: Boolean = receiver.hitPoints < hitPoints
         logger.info(
             "breatheFirePoints={} breatheFirePointsReduction={} damagePoints={} id={} invoker.id={} invoker.simpleName={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
             breatheFirePoints,
@@ -24,34 +25,38 @@ class BreatheFire<A : BreatheFireInvoker, B : BreatheFireReceiver>(
             receiver.simpleName,
             simpleName
         )
-        return receiver.hitPoints < hitPoints
+        return checkValue
     }
 
     override fun checkReceiver(receiver: B): Boolean {
-        logger.trace(
-            "id={} receiver.id={} receiver.simpleName={} simpleName={}",
+        val checkValue: Boolean = checkReceiverHitPoints(receiver)
+        logger.info(
+            "checkValue={} id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return checkReceiverHitPoints(receiver)
+        return checkValue
     }
 
     private fun checkReceiverHitPoints(receiver: B): Boolean {
+        val checkValue: Boolean = receiver.hitPoints > 0
         logger.info(
-            "id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "checkValue={} id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             receiver.hitPoints,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return receiver.hitPoints > 0
+        return checkValue
     }
 
     private fun getBreatheFirePoints(invoker: A): Int {
-        val breatheFire = invoker.breatheFire
+        val breatheFire: Int = invoker.breatheFire
         logger.info(
             "id={} invoker.breatheFire={} invoker.breatheFireRangeMaximum={} invoker.breatheFireRangeMinimum={} invoker.breatheFireScale={} invoker.breatheFireShift={} invoker.id={} invoker.simpleName={} simpleName={}",
             id,
@@ -68,7 +73,7 @@ class BreatheFire<A : BreatheFireInvoker, B : BreatheFireReceiver>(
     }
 
     private fun getBreatheFirePointsReduction(receiver: B): Int {
-        val breatheFireReduction = receiver.armor?.breatheFireReduction ?: 0
+        val breatheFireReduction: Int = receiver.armor?.breatheFireReduction ?: 0
         logger.info(
             "id={} receiver.armor.id={} receiver.armor.breatheFireReduction={} receiver.id={} receiver.simpleName={} simpleName={}",
             id,
@@ -82,13 +87,16 @@ class BreatheFire<A : BreatheFireInvoker, B : BreatheFireReceiver>(
     }
 
     private fun getDamagePoints(breatheFirePoints: Int, breatheFirePointsReduction: Int): Int {
-        logger.trace(
-            "breatheFirePoints={} breatheFirePointsReduction={} id={} simpleName={}",
+        val damagePoints: Double =
+            (breatheFirePoints - (breatheFirePoints * (breatheFirePointsReduction.toDouble() / 100)))
+        logger.info(
+            "damagePoints={} breatheFirePoints={} breatheFirePointsReduction={} id={} simpleName={}",
+            damagePoints,
             breatheFirePoints,
             breatheFirePointsReduction,
             id,
             simpleName
         )
-        return (breatheFirePoints - (breatheFirePoints * (breatheFirePointsReduction.toDouble() / 100))).toInt()
+        return damagePoints.toInt()
     }
 }

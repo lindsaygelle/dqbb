@@ -2,25 +2,16 @@ package dqbb
 
 abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
     final override fun apply(invoker: A, receiver: B): Boolean {
-        val hitPoints = receiver.hitPoints
-        val attackPoints = getAttackPoints(invoker, receiver)
-        logger.info(
-            "attackPoints={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
-            attackPoints,
-            id,
-            invoker.id,
-            invoker.simpleName,
-            receiver.id,
-            receiver.simpleName,
-            simpleName
-        )
-        if (checkReceiverEvasion(receiver)) {
-            return false
+        val hitPoints: Int = receiver.hitPoints
+        val attackPoints: Int = getAttackPoints(invoker, receiver)
+        if (!checkReceiverEvasion(receiver)) {
+            receiver.hitPoints -= attackPoints
         }
-        receiver.hitPoints -= attackPoints
+        val checkValue: Boolean = receiver.hitPoints < hitPoints
         logger.info(
-            "attackPoints={} id={} invoker.id={} invoker.simpleName={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "attackPoints={} checkValue={} id={} invoker.id={} invoker.simpleName={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
             attackPoints,
+            checkValue,
             id,
             invoker.id,
             invoker.simpleName,
@@ -29,11 +20,11 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
             receiver.simpleName,
             simpleName
         )
-        return receiver.hitPoints < hitPoints
+        return checkValue
     }
 
     private fun calculateAttackPointsStandard(invoker: A, receiver: B): Int {
-        val attackPointsStandard = getInvokerAttack(invoker) - (getReceiverDefense(receiver))
+        val attackPointsStandard: Int = getInvokerAttack(invoker) - (getReceiverDefense(receiver))
         logger.info(
             "attackPointsStandard={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
             attackPointsStandard,
@@ -48,32 +39,38 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
     }
 
     final override fun checkReceiver(receiver: B): Boolean {
-        logger.trace(
-            "id={} receiver.id={} receiver.simpleName={} simpleName={}",
+        val checkValue: Boolean = checkReceiverHitPoints(receiver)
+        logger.info(
+            "checkValue={} id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return checkReceiverHitPoints(receiver)
+        return checkValue
     }
 
     private fun checkReceiverHitPoints(receiver: B): Boolean {
+        val checkValue: Boolean = receiver.hitPoints > 0
         logger.info(
-            "id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "checkValue={} id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             receiver.hitPoints,
             receiver.id,
             receiver.simpleName,
             simpleName,
         )
-        return receiver.hitPoints > 0
+        return checkValue
     }
 
     private fun checkReceiverEvasion(receiver: B): Boolean {
-        val evasionRequirement = receiver.evasionRequirement
+        val evasionRequirement: Int = receiver.evasionRequirement
+        val checkValue: Boolean = evasionRequirement == receiver.evasionRequirementMaximum
         logger.info(
-            "id={} receiver.evasionRequirement={} receiver.evasionRequirementMaximum={} receiver.evasionRequirementMinimum={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "checkValue={} id={} receiver.evasionRequirement={} receiver.evasionRequirementMaximum={} receiver.evasionRequirementMinimum={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
             id,
             evasionRequirement,
             receiver.evasionRequirementMaximum,
@@ -82,13 +79,13 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
             receiver.simpleName,
             simpleName
         )
-        return evasionRequirement == receiver.evasionRequirementMaximum
+        return checkValue
     }
 
     protected abstract fun getAttackPoints(invoker: A, receiver: B): Int
 
     protected fun getInvokerAttack(invoker: A): Int {
-        val attack = getInvokerStrength(invoker) + getInvokerWeaponAttack(invoker)
+        val attack: Int = getInvokerStrength(invoker) + getInvokerWeaponAttack(invoker)
         logger.info(
             "attack={} id={} invoker.id={} invoker.simpleName={} simpleName={}",
             attack,
@@ -124,8 +121,8 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
     }
 
     protected fun getAttackPointsStandardRange(invoker: A, receiver: B): IntRange {
-        val attackPointsStandardRangeMaximum = maxOf(1, getAttackPointsStandardRangeMaximum(invoker, receiver))
-        val attackPointsStandardRangeMinimum = minOf(0, getAttackPointsStandardRangeMinimum(invoker, receiver))
+        val attackPointsStandardRangeMaximum: Int = maxOf(1, getAttackPointsStandardRangeMaximum(invoker, receiver))
+        val attackPointsStandardRangeMinimum: Int = maxOf(0, getAttackPointsStandardRangeMinimum(invoker, receiver))
         logger.info(
             "attackPointsStandardRangeMaximum={} attackPointsStandardRangeMinimum={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
             attackPointsStandardRangeMaximum,
@@ -141,7 +138,7 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
     }
 
     private fun getAttackPointsStandardRangeMaximum(invoker: A, receiver: B): Int {
-        val attackPointsStandardMaximum = calculateAttackPointsStandard(invoker, receiver) / 2
+        val attackPointsStandardMaximum: Int = calculateAttackPointsStandard(invoker, receiver) / 2
         logger.info(
             "attackPointsStandardMaximum={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
             attackPointsStandardMaximum,
@@ -156,7 +153,7 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
     }
 
     private fun getAttackPointsStandardRangeMinimum(invoker: A, receiver: B): Int {
-        val attackPointsStandardMinimum = calculateAttackPointsStandard(invoker, receiver) / 4
+        val attackPointsStandardMinimum: Int = calculateAttackPointsStandard(invoker, receiver) / 4
         logger.info(
             "attackPointsStandardMinimum={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
             attackPointsStandardMinimum,
@@ -194,7 +191,7 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
     }
 
     protected fun getReceiverDefense(receiver: B): Int {
-        val defense = (getReceiverAgility(receiver) / 2) + getReceiverEquipmentDefense(receiver)
+        val defense: Int = (getReceiverAgility(receiver) / 2) + getReceiverEquipmentDefense(receiver)
         logger.info(
             "defense={} id={} receiver.id={} receiver.simpleName={} simpleName={}",
             defense,
@@ -207,7 +204,7 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
     }
 
     private fun getReceiverEquipmentDefense(receiver: B): Int {
-        val equipmentDefense = getReceiverArmorDefense(receiver) + getReceiverShieldDefense(receiver)
+        val equipmentDefense: Int = getReceiverArmorDefense(receiver) + getReceiverShieldDefense(receiver)
         logger.info(
             "equipmentDefense={} id={} receiver.id={} receiver.simpleName={} simpleName={}",
             equipmentDefense,
@@ -241,9 +238,6 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
             receiver.simpleName,
             simpleName
         )
-        if (!checkInvoker(invoker) || !checkReceiver(receiver)) {
-            return false
-        }
-        return apply(invoker, receiver)
+        return (checkInvoker(invoker) && checkReceiver(receiver)) && apply(invoker, receiver)
     }
 }
