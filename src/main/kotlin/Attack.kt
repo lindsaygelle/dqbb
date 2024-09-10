@@ -51,20 +51,6 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
         return checkValue
     }
 
-    private fun checkReceiverHitPoints(receiver: B): Boolean {
-        val checkValue: Boolean = receiver.hitPoints > 0
-        logger.info(
-            "checkValue={} id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
-            checkValue,
-            id,
-            receiver.hitPoints,
-            receiver.id,
-            receiver.simpleName,
-            simpleName,
-        )
-        return checkValue
-    }
-
     private fun checkReceiverEvasion(receiver: B): Boolean {
         val evasionRequirement: Int = receiver.evasionRequirement
         val checkValue: Boolean = evasionRequirement == receiver.evasionRequirementMaximum
@@ -82,43 +68,21 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
         return checkValue
     }
 
+    private fun checkReceiverHitPoints(receiver: B): Boolean {
+        val checkValue: Boolean = receiver.hitPoints > 0
+        logger.info(
+            "checkValue={} id={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            checkValue,
+            id,
+            receiver.hitPoints,
+            receiver.id,
+            receiver.simpleName,
+            simpleName,
+        )
+        return checkValue
+    }
+
     protected abstract fun getAttackPoints(invoker: A, receiver: B): Int
-
-    protected fun getInvokerAttack(invoker: A): Int {
-        val attack: Int = getInvokerStrength(invoker) + getInvokerWeaponAttack(invoker)
-        logger.info(
-            "attack={} id={} invoker.id={} invoker.simpleName={} simpleName={}",
-            attack,
-            id,
-            invoker.id,
-            invoker.simpleName,
-            simpleName
-        )
-        return attack
-    }
-
-    private fun getInvokerStrength(invoker: A): Int {
-        logger.info(
-            "id={} invoker.id={} invoker.simpleName={} invoker.strength={}",
-            id,
-            invoker.id,
-            invoker.simpleName,
-            invoker.strength
-        )
-        return invoker.strength
-    }
-
-    private fun getInvokerWeaponAttack(invoker: A): Int {
-        logger.info(
-            "id={} invoker.id={} invoker.simpleName={} invoker.weapon.attack={} invoker.weapon.id={}",
-            id,
-            invoker.id,
-            invoker.simpleName,
-            invoker.weapon?.attack,
-            invoker.weapon?.attack
-        )
-        return invoker.weapon?.attack ?: 0
-    }
 
     protected fun getAttackPointsStandardRange(invoker: A, receiver: B): IntRange {
         val attackPointsStandardRangeMaximum: Int = maxOf(1, getAttackPointsStandardRangeMaximum(invoker, receiver))
@@ -165,6 +129,63 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
             simpleName
         )
         return attackPointsStandardMinimum
+    }
+
+    protected fun getAttackPointsRangeWeak(invoker: A, receiver: B): IntRange {
+        val attackPointsWeakRangeMaximum: Int = getAttackPointsRangeWeakMaximum(invoker, receiver)
+        val attackPointsWeakRangeMinimum: Int = getAttackPointsRangeWeakMinimum(invoker, receiver)
+        logger.info(
+            "attackPointsWeakRangeMaximum={} attackPointsWeakRangeMinimum={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
+            attackPointsWeakRangeMaximum,
+            attackPointsWeakRangeMinimum,
+            id,
+            invoker.id,
+            invoker.simpleName,
+            receiver.id,
+            receiver.simpleName,
+            simpleName
+        )
+        return (attackPointsWeakRangeMinimum..attackPointsWeakRangeMaximum)
+    }
+
+    protected abstract fun getAttackPointsRangeWeakMaximum(invoker: A, receiver: B): Int
+
+    protected abstract fun getAttackPointsRangeWeakMinimum(invoker: A, receiver: B): Int
+
+    protected fun getInvokerAttack(invoker: A): Int {
+        val attack: Int = getInvokerStrength(invoker) + getInvokerWeaponAttack(invoker)
+        logger.info(
+            "attack={} id={} invoker.id={} invoker.simpleName={} simpleName={}",
+            attack,
+            id,
+            invoker.id,
+            invoker.simpleName,
+            simpleName
+        )
+        return attack
+    }
+
+    private fun getInvokerStrength(invoker: A): Int {
+        logger.info(
+            "id={} invoker.id={} invoker.simpleName={} invoker.strength={}",
+            id,
+            invoker.id,
+            invoker.simpleName,
+            invoker.strength
+        )
+        return invoker.strength
+    }
+
+    private fun getInvokerWeaponAttack(invoker: A): Int {
+        logger.info(
+            "id={} invoker.id={} invoker.simpleName={} invoker.weapon.attack={} invoker.weapon.id={}",
+            id,
+            invoker.id,
+            invoker.simpleName,
+            invoker.weapon?.attack,
+            invoker.weapon?.attack
+        )
+        return invoker.weapon?.attack ?: 0
     }
 
     private fun getReceiverAgility(receiver: B): Int {
