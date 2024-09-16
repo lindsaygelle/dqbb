@@ -30,30 +30,17 @@ class AttackHero<A : AttackInvoker, B : AttackReceiver> : Attack<A, B>() {
         if (invoker.strength < getReceiverDefense(receiver)) {
             return getAttackPointsStandardRange(invoker, receiver)
         }
-        return getAttackPointsWeakRange(receiver)
+        return getAttackPointsRangeWeak(invoker, receiver)
     }
 
-    private fun getAttackPointsWeakRange(receiver: B): IntRange {
-        val attackPointsWeakRangeMaximum: Int = getAttackPointsWeakRangeMaximum(receiver)
-        val attackPointsWeakRangeMinimum: Int = getAttackPointsWeakRangeMinimum(receiver)
-        logger.info(
-            "attackPointsWeakRangeMaximum={} attackPointsWeakRangeMinimum={} id={} receiver.id={} receiver.simpleName={} simpleName={}",
-            attackPointsWeakRangeMaximum,
-            attackPointsWeakRangeMinimum,
-            id,
-            receiver.id,
-            receiver.simpleName,
-            simpleName,
-        )
-        return (attackPointsWeakRangeMinimum..attackPointsWeakRangeMaximum)
-    }
-
-    private fun getAttackPointsWeakRangeMaximum(receiver: B): Int {
+    override fun getAttackPointsRangeWeakMaximum(invoker: A, receiver: B): Int {
         val attackPointsWeakRangeMaximum: Int = (receiver.strength + 4) / 6
         logger.info(
-            "attackPointsWeakRangeMaximum={} id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "attackPointsWeakRangeMaximum={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
             attackPointsWeakRangeMaximum,
             id,
+            invoker.id,
+            invoker.simpleName,
             receiver.id,
             receiver.simpleName,
             simpleName
@@ -61,12 +48,14 @@ class AttackHero<A : AttackInvoker, B : AttackReceiver> : Attack<A, B>() {
         return attackPointsWeakRangeMaximum
     }
 
-    private fun getAttackPointsWeakRangeMinimum(receiver: B): Int {
+    override fun getAttackPointsRangeWeakMinimum(invoker: A, receiver: B): Int {
         val attackPointsWeakRangeMinimum = 0
         logger.info(
-            "attackPointsWeakRangeMinimum={} id={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "attackPointsWeakRangeMinimum={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
             attackPointsWeakRangeMinimum,
             id,
+            invoker.id,
+            invoker.simpleName,
             receiver.id,
             receiver.simpleName,
             simpleName

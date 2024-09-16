@@ -34,7 +34,7 @@ class AttackEnemy<A : AttackInvoker, B : AttackReceiver> : Attack<A, B>() {
         val attackPointsRange: IntRange = getAttackPointsRange(invoker, receiver)
         var attackPoints: Int = attackPointsRange.random()
         if (attackPoints < 0) {
-            val attackPointsWeakRange: IntRange = getAttackPointsWeakRange(invoker)
+            val attackPointsWeakRange: IntRange = getAttackPointsRangeWeak(invoker, receiver)
             attackPoints = attackPointsWeakRange.random()
         }
         logger.info(
@@ -61,14 +61,14 @@ class AttackEnemy<A : AttackInvoker, B : AttackReceiver> : Attack<A, B>() {
             simpleName
         )
         if (checkInvokerExcellent(invoker) && checkReceiverExcellent(receiver)) {
-            return getAttackPointsExcellentRange(invoker)
+            return getAttackPointsRangeExcellent(invoker)
         }
         return getAttackPointsStandardRange(invoker, receiver)
     }
 
-    private fun getAttackPointsExcellentRange(invoker: A): IntRange {
-        val attackPointsExcellentRangeMaximum: Int = getAttackPointsExcellentRangeMaximum(invoker)
-        val attackPointsExcellentRangeMinimum: Int = getAttackPointsExcellentRangeMinimum(invoker)
+    private fun getAttackPointsRangeExcellent(invoker: A): IntRange {
+        val attackPointsExcellentRangeMaximum: Int = getAttackPointsRangeExcellentMaximum(invoker)
+        val attackPointsExcellentRangeMinimum: Int = getAttackPointsRangeExcellentMinimum(invoker)
         logger.info(
             "attackPointsExcellentRangeMaximum={} attackPointsExcellentRangeMinimum={} id={} invoker.id={} invoker.simpleName={} simpleName={}",
             attackPointsExcellentRangeMaximum,
@@ -81,7 +81,7 @@ class AttackEnemy<A : AttackInvoker, B : AttackReceiver> : Attack<A, B>() {
         return (attackPointsExcellentRangeMinimum..attackPointsExcellentRangeMaximum)
     }
 
-    private fun getAttackPointsExcellentRangeMaximum(invoker: A): Int {
+    private fun getAttackPointsRangeExcellentMaximum(invoker: A): Int {
         val attackPointsExcellentRangeMaximum: Int = getInvokerAttack(invoker)
         logger.info(
             "attackPointsExcellentRangeMaximum={} id={} invoker.id={} invoker.simpleName={} simpleName={}",
@@ -94,7 +94,7 @@ class AttackEnemy<A : AttackInvoker, B : AttackReceiver> : Attack<A, B>() {
         return attackPointsExcellentRangeMaximum
     }
 
-    private fun getAttackPointsExcellentRangeMinimum(invoker: A): Int {
+    private fun getAttackPointsRangeExcellentMinimum(invoker: A): Int {
         val attackPointsExcellentRangeMinimum: Int = getInvokerAttack(invoker) / 2
         logger.info(
             "attackPointsExcellentRangeMinimum={} id={} invoker.id={} invoker.simpleName={} simpleName={}",
@@ -107,42 +107,31 @@ class AttackEnemy<A : AttackInvoker, B : AttackReceiver> : Attack<A, B>() {
         return attackPointsExcellentRangeMinimum
     }
 
-    private fun getAttackPointsWeakRange(invoker: A): IntRange {
-        val attackPointsWeakRangeMaximum: Int = getAttackPointsWeakRangeMaximum(invoker)
-        val attackPointsWeakRangeMinimum: Int = getAttackPointsWeakRangeMinimum(invoker)
-        logger.info(
-            "attackPointsWeakRangeMaximum={} attackPointsWeakRangeMinimum={} id={} invoker.id={} invoker.simpleName={} simpleName={}",
-            attackPointsWeakRangeMaximum,
-            attackPointsWeakRangeMinimum,
-            id,
-            invoker.id,
-            invoker.simpleName,
-            simpleName
-        )
-        return (attackPointsWeakRangeMinimum..attackPointsWeakRangeMaximum)
-    }
-
-    private fun getAttackPointsWeakRangeMaximum(invoker: A): Int {
+    override fun getAttackPointsRangeWeakMaximum(invoker: A, receiver: B): Int {
         val attackPointsWeakRangeMaximum = 1
         logger.info(
-            "attackPointsWeakRangeMaximum={} id={} invoker.id={} invoker.simpleName={} simpleName={}",
+            "attackPointsWeakRangeMaximum={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
             attackPointsWeakRangeMaximum,
             id,
             invoker.id,
             invoker.simpleName,
+            receiver.id,
+            receiver.simpleName,
             simpleName
         )
         return attackPointsWeakRangeMaximum
     }
 
-    private fun getAttackPointsWeakRangeMinimum(invoker: A): Int {
+    override fun getAttackPointsRangeWeakMinimum(invoker: A, receiver: B): Int {
         val attackPointsWeakRangeMinimum = 0
         logger.info(
-            "attackPointsWeakRangeMinimum={} id={} invoker.id={} invoker.simpleName={} simpleName={}",
+            "attackPointsWeakRangeMinimum={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
             attackPointsWeakRangeMinimum,
             id,
             invoker.id,
             invoker.simpleName,
+            receiver.id,
+            receiver.simpleName,
             simpleName
         )
         return attackPointsWeakRangeMinimum

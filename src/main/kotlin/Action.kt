@@ -41,7 +41,8 @@ class Action<A : ActionInvoker, B : ActionReceiver>() : Identifier,
         set(value) {
             field = value
             logger.debug(
-                "attributeSort.id={} attributeSort.sortType={} id={} simpleName={}",
+                "attributeSort.attributeName={} attributeSort.id={} attributeSort.sortType={} id={} simpleName={}",
+                field?.attributeName,
                 field?.id,
                 field?.sortType,
                 id,

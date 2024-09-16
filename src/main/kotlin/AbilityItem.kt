@@ -21,20 +21,6 @@ abstract class AbilityItem<A : ItemInvoker, B : Receiver>(
         return checkValue
     }
 
-    private fun checkInvokerItemExists(invoker: A): Boolean {
-        val itemExists = invoker.items.contains(itemName)
-        logger.info(
-            "id={} invoker.id={} invoker.simpleName={} itemExists={} itemName={} simpleName={}",
-            id,
-            invoker.id,
-            invoker.simpleName,
-            itemExists,
-            itemName,
-            simpleName
-        )
-        return itemExists
-    }
-
     private fun checkInvokerItemCount(invoker: A): Boolean {
         val itemCount: Int = invoker.items.getOrDefault(itemName, 0)
         val checkValue: Boolean = itemCount > 0
@@ -49,6 +35,20 @@ abstract class AbilityItem<A : ItemInvoker, B : Receiver>(
             simpleName
         )
         return checkValue
+    }
+
+    private fun checkInvokerItemExists(invoker: A): Boolean {
+        val itemExists = invoker.items.contains(itemName)
+        logger.info(
+            "id={} invoker.id={} invoker.simpleName={} itemExists={} itemName={} simpleName={}",
+            id,
+            invoker.id,
+            invoker.simpleName,
+            itemExists,
+            itemName,
+            simpleName
+        )
+        return itemExists
     }
 
     private fun reduceInvokerItemCount(invoker: A) {
