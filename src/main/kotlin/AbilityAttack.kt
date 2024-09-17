@@ -1,18 +1,34 @@
 package dqbb
 
-abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
-    final override fun apply(invoker: A, receiver: B): Boolean {
-        val hitPoints: Int = receiver.hitPoints
+abstract class AbilityAttack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
+
+    final override fun apply(invoker: A, receiver: B): Reviewable {
+        logger.info(
+            "id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
+            id,
+            invoker.id,
+            invoker.simpleName,
+            receiver.id,
+            receiver.simpleName,
+            simpleName
+        )
+        if (!checkReceiver(receiver)) {
+            return getReviewableReceiverInvalid(invoker, receiver)
+        }
+        return applyEffect(invoker, receiver)
+    }
+
+    private fun applyEffect(invoker: A, receiver: B): Reviewable {
         val attackPoints: Int = getAttackPoints(invoker, receiver)
+        var attackType: AttackType = AttackType.MISS
         if (!checkReceiverEvasion(receiver)) {
             receiver.hitPoints -= attackPoints
+            attackType = AttackType.HIT
         }
-        val checkValue: Boolean = receiver.hitPoints < hitPoints
         logger.info(
-            "attackPoints={} checkValue={} id={} invoker.id={} invoker.simpleName={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
-            attackPoints,
-            checkValue,
+            "id={} invoker.attackPoints={} invoker.id={} invoker.simpleName={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
             id,
+            attackPoints,
             invoker.id,
             invoker.simpleName,
             receiver.hitPoints,
@@ -20,8 +36,9 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
             receiver.simpleName,
             simpleName
         )
-        return checkValue
+        return getReviewable(invoker, attackPoints, attackType, receiver)
     }
+
 
     private fun calculateAttackPointsStandard(invoker: A, receiver: B): Int {
         val attackPointsStandard: Int = getInvokerAttack(invoker) - (getReceiverDefense(receiver))
@@ -152,6 +169,47 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
 
     protected abstract fun getAttackPointsRangeWeakMinimum(invoker: A, receiver: B): Int
 
+    private fun getReviewable(
+        invoker: A,
+        invokerAttack: Int?,
+        invokerAttackType: AttackType?,
+        receiver: B,
+    ): Reviewable {
+        return ReviewAttack(
+            id,
+            simpleName,
+            invokerAttack,
+            invokerAttackType,
+            invoker.id,
+            invoker.name,
+            invoker.simpleName,
+            invoker.weapon?.attack,
+            invoker.weapon?.id,
+            invoker.weapon?.name,
+            invoker.weapon?.simpleName,
+            receiver.armor?.defense,
+            receiver.armor?.id,
+            receiver.armor?.name,
+            receiver.armor?.simpleName,
+            receiver.hitPoints,
+            receiver.id,
+            receiver.name,
+            receiver.shield?.defense,
+            receiver.shield?.id,
+            receiver.shield?.name,
+            receiver.shield?.simpleName,
+            receiver.simpleName,
+        )
+    }
+
+    override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, null, null, receiver)
+    }
+
+    private fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, null, null, receiver)
+    }
+
     protected fun getInvokerAttack(invoker: A): Int {
         val attack: Int = getInvokerStrength(invoker) + getInvokerWeaponAttack(invoker)
         logger.info(
@@ -247,18 +305,5 @@ abstract class Attack<A : AttackInvoker, B : AttackReceiver> : Ability<A, B>() {
             receiver.simpleName
         )
         return receiver.shield?.defense ?: 0
-    }
-
-    final override fun use(invoker: A, receiver: B): Boolean {
-        logger.info(
-            "id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
-            id,
-            invoker.id,
-            invoker.simpleName,
-            receiver.id,
-            receiver.simpleName,
-            simpleName
-        )
-        return (checkInvoker(invoker) && checkReceiver(receiver)) && apply(invoker, receiver)
     }
 }

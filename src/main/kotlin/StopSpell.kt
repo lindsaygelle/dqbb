@@ -2,24 +2,23 @@ package dqbb
 
 class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
     magicCost: Int,
-) : RequirementMagic<A, B>(
+) : AbilityMagicRequirement<A, B>(
     magicCost = magicCost
 ) {
-    override fun applyEffect(invoker: A, receiver: B): Boolean {
-        receiver.turnsStopSpell = if (!checkReceiverArmor(receiver)) 1 else 0
-        val checkValue: Boolean = receiver.turnsStopSpell > 0
+    override fun applyUpdate(invoker: A, receiver: B): Reviewable {
+        if (!checkReceiverArmor(receiver)) {
+            receiver.turnsStopSpell = 1
+        }
         logger.info(
-            "checkValue={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} receiver.turnsStopSpell={} simpleName={}",
-            checkValue,
+            "id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} receiver.turnsStopSpell={}",
             id,
             invoker.id,
             invoker.simpleName,
             receiver.id,
             receiver.simpleName,
-            receiver.turnsStopSpell,
-            simpleName
+            receiver.turnsStopSpell
         )
-        return checkValue
+        return getReviewable(invoker, receiver)
     }
 
     override fun checkReceiver(receiver: B): Boolean {
@@ -85,7 +84,7 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
             id,
             invoker.id,
             invoker.simpleName,
-            invoker.stopSpellRequirement,
+            stopSpellRequirement,
             invoker.stopSpellRequirementMaximum,
             invoker.stopSpellRequirementMinimum,
             simpleName
@@ -106,5 +105,36 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
             simpleName
         )
         return stopSpellResistance
+    }
+
+    private fun getReviewable(invoker: A, receiver: B): Reviewable {
+        return ReviewStopSpell(
+            id,
+            simpleName,
+            invoker.id,
+            invoker.name,
+            invoker.simpleName,
+            magicCost,
+            receiver.armor?.blocksStopSpell,
+            receiver.armor?.id,
+            receiver.armor?.name,
+            receiver.armor?.simpleName,
+            receiver.id,
+            receiver.name,
+            receiver.simpleName,
+            receiver.turnsStopSpell,
+        )
+    }
+
+    override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, receiver)
+    }
+
+    override fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, receiver)
+    }
+
+    override fun getReviewableRequirementInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, receiver)
     }
 }

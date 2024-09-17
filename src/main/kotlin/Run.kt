@@ -1,12 +1,10 @@
 package dqbb
 
 class Run<A : RunInvoker, B : RunReceiver> : Ability<A, B>() {
-    override fun apply(invoker: A, receiver: B): Boolean {
-        val checkValue: Boolean = checkReceiver(receiver) || checkRequirement(invoker, receiver)
-        invoker.isRunning = checkValue
+    override fun apply(invoker: A, receiver: B): Reviewable {
+        invoker.isRunning = checkReceiver(receiver) || checkRequirement(invoker, receiver)
         logger.info(
-            "checkValue={} id={} invoker.id={} invoker.isRunning={}invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
-            checkValue,
+            "id={} invoker.id={} invoker.isRunning={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
             id,
             invoker.id,
             invoker.isRunning,
@@ -15,7 +13,7 @@ class Run<A : RunInvoker, B : RunReceiver> : Ability<A, B>() {
             receiver.simpleName,
             simpleName
         )
-        return checkValue
+        return getReviewable(invoker, receiver)
     }
 
     override fun checkReceiver(receiver: B): Boolean {
@@ -105,19 +103,22 @@ class Run<A : RunInvoker, B : RunReceiver> : Ability<A, B>() {
         return runResistance
     }
 
-    override fun use(invoker: A, receiver: B): Boolean {
-        logger.info(
-            "id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
+    private fun getReviewable(invoker: A, receiver: B): Reviewable {
+        return ReviewRun(
             id,
+            simpleName,
             invoker.id,
+            invoker.isRunning,
+            invoker.name,
             invoker.simpleName,
             receiver.id,
+            receiver.name,
             receiver.simpleName,
-            simpleName
+            receiver.turnsSleep,
         )
-        if (!checkInvoker(invoker)) {
-            return false
-        }
-        return apply(invoker, receiver)
+    }
+
+    override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, receiver)
     }
 }

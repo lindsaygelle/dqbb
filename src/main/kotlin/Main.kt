@@ -38,6 +38,7 @@ fun main() {
     val hurt = Hurt<Actor, Actor>(2)
     val hurtMore = HurtMore<Actor, Actor>(4)
     val run = Run<Actor, Actor>()
+    val magicPotion = MagicPotion<Actor, Actor>()
     val sleep = Sleep<Actor, Actor>(2)
     val stopSpell = StopSpell<Actor, Actor>(2)
 
@@ -534,6 +535,82 @@ fun main() {
         priorityType = PriorityType.entries.random()
     )
 
+    val actionMagicPotion = Action(
+        ability = magicPotion,
+        actionCondition = ActionCondition(
+            actionChecks = listOf(
+                ActionCheck(
+                    attributeCriteria = listOf(
+                        AttributeCriterion(
+                            attributeComparisons = listOf(
+                                AttributeComparison(
+                                    attributeName = AttributeName.MAGIC_POINTS_PERCENTAGE,
+                                    operatorType = OperatorType.GREATER_THAN,
+                                    value = 25
+                                ),
+                                AttributeComparison(
+                                    attributeName = AttributeName.MAGIC_POINTS,
+                                    operatorType = OperatorType.LESS_THAN,
+                                    value = heal.magicCost
+                                ),
+                                AttributeComparison(
+                                    attributeName = AttributeName.TURNS_SLEEP,
+                                    operatorType = OperatorType.EQUAL,
+                                    value = 0
+                                ),
+                                AttributeComparison(
+                                    attributeName = AttributeName.MAGIC_POTION_COUNT,
+                                    operatorType = OperatorType.GREATER_THAN_EQUAL,
+                                    value = 1
+                                )
+                            ),
+                            matchType = MatchType.ALL
+                        )
+                    ),
+                    selectionType = SelectionType.SELF
+                ),
+                ActionCheck(
+                    attributeCriteria = listOf(
+                        AttributeCriterion(
+                            attributeComparisons = listOf(
+                                AttributeComparison(
+                                    attributeName = AttributeName.MAGIC_POINTS_PERCENTAGE,
+                                    operatorType = OperatorType.LESS_THAN_EQUAL,
+                                    value = 25
+                                ),
+                                AttributeComparison(
+                                    attributeName = AttributeName.MAGIC_POINTS,
+                                    operatorType = OperatorType.GREATER_THAN_EQUAL,
+                                    value = 1
+                                )
+                            )
+                        )
+                    ),
+                    selectionType = SelectionType.ALLY
+                )
+            )
+        ),
+        actionTarget = ActionTarget(
+            attributeCriteria = listOf(
+                AttributeCriterion(
+                    attributeComparisons = listOf(
+                        AttributeComparison(
+                            attributeName = AttributeName.MAGIC_POINTS,
+                            operatorType = OperatorType.GREATER_THAN_EQUAL,
+                            value = 1
+                        )
+                    )
+                )
+            ),
+            selectionType = SelectionType.ALLY
+        ),
+        attributeSort = AttributeSort(
+            attributeName = AttributeName.MAGIC_POINTS,
+            sortType = SortType.ASCENDING
+        ),
+        priorityType = PriorityType.entries.random()
+    )
+
     val actionRun = Action(
         ability = run,
         actionCondition = ActionCondition(
@@ -748,16 +825,13 @@ fun main() {
         val bufferedImage = ImageIO.read(d)
 
         val actions = mutableListOf(
-            listOf(actionAttackEnemy, actionAttackHero, actionRun).random(),
+            listOf(actionAttackEnemy, actionAttackHero).random(), actionRun, actionMagicPotion
         )
-
 
         var action = listOf(actionHeal, actionHealMore, actionHerb, null).random()
         if (action != null) {
             actions.add(action)
         }
-
-
 
         action = listOf(actionBreatheFire, actionHurt, actionHurtMore, null).random()
 
@@ -807,8 +881,12 @@ fun main() {
         actor.hurtScale = (3..10).random()
         actor.hurtShift = (0..10).random()
         actor.items[ItemName.HERB] = (3..10).random()
+        actor.items[ItemName.MAGIC_POTION] = (3..10).random()
         actor.magicPointsMaximum = (6..12).random()
         actor.magicPoints = actor.magicPointsMaximum
+        actor.magicPotionRangeMaximum = (10..50).random()
+        actor.magicPotionScale = 3
+        actor.magicPotionShift = 7
         actor.runRangeMaximum = (0..16).random()
         actor.runShift = 2
         actor.sleepRequirementMaximum = (0..16).random()

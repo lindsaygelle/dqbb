@@ -106,15 +106,9 @@ class Actor : ActionInvoker,
 
     val bufferedImageHeight: Int
         get() = bufferedImage?.height ?: 0
-
-    val bufferedImageHeightCenter: Int
-        get() = bufferedImageHeight / 2
-
+    
     val bufferedImageWidth: Int
         get() = bufferedImage?.width ?: 0
-
-    val bufferedImageWidthCenter: Int
-        get() = bufferedImageWidth / 2
 
     override var canReceiveExcellentAttack: Boolean = true
         set(value) {
@@ -350,14 +344,6 @@ class Actor : ActionInvoker,
         }
 
     override val items: MutableMap<ItemName, Int> = mutableMapOf()
-
-    var index: Int? = null
-        set(value) {
-            field = value
-            logger.debug(
-                "id={} index={} simpleName={}", id, field, simpleName
-            )
-        }
 
     private val logger: Logger = LogManager.getLogger(this::class.simpleName)
 

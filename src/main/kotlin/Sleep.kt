@@ -2,15 +2,15 @@ package dqbb
 
 class Sleep<A : SleepInvoker, B : SleepReceiver>(
     magicCost: Int,
-) : RequirementMagic<A, B>(
+) : AbilityMagicRequirement<A, B>(
     magicCost = magicCost
 ) {
-    override fun applyEffect(invoker: A, receiver: B): Boolean {
-        receiver.turnsSleep = if (!checkReceiverArmor(receiver)) 1 else 0
-        val checkValue: Boolean = receiver.turnsSleep > 0
+    override fun applyUpdate(invoker: A, receiver: B): Reviewable {
+        if (!checkReceiverArmor(receiver)) {
+            receiver.turnsSleep = 1
+        }
         logger.info(
-            "checkValue={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} receiver.turnsSleep={}",
-            checkValue,
+            "id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} receiver.turnsSleep={}",
             id,
             invoker.id,
             invoker.simpleName,
@@ -18,7 +18,7 @@ class Sleep<A : SleepInvoker, B : SleepReceiver>(
             receiver.simpleName,
             receiver.turnsSleep
         )
-        return checkValue
+        return getReviewable(invoker, receiver)
     }
 
     override fun checkReceiver(receiver: B): Boolean {
@@ -105,5 +105,36 @@ class Sleep<A : SleepInvoker, B : SleepReceiver>(
             simpleName
         )
         return sleepResistance
+    }
+
+    private fun getReviewable(invoker: A, receiver: B): Reviewable {
+        return ReviewSleep(
+            id,
+            simpleName,
+            invoker.id,
+            invoker.name,
+            invoker.simpleName,
+            magicCost,
+            receiver.armor?.blocksSleep,
+            receiver.armor?.id,
+            receiver.armor?.name,
+            receiver.armor?.simpleName,
+            receiver.id,
+            receiver.name,
+            receiver.simpleName,
+            receiver.turnsSleep,
+        )
+    }
+
+    override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, receiver)
+    }
+
+    override fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, receiver)
+    }
+
+    override fun getReviewableRequirementInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, receiver)
     }
 }

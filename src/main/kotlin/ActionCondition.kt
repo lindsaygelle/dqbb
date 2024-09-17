@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 class ActionCondition<A : ActionInvoker, B : ActionReceiver>() : Identifier,
-    Nameable {
+        Nameable {
     var actionChecks: Collection<ActionCheck<A, B>> = emptyList()
         set(value) {
             field = value.filter { actionCheck: ActionCheck<A, B> ->
@@ -46,7 +46,7 @@ class ActionCondition<A : ActionInvoker, B : ActionReceiver>() : Identifier,
             simpleName
         )
         val checkValue = actionChecks.withIndex().all { (index: Int, actionCheck: ActionCheck<A, B>) ->
-            checkActionCheck(actionCheck, actionInvoker, index, actionReceivers)
+            checkActionCheck(actionCheck, index, actionInvoker, actionReceivers)
         }
         logger.info(
             "checkValue={} id={} simpleName={}", checkValue, id, simpleName
@@ -55,16 +55,16 @@ class ActionCondition<A : ActionInvoker, B : ActionReceiver>() : Identifier,
     }
 
     private fun checkActionCheck(
-        actionCheck: ActionCheck<A, B>, actionInvoker: A, index: Int, actionReceivers: Collection<B>,
+        actionCheck: ActionCheck<A, B>, actionCheckIndex: Int, actionInvoker: A, actionReceivers: Collection<B>,
     ): Boolean {
         logger.info(
-            "actionCheck.id={} actionInvoker.id={} actionInvoker.simpleName={} actionReceivers.size={} id={} index={} simpleName={}",
+            "actionCheck.id={} actionCheck.index={} actionInvoker.id={} actionInvoker.simpleName={} actionReceivers.size={} id={} simpleName={}",
             actionCheck.id,
+            actionCheckIndex,
             actionInvoker.id,
             actionInvoker.simpleName,
             actionReceivers.size,
             id,
-            index,
             simpleName
         )
         return actionCheck.check(actionInvoker, actionReceivers)

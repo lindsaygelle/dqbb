@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 class BattleSystem : Identifier,
-    TurnAccumulator {
+        TurnAccumulator {
     private var attributeName: AttributeName = AttributeName.AGILITY
         set(value) {
             field = value
@@ -12,8 +12,6 @@ class BattleSystem : Identifier,
                 "attributeName={} id={} simpleName={}", field, id, simpleName
             )
         }
-
-    private var indexedValueActor: IndexedValue<Actor>? = null
 
     private val logger: Logger = LogManager.getLogger(this::class.simpleName)
 
@@ -26,11 +24,11 @@ class BattleSystem : Identifier,
         }
 
     private fun checkActorAction(
-        action: Action<Actor, Actor>, actionIndex: Int, actor: Actor, actors: Collection<Actor>, index: Int,
+        action: Action<Actor, Actor>, actionIndex: Int, actor: Actor, actorIndex: Int, actors: Collection<Actor>,
     ): Boolean {
         val checkValue: Boolean = action.ability != null && action.actionCondition?.check(actor, actors) ?: false
         logger.info(
-            "action.ability.id={} action.ability.simpleName={} action.actionCondition.id={} action.id={} actionIndex={} actor.actions.size={} actor.id={} actors.size={} checkValue={} id={} index={} simpleName={} turn={}",
+            "action.ability.id={} action.ability.simpleName={} action.actionCondition.id={} action.id={} action.index={} actor.actions.size={} actor.id={} actor.index={} actors.size={} checkValue={} id={} simpleName={} turn={}",
             action.ability?.id,
             action.ability?.simpleName,
             action.actionCondition?.id,
@@ -38,233 +36,244 @@ class BattleSystem : Identifier,
             actionIndex,
             actor.actions.size,
             actor.id,
+            actorIndex,
             actors.size,
             checkValue,
             id,
-            index,
             simpleName,
             turn
         )
         return checkValue
     }
 
-    private fun checkActorActions(actor: Actor, index: Int): Boolean {
+    private fun checkActorActions(actor: Actor, actorIndex: Int): Boolean {
         val checkValue: Boolean = actor.actions.isNotEmpty()
         logger.info(
-            "actor.actions.size={} actor.id={} checkValue={} id={} index={} simpleName={} turn={}",
+            "actor.actions.size={} actor.id={} actor.index={} checkValue={} id={} simpleName={} turn={}",
             actor.actions.size,
             actor.id,
+            actorIndex,
             checkValue,
             id,
-            index,
             simpleName,
             turn,
         )
         return checkValue
     }
 
-    private fun checkActorHitPoints(actor: Actor, index: Int): Boolean {
+    private fun checkActorHitPoints(actor: Actor, actorIndex: Int): Boolean {
         val checkValue: Boolean = actor.hitPoints > 0
         logger.info(
-            "actor.hitPoints={} actor.hitPointsMaximum={} actor.id={} checkValue={} id={} index={} simpleName={} turn={}",
+            "actor.hitPoints={} actor.hitPointsMaximum={} actor.id={} actor.index={} checkValue={} id={} simpleName={} turn={}",
             actor.hitPoints,
             actor.hitPointsMaximum,
             actor.id,
+            actorIndex,
             checkValue,
             id,
-            index,
             simpleName,
             turn
         )
         return checkValue
     }
 
-    fun checkActorRemoval(actor: Actor, index: Int): Boolean {
+    fun checkActorRemoval(actor: Actor, actorIndex: Int): Boolean {
         val checkValue: Boolean =
-            !checkActorActions(actor, index) || !checkActorHitPoints(actor, index) || checkActorRunning(actor, index)
+            !checkActorActions(actor, actorIndex) || !checkActorHitPoints(actor, actorIndex) || checkActorRunning(
+                actor, actorIndex
+            )
         logger.trace(
-            "actor.allegiance={} actor.id={} checkValue={} id={} index={} simpleName={} turn={}",
+            "actor.allegiance={} actor.id={} actor.index={} checkValue={} id={} simpleName={} turn={}",
             actor.allegiance,
             actor.id,
+            actorIndex,
             checkValue,
             id,
-            index,
-            simpleName, turn,
-        )
-        return checkValue
-    }
-
-    private fun checkActorRunning(actor: Actor, index: Int): Boolean {
-        val checkValue: Boolean = actor.isRunning
-        logger.info(
-            "actor.id={} actor.isRunning={} checkValue={} id={} index={} simpleName={} turn={}",
-            actor.id,
-            actor.isRunning,
-            checkValue,
-            id,
-            index,
             simpleName,
             turn,
         )
         return checkValue
     }
 
-    private fun checkActorSleep(actor: Actor, index: Int): Boolean {
-        val checkValue: Boolean = !checkActorTurnsSleep(actor, index) ||
-                checkActorTurnsSleepMinimum(actor, index) && checkActorSleepResolution(actor, index)
+    private fun checkActorRunning(actor: Actor, actorIndex: Int): Boolean {
+        val checkValue: Boolean = actor.isRunning
         logger.info(
-            "actor.id={} checkValue={} id={} index={} simpleName={} turn={}",
+            "actor.id={} actor.index={} actor.isRunning={} checkValue={} id={} simpleName={} turn={}",
             actor.id,
+            actorIndex,
+            actor.isRunning,
             checkValue,
             id,
-            index,
+            simpleName,
+            turn,
+        )
+        return checkValue
+    }
+
+    private fun checkActorSleep(actor: Actor, actorIndex: Int): Boolean {
+        val checkValue: Boolean = !checkActorTurnsSleep(actor, actorIndex) || checkActorTurnsSleepMinimum(
+            actor, actorIndex
+        ) && checkActorSleepResolution(actor, actorIndex)
+        logger.info(
+            "actor.id={} actor.index={} checkValue={} id={} simpleName={} turn={}",
+            actor.id,
+            actorIndex,
+            checkValue,
+            id,
             simpleName,
             turn
         )
         return checkValue
     }
 
-    private fun checkActorSleepResolution(actor: Actor, index: Int): Boolean {
+    private fun checkActorSleepResolution(actor: Actor, actorIndex: Int): Boolean {
         val sleepResolution: Int = actor.sleepResolution
         val checkValue: Boolean = sleepResolution == actor.sleepResolutionMaximum
         logger.info(
-            "actor.id={} actor.sleepResolution={} actor.sleepResolutionMaximum={} actor.sleepResolutionMinimum={} checkValue={} id={} index={} simpleName={} turn={}",
+            "actor.id={} actor.index={} actor.sleepResolution={} actor.sleepResolutionMaximum={} actor.sleepResolutionMinimum={} checkValue={} id={} simpleName={} turn={}",
             actor.id,
+            actorIndex,
             sleepResolution,
             actor.sleepResolutionMaximum,
             actor.sleepResolutionMinimum,
             checkValue,
             id,
-            index,
             simpleName,
             turn
         )
         return checkValue
     }
 
-    private fun checkActorStopSpell(actor: Actor, index: Int): Boolean {
-        val checkValue: Boolean = !checkActorTurnsStopSpell(actor, index) ||
-                checkActorTurnsStopSpellMinimum(actor, index) && checkActorStopSpellResolution(actor, index)
+    private fun checkActorStopSpell(actor: Actor, actorIndex: Int): Boolean {
+        val checkValue: Boolean = !checkActorTurnsStopSpell(actor, actorIndex) || checkActorTurnsStopSpellMinimum(
+            actor, actorIndex
+        ) && checkActorStopSpellResolution(actor, actorIndex)
         logger.info(
-            "actor.id={} checkValue={} id={} index={} simpleName={} turn={}",
+            "actor.id={} actor.index={} checkValue={} id={} simpleName={} turn={}",
             actor.id,
+            actorIndex,
             checkValue,
             id,
-            index,
             simpleName,
             turn
         )
         return checkValue
     }
 
-    private fun checkActorStopSpellResolution(actor: Actor, index: Int): Boolean {
+    private fun checkActorStopSpellResolution(actor: Actor, actorIndex: Int): Boolean {
         val stopSpellResolution: Int = actor.stopSpellResolution
         val checkValue: Boolean = stopSpellResolution == actor.stopSpellResolutionMaximum
         logger.info(
-            "actor.id={} actor.stopSpellResolution={} actor.stopSpellResolutionMaximum={} actor.stopSpellResolutionMinimum={} checkValue={} id={} index={} simpleName={} turn={}",
+            "actor.id={} actor.index={} actor.stopSpellResolution={} actor.stopSpellResolutionMaximum={} actor.stopSpellResolutionMinimum={} checkValue={} id={} simpleName={} turn={}",
             actor.id,
+            actorIndex,
             stopSpellResolution,
             actor.stopSpellResolutionMaximum,
             actor.stopSpellResolutionMinimum,
             checkValue,
             id,
-            index,
             simpleName,
             turn
         )
         return checkValue
     }
 
-    private fun checkActorTurnsSleep(actor: Actor, index: Int): Boolean {
+    private fun checkActorTurnsSleep(actor: Actor, actorIndex: Int): Boolean {
         val checkValue: Boolean = actor.turnsSleep > 0
         logger.info(
-            "actor.id={} actor.turnsSleep={} actor.turnsSleepMaximum={} checkValue={} id={} index={} simpleName={} turn={}",
+            "actor.id={} actor.index={} actor.turnsSleep={} actor.turnsSleepMaximum={} checkValue={} id={} simpleName={} turn={}",
             actor.id,
+            actorIndex,
             actor.turnsSleep,
             actor.turnsSleepMaximum,
             checkValue,
             id,
-            index,
-            simpleName, turn,
-        )
-        return checkValue
-    }
-
-    private fun checkActorTurnsSleepMinimum(actor: Actor, index: Int): Boolean {
-        val checkValue: Boolean = actor.turnsSleep > actor.turnsSleepMinimum
-        logger.info(
-            "actor.id={} actor.turnsSleep={} actor.turnsSleepMinimum={} checkValue={} id={} index={} simpleName={} turn={}",
-            actor.id,
-            actor.turnsSleep,
-            actor.turnsSleepMinimum,
-            checkValue,
-            id,
-            index,
-            simpleName,
-            turn
-        )
-        return checkValue
-    }
-
-    private fun checkActorTurnsStopSpell(actor: Actor, index: Int): Boolean {
-        val checkValue: Boolean = actor.turnsStopSpell > 0
-        logger.info(
-            "actor.id={} actor.turnsStopSpell={} actor.turnsStopSpellMaximum={} checkValue={} id={} index={} simpleName={} turn={}",
-            actor.id,
-            actor.turnsStopSpell,
-            actor.turnsStopSpellMaximum,
-            checkValue,
-            id,
-            index,
             simpleName,
             turn,
         )
         return checkValue
     }
 
-    private fun checkActorTurnsStopSpellMinimum(actor: Actor, index: Int): Boolean {
+    private fun checkActorTurnsSleepMinimum(actor: Actor, actorIndex: Int): Boolean {
+        val checkValue: Boolean = actor.turnsSleep > actor.turnsSleepMinimum
+        logger.info(
+            "actor.id={} actor.index={} actor.turnsSleep={} actor.turnsSleepMinimum={} checkValue={} id={} simpleName={} turn={}",
+            actor.id,
+            actorIndex,
+            actor.turnsSleep,
+            actor.turnsSleepMinimum,
+            checkValue,
+            id,
+            simpleName,
+            turn
+        )
+        return checkValue
+    }
+
+    private fun checkActorTurnsStopSpell(actor: Actor, actorIndex: Int): Boolean {
+        val checkValue: Boolean = actor.turnsStopSpell > 0
+        logger.info(
+            "actor.id={} actor.index={} actor.turnsStopSpell={} actor.turnsStopSpellMaximum={} checkValue={} id={} simpleName={} turn={}",
+            actor.id,
+            actorIndex,
+            actor.turnsStopSpell,
+            actor.turnsStopSpellMaximum,
+            checkValue,
+            id,
+            simpleName,
+            turn,
+        )
+        return checkValue
+    }
+
+    private fun checkActorTurnsStopSpellMinimum(actor: Actor, actorIndex: Int): Boolean {
         val checkValue: Boolean = (actor.turnsStopSpell > 0) && (actor.turnsStopSpell > actor.turnsStopSpellMinimum)
         logger.info(
-            "actor.id={} actor.turnsStopSpell={} actor.turnsStopSpellMinimum={} checkValue={} id={} index={} simpleName={} turn={}",
+            "actor.id={} actor.index={} actor.turnsStopSpell={} actor.turnsStopSpellMinimum={} checkValue={} id={} simpleName={} turn={}",
             actor.id,
+            actorIndex,
             actor.turnsStopSpell,
             actor.turnsStopSpellMinimum,
             checkValue,
             id,
-            index,
             simpleName,
             turn
         )
         return checkValue
     }
 
-    private fun checkActorValid(actor: Actor, index: Int): Boolean {
-        val checkValue: Boolean = checkActorActions(actor, index) && checkActorHitPoints(actor, index)
+    private fun checkActorValid(actor: Actor, actorIndex: Int): Boolean {
+        val checkValue: Boolean = checkActorActions(actor, actorIndex) && checkActorHitPoints(actor, actorIndex)
         logger.info(
-            "actor.id={} checkValue={} id={} index={} simpleName={} turn={}",
+            "actor.id={} actor.index={} checkValue={} id={} simpleName={} turn={}",
             actor.id,
+            actorIndex,
             checkValue,
             id,
-            index,
             simpleName,
             turn
         )
         return checkValue
     }
 
-    fun getAction(actor: Actor, actors: Collection<Actor>, index: Int): IndexedValue<Action<Actor, Actor>>? {
-        val indexedValue: IndexedValue<Action<Actor, Actor>>? =
-            actor.actions.withIndex().firstOrNull { indexedValue: IndexedValue<Action<Actor, Actor>> ->
-                checkActorAction(indexedValue.value, indexedValue.index, actor, actors, index)
+    fun getAction(
+        actors: Collection<Actor>,
+        indexedValueActor: IndexedValue<Actor>,
+    ): IndexedValue<Action<Actor, Actor>>? {
+        val indexedValue: IndexedValue<Action<Actor, Actor>>? = indexedValueActor.value.actions.withIndex()
+            .firstOrNull { indexedValue: IndexedValue<Action<Actor, Actor>> ->
+                checkActorAction(
+                    indexedValue.value, indexedValue.index, indexedValueActor.value, indexedValueActor.index, actors
+                )
             }
         logger.info(
-            "action.id={} actionIndex={} actor.id={} actors.size={} id={} index={} simpleName={} turn={}",
+            "action.id={} action.index={} actor.id={} actor.index={} actors.size={} id={} simpleName={} turn={}",
             indexedValue?.value?.id,
             indexedValue?.index,
-            actor.id,
+            indexedValueActor.value.id,
+            indexedValueActor.value,
             actors.size,
             id,
-            index,
             simpleName,
             turn
         )
@@ -272,18 +281,21 @@ class BattleSystem : Identifier,
     }
 
     fun getActionTargets(
-        action: Action<Actor, Actor>, actionIndex: Int, actor: Actor, actors: Collection<Actor>, index: Int,
+        actors: Collection<Actor>,
+        indexedValueAction: IndexedValue<Action<Actor, Actor>>,
+        indexedValueActor: IndexedValue<Actor>,
     ): Collection<Actor> {
-        val targetedActors = action.actionTarget?.target(actor, actors) ?: emptyList()
+        val targetedActors: Collection<Actor> =
+            indexedValueAction.value.actionTarget?.target(indexedValueActor.value, actors) ?: emptyList()
         logger.info(
-            "action.actionTarget.id={} action.id={} actionIndex={} actor.id={} actors.size={} id={} index={} simpleName={} targetedActors.size={} turn={}",
-            action.actionTarget?.id,
-            action.id,
-            actionIndex,
-            actor.id,
+            "action.actionTarget.id={} action.id={} action.index={} actor.id={} actor.index={} actors.size={} id={} simpleName={} targetedActors.size={} turn={}",
+            indexedValueAction.value.actionTarget?.id,
+            indexedValueAction.value.id,
+            indexedValueAction.index,
+            indexedValueActor.value.id,
+            indexedValueActor.index,
             actors.size,
             id,
-            index,
             simpleName,
             targetedActors.size,
             turn
@@ -292,43 +304,54 @@ class BattleSystem : Identifier,
     }
 
     fun getActionTargetOrder(
-        action: Action<Actor, Actor>, actionIndex: Int, actor: Actor, actors: Collection<Actor>, index: Int,
+        actors: Collection<Actor>,
+        indexedValueAction: IndexedValue<Action<Actor, Actor>>,
+        indexedValueActor: IndexedValue<Actor>,
     ): Collection<Actor> {
         logger.info(
-            "action.attributeSort.id={} action.attributeSort.sortType={} action.id={} actionIndex={} actor.id={} actors.size={} id={} index={} simpleName={} turn={}",
-            action.attributeSort?.id,
-            action.attributeSort?.sortType,
-            action.id,
-            actionIndex,
-            actor.id,
+            "action.attributeSort.attributeName={} action.attributeSort.id={} action.attributeSort.sortType={} action.id={} action.index={} actor.id={} actor.index={} actors.size={} id={} simpleName={} turn={}",
+            indexedValueAction.value.attributeSort?.attributeName,
+            indexedValueAction.value.attributeSort?.id,
+            indexedValueAction.value.attributeSort?.sortType,
+            indexedValueAction.value.id,
+            indexedValueAction.index,
+            indexedValueActor.value.id,
+            indexedValueActor.index,
             actors.size,
             id,
-            index,
             simpleName,
             turn
         )
-        return action.attributeSort?.sort(actors) ?: actors
+        return indexedValueAction.value.attributeSort?.sort(actors) ?: actors
     }
 
     fun getActor(actorIterator: Iterator<IndexedValue<Actor>>): IndexedValue<Actor>? {
-        if (actorIterator.hasNext()) {
+        val hasNext: Boolean = actorIterator.hasNext()
+        var indexedValueActor: IndexedValue<Actor>? = null
+        if (hasNext) {
             indexedValueActor = actorIterator.next()
-            indexedValueActor?.let {
-                tickActor(it.value, it.index)
-            }
+            tickActor(indexedValueActor.value, indexedValueActor.index)
         }
+        logger.info(
+            "actorIterator.hasNext={} actor.id={} actor.index={} id={} simpleName={}",
+            hasNext,
+            indexedValueActor?.value?.id,
+            indexedValueActor?.index,
+            id,
+            simpleName
+        )
         return indexedValueActor
     }
 
-    private fun getActorOrder(actor: Actor, index: Int): Int {
+    private fun getActorOrder(actor: Actor, actorIndex: Int): Int {
         val attributeValue: Int = actor.getAttribute(attributeName)
         logger.info(
-            "actor.id={} attributeName={} attributeValue={} id={} index={} simpleName={} turn={}",
+            "actor.id={} actor.index={} attributeName={} attributeValue={} id={} simpleName={} turn={}",
             actor.id,
+            actorIndex,
             attributeName,
             attributeValue,
             id,
-            index,
             simpleName,
             turn
         )
@@ -336,6 +359,9 @@ class BattleSystem : Identifier,
     }
 
     fun getActors(actors: Collection<Actor>): Iterator<IndexedValue<Actor>> {
+        logger.info(
+            "actors.size={} id={} simpleName={} turn={}", actors.size, id, simpleName, turn
+        )
         return actors.filterIndexed { index: Int, actor: Actor ->
             checkActorValid(actor, index)
         }.withIndex().sortedByDescending { indexedValue: IndexedValue<Actor> ->
@@ -343,64 +369,53 @@ class BattleSystem : Identifier,
         }.iterator()
     }
 
-    private fun tickActor(actor: Actor, index: Int) {
-        tickActorIndex(actor, index)
-        tickActorTurn(actor, index)
-        tickActorSleep(actor, index)
-        tickActorStopSpell(actor, index)
-    }
-
-    private fun tickActorIndex(actor: Actor, index: Int) {
-        actor.index = index
+    private fun tickActor(actor: Actor, actorIndex: Int) {
         logger.info(
-            "actor.id={} actor.index={} id={} index={} simpleName={} turn={}",
-            actor.id,
-            actor.index,
-            id,
-            index,
-            simpleName,
-            turn,
+            "actor.id={} actor.index={} id={} simpleName={} turn={}", actor.id, actorIndex, id, simpleName, turn
         )
+        tickActorTurn(actor, actorIndex)
+        tickActorSleep(actor, actorIndex)
+        tickActorStopSpell(actor, actorIndex)
     }
 
-    private fun tickActorSleep(actor: Actor, index: Int) {
-        if (!checkActorSleep(actor, index)) {
+    private fun tickActorSleep(actor: Actor, actorIndex: Int) {
+        if (!checkActorSleep(actor, actorIndex)) {
             actor.turnsSleep += 1
         }
         logger.info(
-            "actor.id={} actor.turnsSleep={} id={} index={} simpleName={} turn={}",
+            "actor.id={} actor.index={} actor.turnsSleep={} id={} simpleName={} turn={}",
             actor.id,
+            actorIndex,
             actor.turnsSleep,
             id,
-            index,
             simpleName,
             turn
         )
     }
 
-    private fun tickActorStopSpell(actor: Actor, index: Int) {
-        if (!checkActorStopSpell(actor, index)) {
+    private fun tickActorStopSpell(actor: Actor, actorIndex: Int) {
+        if (!checkActorStopSpell(actor, actorIndex)) {
             actor.turnsStopSpell += 1
         }
         logger.info(
-            "actor.id={} actor.turnsStopSpell={} id={} index={} simpleName={} turn={}",
+            "actor.id={} actor.index={} actor.turnsStopSpell={} id={} simpleName={} turn={}",
             actor.id,
+            actorIndex,
             actor.turnsStopSpell,
             id,
-            index,
             simpleName,
             turn
         )
     }
 
-    private fun tickActorTurn(actor: Actor, index: Int) {
+    private fun tickActorTurn(actor: Actor, actorIndex: Int) {
         actor.turn = turn++
         logger.info(
-            "actor.id={} actor.turn={} id={} index={} simpleName={} turn={}",
+            "actor.id={} actor.index={} actor.turn={} id={} simpleName={} turn={}",
             actor.id,
+            actorIndex,
             actor.turn,
             id,
-            index,
             simpleName,
             turn,
         )
