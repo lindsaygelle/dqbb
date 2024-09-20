@@ -1,11 +1,11 @@
 package dqbb
 
-abstract class RequirementMagic<A : MagicInvoker, B : Receiver>(
+abstract class AbilityMagicRequirement<A : MagicInvoker, B : Receiver>(
     magicCost: Int,
 ) : AbilityMagic<A, B>(
     magicCost = magicCost,
 ) {
-    final override fun apply(invoker: A, receiver: B): Boolean {
+    final override fun applyEffect(invoker: A, receiver: B): Reviewable {
         logger.info(
             "id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
             id,
@@ -15,10 +15,13 @@ abstract class RequirementMagic<A : MagicInvoker, B : Receiver>(
             receiver.simpleName,
             simpleName
         )
-        return checkRequirement(invoker, receiver) && applyEffect(invoker, receiver)
+        if (!checkRequirement(invoker, receiver)) {
+            return getReviewableRequirementInvalid(invoker, receiver)
+        }
+        return applyUpdate(invoker, receiver)
     }
 
-    protected abstract fun applyEffect(invoker: A, receiver: B): Boolean
+    protected abstract fun applyUpdate(invoker: A, receiver: B): Reviewable
 
     private fun checkRequirement(invoker: A, receiver: B): Boolean {
         val checkValue: Boolean = getInvokerRequirement(invoker) > getReceiverResistance(receiver)
@@ -38,4 +41,6 @@ abstract class RequirementMagic<A : MagicInvoker, B : Receiver>(
     protected abstract fun getInvokerRequirement(invoker: A): Int
 
     protected abstract fun getReceiverResistance(receiver: B): Int
+
+    protected abstract fun getReviewableRequirementInvalid(invoker: A, receiver: B): Reviewable
 }

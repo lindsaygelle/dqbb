@@ -1,7 +1,7 @@
 package dqbb
 
 class ActionCheck<A : ActionInvoker, B : ActionReceiver>() : ActionRequirement<A, B>(),
-    Prioritized {
+        Prioritized {
     override var priorityType: PriorityType = PriorityType.EQUAL
         set(value) {
             field = value
@@ -30,9 +30,9 @@ class ActionCheck<A : ActionInvoker, B : ActionReceiver>() : ActionRequirement<A
             simpleName
         )
         val checkValue = actionReceivers.filterIndexed { index: Int, receiver: B ->
-            checkSelectionType(actionInvoker, index, receiver)
+            checkSelectionType(actionInvoker, receiver, index)
         }.withIndex().all { (index: Int, receiver: B) ->
-            checkAttributeCriteria(index, receiver)
+            checkAttributeCriteria(receiver, index)
         }
         logger.info(
             "checkValue={} id={} simpleName={}", checkValue, id, simpleName

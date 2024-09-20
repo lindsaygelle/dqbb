@@ -3,14 +3,11 @@ package dqbb
 class Herb<A : HerbInvoker, B : HealReceiver> : AbilityItem<A, B>(
     itemName = ItemName.HERB
 ) {
-    override fun apply(invoker: A, receiver: B): Boolean {
-        val hitPoints: Int = receiver.hitPoints
+    override fun applyEffect(invoker: A, receiver: B): Reviewable {
         val herbPoints: Int = maxOf(0, getHerbPoints(invoker))
         receiver.hitPoints += herbPoints
-        val checkValue: Boolean = receiver.hitPoints > hitPoints
         logger.info(
-            "checkValue={} herbPoints={} id={} invoker.id={} invoker.simpleName={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={} receiver.simpleName={} simpleName={}",
-            checkValue,
+            "id={} invoker.herb={} invoker.id={} invoker.simpleName={} receiver.hitPoints={} receiver.hitPointsMaximum={} receiver.id={} receiver.simpleName={} simpleName={}",
             herbPoints,
             id,
             invoker.id,
@@ -21,7 +18,7 @@ class Herb<A : HerbInvoker, B : HealReceiver> : AbilityItem<A, B>(
             receiver.simpleName,
             simpleName
         )
-        return checkValue
+        return getReviewable(invoker, herbPoints, receiver)
     }
 
     override fun checkReceiver(receiver: B): Boolean {
@@ -81,5 +78,29 @@ class Herb<A : HerbInvoker, B : HealReceiver> : AbilityItem<A, B>(
             simpleName
         )
         return herb
+    }
+
+    private fun getReviewable(invoker: A, invokerHerb: Int?, receiver: B): Reviewable {
+        return ReviewHerb(
+            id,
+            simpleName,
+            invokerHerb,
+            invoker.id,
+            invoker.items.getOrDefault(itemName, 0),
+            invoker.name,
+            invoker.simpleName,
+            receiver.hitPoints,
+            receiver.id,
+            receiver.name,
+            receiver.simpleName,
+        )
+    }
+
+    override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, null, receiver)
+    }
+
+    override fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, null, receiver)
     }
 }

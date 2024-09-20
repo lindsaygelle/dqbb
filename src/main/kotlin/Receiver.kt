@@ -1,3 +1,4 @@
 package dqbb
 
-interface Receiver: Identifier
+interface Receiver : Identifier,
+    Nameable

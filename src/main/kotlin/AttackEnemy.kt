@@ -1,6 +1,6 @@
 package dqbb
 
-class AttackEnemy<A : AttackInvoker, B : AttackReceiver> : Attack<A, B>() {
+class AttackEnemy<A : AttackInvoker, B : AttackReceiver> : AbilityAttack<A, B>() {
     private fun checkInvokerExcellent(invoker: A): Boolean {
         val excellentAttackRequirement: Int = invoker.excellentAttackRequirement
         val checkValue: Boolean = excellentAttackRequirement == invoker.excellentAttackRequirementMaximum

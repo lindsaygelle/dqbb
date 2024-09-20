@@ -2,31 +2,31 @@ package dqbb
 
 abstract class HurtMagic<A, B : HurtReceiver>(
     magicCost: Int,
-) : RequirementMagic<A, B>(
+) : AbilityMagicRequirement<A, B>(
     magicCost = magicCost
 ) where A : HurtRanger, A : HurtRequester, A : MagicInvoker {
-    final override fun applyEffect(invoker: A, receiver: B): Boolean {
-        val hitPoints: Int = receiver.hitPoints
-        val hurtPoints: Int = maxOf(0, getHurtPoints(invoker))
+    final override fun applyUpdate(invoker: A, receiver: B): Reviewable {
         val hurtPointsReduction: Int = maxOf(0, getHurtPointsReduction(receiver))
-        val damagePoints: Int = getDamagePoints(hurtPoints, hurtPointsReduction)
-        receiver.hitPoints -= damagePoints
-        val checkValue: Boolean = receiver.hitPoints < hitPoints
+        val hurtPoints: Int = maxOf(0, getHurtPoints(invoker))
+        val hurt: Int = getHurt(hurtPoints, hurtPointsReduction)
+        receiver.hitPoints -= hurt
         logger.info(
-            "checkValue={} damagePoints={} hurtPoints={} hurtPointsReduction={} id={} invoker.id={} invoker.simpleName={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
-            checkValue,
-            damagePoints,
+            "id={} invoker.hurt={} invoker.hurtPoints={} invoker.id={} invoker.simpleName={} receiver.armor.hurtReduction={} receiver.armor.id={} receiver.armor.name={} receiver.armor.simpleName={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
+            hurt,
             hurtPoints,
-            hurtPointsReduction,
             id,
             invoker.id,
             invoker.simpleName,
             receiver.hitPoints,
+            receiver.armor?.hurtReduction,
+            receiver.armor?.id,
+            receiver.armor?.name,
+            receiver.armor?.simpleName,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return checkValue
+        return getReviewable(invoker, hurt, receiver)
     }
 
     final override fun checkReceiver(receiver: B): Boolean {
@@ -56,6 +56,19 @@ abstract class HurtMagic<A, B : HurtReceiver>(
         return checkValue
     }
 
+    private fun getHurt(hurtPoints: Int, hurtPointsReduction: Int): Int {
+        val hurt: Int = (hurtPoints - (hurtPoints * (hurtPointsReduction.toDouble() / 100))).toInt()
+        logger.info(
+            "hurt={} hurtPoints={} hurtPointsReduction={} id={} simpleName={}",
+            hurt,
+            hurtPoints,
+            hurtPointsReduction,
+            id,
+            simpleName
+        )
+        return hurt
+    }
+
     protected abstract fun getHurtPoints(invoker: A): Int
 
     private fun getHurtPointsReduction(receiver: B): Int {
@@ -69,19 +82,6 @@ abstract class HurtMagic<A, B : HurtReceiver>(
             receiver.simpleName
         )
         return hurtReduction
-    }
-
-    private fun getDamagePoints(hurtPoints: Int, hurtPointsReduction: Int): Int {
-        val damagePoints: Double = (hurtPoints - (hurtPoints * (hurtPointsReduction.toDouble() / 100)))
-        logger.info(
-            "damagePoints={} hurtPoints={} hurtPointsReduction={} id={} simpleName={}",
-            damagePoints,
-            hurtPoints,
-            hurtPointsReduction,
-            id,
-            simpleName
-        )
-        return damagePoints.toInt()
     }
 
     override fun getInvokerRequirement(invoker: A): Int {
@@ -110,5 +110,37 @@ abstract class HurtMagic<A, B : HurtReceiver>(
             receiver.simpleName
         )
         return hurtResistance
+    }
+
+    private fun getReviewable(invoker: A, invokerHurt: Int?, receiver: B): Reviewable {
+        return ReviewHurt(
+            id,
+            simpleName,
+            invokerHurt,
+            invoker.id,
+            invoker.name,
+            invoker.simpleName,
+            magicCost,
+            receiver.armor?.hurtReduction,
+            receiver.armor?.id,
+            receiver.armor?.name,
+            receiver.armor?.simpleName,
+            receiver.hitPoints,
+            receiver.id,
+            receiver.name,
+            receiver.simpleName,
+        )
+    }
+
+    override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, null, receiver)
+    }
+
+    override fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, null, receiver)
+    }
+
+    override fun getReviewableRequirementInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, null, receiver)
     }
 }

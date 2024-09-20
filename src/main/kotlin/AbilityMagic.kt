@@ -1,17 +1,27 @@
 package dqbb
 
 abstract class AbilityMagic<A : MagicInvoker, B : Receiver>(
-    val magicCost: Int,
+    magicCost: Int,
 ) : Ability<A, B>() {
+    var magicCost: Int = magicCost
+        set(value) {
+            field = maxOf(0, value)
+            logger.debug(
+                "id={} magicCost={} simpleName={}", id, field, simpleName
+            )
+        }
+
+    final override fun apply(invoker: A, receiver: B): Reviewable {
+        if (!checkReceiver(receiver)) {
+            return getReviewableReceiverInvalid(invoker, receiver)
+        }
+        reduceInvokerMagicPoints(invoker)
+        return applyEffect(invoker, receiver)
+    }
+
+    protected abstract fun applyEffect(invoker: A, receiver: B): Reviewable
+
     final override fun checkInvoker(invoker: A): Boolean {
-        logger.trace(
-            "id={} invoker.id={} invoker.simpleName={} magicCost={} simpleName={}",
-            id,
-            invoker.id,
-            invoker.simpleName,
-            magicCost,
-            simpleName
-        )
         return super.checkInvoker(invoker) && checkInvokerMagicCost(invoker) && checkInvokerTurnsStopSpell(invoker)
     }
 
@@ -44,6 +54,8 @@ abstract class AbilityMagic<A : MagicInvoker, B : Receiver>(
         return checkValue
     }
 
+    protected abstract fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable
+
     private fun reduceInvokerMagicPoints(invoker: A) {
         invoker.magicPoints -= magicCost
         logger.info(
@@ -55,24 +67,6 @@ abstract class AbilityMagic<A : MagicInvoker, B : Receiver>(
             magicCost,
             simpleName
         )
-    }
-
-    final override fun use(invoker: A, receiver: B): Boolean {
-        logger.info(
-            "id={} invoker.id={} invoker.simpleName={} magicCost={} receiver.id={} receiver.simpleName={} simpleName={}",
-            id,
-            invoker.id,
-            invoker.simpleName,
-            magicCost,
-            receiver.id,
-            receiver.simpleName,
-            simpleName
-        )
-        if (!checkInvoker(invoker) || !checkReceiver(receiver)) {
-            return false
-        }
-        reduceInvokerMagicPoints(invoker)
-        return apply(invoker, receiver)
     }
 
     override fun toString(): String {

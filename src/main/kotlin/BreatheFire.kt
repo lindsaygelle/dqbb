@@ -5,27 +5,28 @@ class BreatheFire<A : BreatheFireInvoker, B : BreatheFireReceiver>(
 ) : AbilityMagic<A, B>(
     magicCost = magicCost
 ) {
-    override fun apply(invoker: A, receiver: B): Boolean {
-        val hitPoints: Int = receiver.hitPoints
-        val breatheFirePoints: Int = maxOf(0, getBreatheFirePoints(invoker))
-        val breatheFirePointsReduction: Int = maxOf(0, getBreatheFirePointsReduction(receiver))
-        val damagePoints: Int = getDamagePoints(breatheFirePoints, breatheFirePointsReduction)
-        receiver.hitPoints -= damagePoints
-        val checkValue: Boolean = receiver.hitPoints < hitPoints
+    override fun applyEffect(invoker: A, receiver: B): Reviewable {
+        val breatheFirePointsReduction: Int = getBreatheFirePointsReduction(receiver)
+        val breatheFirePoints: Int = getBreatheFirePoints(invoker)
+        val breatheFire: Int = getBreatheFire(breatheFirePoints, breatheFirePointsReduction)
+        receiver.hitPoints -= breatheFire
         logger.info(
-            "breatheFirePoints={} breatheFirePointsReduction={} damagePoints={} id={} invoker.id={} invoker.simpleName={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
-            breatheFirePoints,
-            breatheFirePointsReduction,
-            damagePoints,
+            "id={} invoker.breatheFire={} invoker.breatheFirePoints={} invoker.id={} invoker.simpleName={} receiver.armor.breatheFireReduction={} receiver.armor.id={} receiver.armor.name={} receiver.armor.simpleName={} receiver.hitPoints={} receiver.id={} receiver.simpleName={} simpleName={}",
             id,
+            breatheFire,
+            breatheFirePoints,
             invoker.id,
             invoker.simpleName,
             receiver.hitPoints,
+            receiver.armor?.breatheFireReduction,
+            receiver.armor?.id,
+            receiver.armor?.name,
+            receiver.armor?.simpleName,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return checkValue
+        return getReviewable(invoker, breatheFire, receiver)
     }
 
     override fun checkReceiver(receiver: B): Boolean {
@@ -56,7 +57,7 @@ class BreatheFire<A : BreatheFireInvoker, B : BreatheFireReceiver>(
     }
 
     private fun getBreatheFirePoints(invoker: A): Int {
-        val breatheFire: Int = invoker.breatheFire
+        val breatheFire: Int = maxOf(0, invoker.breatheFire)
         logger.info(
             "id={} invoker.breatheFire={} invoker.breatheFireRangeMaximum={} invoker.breatheFireRangeMinimum={} invoker.breatheFireScale={} invoker.breatheFireShift={} invoker.id={} invoker.simpleName={} simpleName={}",
             id,
@@ -73,30 +74,59 @@ class BreatheFire<A : BreatheFireInvoker, B : BreatheFireReceiver>(
     }
 
     private fun getBreatheFirePointsReduction(receiver: B): Int {
-        val breatheFireReduction: Int = receiver.armor?.breatheFireReduction ?: 0
         logger.info(
-            "id={} receiver.armor.id={} receiver.armor.breatheFireReduction={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "id={} receiver.armor.breatheFireReduction={} receiver.armor.id={} receiver.armor.name={} receiver.armor.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
             id,
             receiver.armor?.id,
             receiver.armor?.breatheFireReduction,
+            receiver.armor?.name,
+            receiver.armor?.simpleName,
             receiver.id,
             receiver.simpleName,
             simpleName
         )
-        return breatheFireReduction
+        return receiver.armor?.breatheFireReduction ?: 0
     }
 
-    private fun getDamagePoints(breatheFirePoints: Int, breatheFirePointsReduction: Int): Int {
-        val damagePoints: Double =
-            (breatheFirePoints - (breatheFirePoints * (breatheFirePointsReduction.toDouble() / 100)))
+    private fun getBreatheFire(breatheFirePoints: Int, breatheFirePointsReduction: Int): Int {
+        val breatheFire: Int =
+            (breatheFirePoints - (breatheFirePoints * (breatheFirePointsReduction.toDouble() / 100))).toInt()
         logger.info(
-            "damagePoints={} breatheFirePoints={} breatheFirePointsReduction={} id={} simpleName={}",
-            damagePoints,
+            "breatheFire={} breatheFirePoints={} breatheFirePointsReduction={} id={} simpleName={}",
+            breatheFire,
             breatheFirePoints,
             breatheFirePointsReduction,
             id,
             simpleName
         )
-        return damagePoints.toInt()
+        return breatheFire
+    }
+
+    private fun getReviewable(invoker: A, invokerBreatheFire: Int?, receiver: B): Reviewable {
+        return ReviewBreatheFire(
+            id,
+            simpleName,
+            invokerBreatheFire,
+            invoker.id,
+            invoker.name,
+            invoker.simpleName,
+            magicCost,
+            receiver.armor?.breatheFireReduction,
+            receiver.armor?.id,
+            receiver.armor?.name,
+            receiver.armor?.simpleName,
+            receiver.hitPoints,
+            receiver.id,
+            receiver.name,
+            receiver.simpleName,
+        )
+    }
+
+    override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, null, receiver)
+    }
+
+    override fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, null, receiver)
     }
 }

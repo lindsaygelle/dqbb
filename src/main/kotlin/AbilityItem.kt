@@ -3,22 +3,22 @@ package dqbb
 abstract class AbilityItem<A : ItemInvoker, B : Receiver>(
     val itemName: ItemName,
 ) : Ability<A, B>() {
+    override fun apply(invoker: A, receiver: B): Reviewable {
+        reduceInvokerItemCount(invoker)
+        if (!checkReceiver(receiver)) {
+            return getReviewableReceiverInvalid(invoker, receiver)
+        }
+        return applyEffect(invoker, receiver)
+    }
+
+    protected abstract fun applyEffect(invoker: A, receiver: B): Reviewable
+
     final override fun checkInvoker(invoker: A): Boolean {
         return super.checkInvoker(invoker) && checkInvokerItem(invoker)
     }
 
     private fun checkInvokerItem(invoker: A): Boolean {
-        val checkValue: Boolean = checkInvokerItemExists(invoker) && checkInvokerItemCount(invoker)
-        logger.trace(
-            "checkValue={} id={} invoker.id={} invoker.simpleName={} itemName={} simpleName={}",
-            checkValue,
-            id,
-            invoker.id,
-            invoker.simpleName,
-            itemName,
-            simpleName
-        )
-        return checkValue
+        return checkInvokerItemExists(invoker) && checkInvokerItemCount(invoker)
     }
 
     private fun checkInvokerItemCount(invoker: A): Boolean {
@@ -51,6 +51,8 @@ abstract class AbilityItem<A : ItemInvoker, B : Receiver>(
         return itemExists
     }
 
+    protected abstract fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable
+
     private fun reduceInvokerItemCount(invoker: A) {
         invoker.items[itemName] = invoker.items.getOrDefault(itemName, 1) - 1
         logger.info(
@@ -63,23 +65,6 @@ abstract class AbilityItem<A : ItemInvoker, B : Receiver>(
             itemName,
             simpleName
         )
-    }
-
-    override fun use(invoker: A, receiver: B): Boolean {
-        logger.info(
-            "id={} invoker.id={} invoker.simpleName={} itemName={} receiver.id={} simpleName={}",
-            id,
-            invoker.id,
-            invoker.simpleName,
-            itemName,
-            receiver.id,
-            simpleName
-        )
-        if (!checkInvoker(invoker) || !checkReceiver(receiver)) {
-            return false
-        }
-        reduceInvokerItemCount(invoker)
-        return apply(invoker, receiver)
     }
 
     override fun toString(): String {

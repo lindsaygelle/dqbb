@@ -1,6 +1,6 @@
 package dqbb
 
-class AttackHero<A : AttackInvoker, B : AttackReceiver> : Attack<A, B>() {
+class AttackHero<A : AttackInvoker, B : AttackReceiver> : AbilityAttack<A, B>() {
     override fun getAttackPoints(invoker: A, receiver: B): Int {
         val attackPointsRange: IntRange = getAttackPointsRange(invoker, receiver)
         val attackPoints: Int = attackPointsRange.random()
