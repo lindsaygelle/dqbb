@@ -26,7 +26,7 @@ abstract class HurtMagic<A, B : HurtReceiver>(
             receiver.simpleName,
             simpleName
         )
-        return getReviewable(invoker, hurt, receiver)
+        return getReviewable(invoker, hurt, true, receiver, true)
     }
 
     final override fun checkReceiver(receiver: B): Boolean {
@@ -112,12 +112,19 @@ abstract class HurtMagic<A, B : HurtReceiver>(
         return hurtResistance
     }
 
-    private fun getReviewable(invoker: A, invokerHurt: Int?, receiver: B): Reviewable {
+    private fun getReviewable(
+        invoker: A,
+        invokerHurt: Int?,
+        invokerIsValid: Boolean,
+        receiver: B,
+        receiverIsValid: Boolean,
+    ): Reviewable {
         return ReviewHurt(
             id,
             simpleName,
             invokerHurt,
             invoker.id,
+            invokerIsValid,
             invoker.name,
             invoker.simpleName,
             magicCost,
@@ -127,20 +134,21 @@ abstract class HurtMagic<A, B : HurtReceiver>(
             receiver.armor?.simpleName,
             receiver.hitPoints,
             receiver.id,
+            receiverIsValid,
             receiver.name,
             receiver.simpleName,
         )
     }
 
     override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, null, receiver)
+        return getReviewable(invoker, null, false, receiver, false)
     }
 
     override fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, null, receiver)
+        return getReviewable(invoker, null, true, receiver, false)
     }
 
     override fun getReviewableRequirementInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, null, receiver)
+        return getReviewable(invoker, null, true, receiver, true)
     }
 }

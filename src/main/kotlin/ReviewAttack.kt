@@ -6,6 +6,7 @@ data class ReviewAttack(
     val invokerAttack: Int?,
     val invokerAttackType: AttackType?,
     override val invokerId: Int,
+    override val invokerIsValid: Boolean,
     override val invokerName: String?,
     override val invokerSimpleName: String,
     val invokerWeaponAttack: Int?,
@@ -18,6 +19,7 @@ data class ReviewAttack(
     val receiverArmorSimpleName: String?,
     val receiverHitPoints: Int,
     override val receiverId: Int,
+    override val receiverIsValid: Boolean,
     override val receiverName: String?,
     val receiverShieldDefense: Int?,
     val receiverShieldId: Int?,
@@ -32,6 +34,6 @@ data class ReviewAttack(
     }
 
     override fun toString(): String {
-        return "abilityId=$abilityId abilitySimpleName=$abilitySimpleName id=$id invokerAttack=$invokerAttack invokerAttackType=$invokerAttackType invokerId=$invokerId invokerName=$invokerName invokerSimpleName=$invokerSimpleName invokerWeaponAttack=$invokerWeaponAttack invokerWeaponId=$invokerWeaponId invokerWeaponName=$invokerWeaponName invokerWeaponSimpleName=$invokerWeaponSimpleName receiverArmorDefense=$receiverArmorDefense receiverArmorId=$receiverArmorId receiverArmorName=$receiverArmorName receiverArmorSimpleName=$receiverArmorSimpleName receiverHitPoints=$receiverHitPoints receiverId=$receiverId receiverName=$receiverName receiverShieldDefense=$receiverShieldDefense receiverShieldId=$receiverShieldId receiverShieldName=$receiverShieldName receiverShieldSimpleName=$receiverShieldSimpleName receiverSimpleName=$receiverSimpleName simpleName=$simpleName timeMilliseconds=$timeMilliseconds"
+        return "abilityId=$abilityId abilitySimpleName=$abilitySimpleName id=$id invokerAttack=$invokerAttack invokerAttackType=$invokerAttackType invokerId=$invokerId invokerIsValid=$invokerIsValid invokerName=$invokerName invokerSimpleName=$invokerSimpleName invokerWeaponAttack=$invokerWeaponAttack invokerWeaponId=$invokerWeaponId invokerWeaponName=$invokerWeaponName invokerWeaponSimpleName=$invokerWeaponSimpleName receiverArmorDefense=$receiverArmorDefense receiverArmorId=$receiverArmorId receiverArmorName=$receiverArmorName receiverArmorSimpleName=$receiverArmorSimpleName receiverHitPoints=$receiverHitPoints receiverId=$receiverId receiverIsValid=$receiverIsValid receiverName=$receiverName receiverShieldDefense=$receiverShieldDefense receiverShieldId=$receiverShieldId receiverShieldName=$receiverShieldName receiverShieldSimpleName=$receiverShieldSimpleName receiverSimpleName=$receiverSimpleName simpleName=$simpleName timeMilliseconds=$timeMilliseconds"
     }
 }

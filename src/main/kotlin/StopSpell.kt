@@ -18,7 +18,7 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
             receiver.simpleName,
             receiver.turnsStopSpell
         )
-        return getReviewable(invoker, receiver)
+        return getReviewable(invoker, true, receiver, true)
     }
 
     override fun checkReceiver(receiver: B): Boolean {
@@ -107,11 +107,17 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
         return stopSpellResistance
     }
 
-    private fun getReviewable(invoker: A, receiver: B): Reviewable {
+    private fun getReviewable(
+        invoker: A,
+        invokerIsValid: Boolean,
+        receiver: B,
+        receiverIsValid: Boolean,
+    ): Reviewable {
         return ReviewStopSpell(
             id,
             simpleName,
             invoker.id,
+            invokerIsValid,
             invoker.name,
             invoker.simpleName,
             magicCost,
@@ -120,6 +126,7 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
             receiver.armor?.name,
             receiver.armor?.simpleName,
             receiver.id,
+            receiverIsValid,
             receiver.name,
             receiver.simpleName,
             receiver.turnsStopSpell,
@@ -127,14 +134,14 @@ class StopSpell<A : StopSpellInvoker, B : StopSpellReceiver>(
     }
 
     override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, receiver)
+        return getReviewable(invoker, false, receiver, false)
     }
 
     override fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, receiver)
+        return getReviewable(invoker, true, receiver, false)
     }
 
     override fun getReviewableRequirementInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, receiver)
+        return getReviewable(invoker, true, receiver, true)
     }
 }

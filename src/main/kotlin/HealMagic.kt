@@ -20,7 +20,7 @@ abstract class HealMagic<A, B : HealReceiver>(
             receiver.simpleName,
             simpleName
         )
-        return getReviewable(invoker, heal, receiver)
+        return getReviewable(invoker, heal, true, receiver, true)
     }
 
     final override fun checkReceiver(receiver: B): Boolean {
@@ -67,28 +67,37 @@ abstract class HealMagic<A, B : HealReceiver>(
 
     protected abstract fun getHealPoints(invoker: A): Int
 
-    private fun getReviewable(invoker: A, invokerHeal: Int?, receiver: B): Reviewable {
+    private fun getReviewable(
+        invoker: A,
+        invokerHeal: Int?,
+        invokerIsValid: Boolean,
+        receiver: B,
+        receiverIsValid: Boolean,
+    ): Reviewable {
         return ReviewHeal(
             id,
             simpleName,
             invokerHeal,
             invoker.id,
+            invokerIsValid,
             invoker.magicPoints,
             invoker.name,
             invoker.simpleName,
             magicCost,
             receiver.hitPoints,
+            receiver.hitPointsMaximum,
             receiver.id,
+            receiverIsValid,
             receiver.name,
             receiver.simpleName,
         )
     }
 
     override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, null, receiver)
+        return getReviewable(invoker, null, false, receiver, false)
     }
 
     override fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, null, receiver)
+        return getReviewable(invoker, null, true, receiver, false)
     }
 }
