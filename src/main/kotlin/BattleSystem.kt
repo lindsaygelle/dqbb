@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 class BattleSystem : Identifier,
-        TurnAccumulator {
+    TurnAccumulator {
     private var attributeName: AttributeName = AttributeName.AGILITY
         set(value) {
             field = value
@@ -23,15 +23,15 @@ class BattleSystem : Identifier,
             )
         }
 
-    private fun checkActorAction(
+    private fun checkAction(
         action: Action<Actor, Actor>, actionIndex: Int, actor: Actor, actorIndex: Int, actors: Collection<Actor>,
     ): Boolean {
-        val checkValue: Boolean = action.ability != null && action.actionCondition?.check(actor, actors) ?: false
+        val actionId: Int = actor.id
+        val checkValue: Boolean = checkActionAbility(action.ability, actionId, actionIndex) && checkActionCondition(
+            action.actionCondition, actionId, actionIndex, actor, actorIndex, actors
+        ) && checkActionTarget(action.actionTarget, actionId, actionIndex)
         logger.info(
-            "action.ability.id={} action.ability.simpleName={} action.actionCondition.id={} action.id={} action.index={} actor.actions.size={} actor.id={} actor.index={} actors.size={} checkValue={} id={} simpleName={} turn={}",
-            action.ability?.id,
-            action.ability?.simpleName,
-            action.actionCondition?.id,
+            "action.id={} action.index={} actor.actions.size={} actor.id={} actor.index={} actors.size={} checkValue={} id={} simpleName={} turn={}",
             action.id,
             actionIndex,
             actor.actions.size,
@@ -39,6 +39,67 @@ class BattleSystem : Identifier,
             actorIndex,
             actors.size,
             checkValue,
+            id,
+            simpleName,
+            turn
+        )
+        return checkValue
+    }
+
+    private fun checkActionAbility(ability: Ability<Actor, Actor>?, actionId: Int, actionIndex: Int): Boolean {
+        val checkValue: Boolean = ability != null
+        logger.info(
+            "checkValue={} ability.id={} ability.simpleName={} action.id={} action.index={} id={} simpleName={} turn={}",
+            checkValue,
+            ability?.id,
+            ability?.simpleName,
+            actionId,
+            actionIndex,
+            id,
+            simpleName,
+            turn
+        )
+        return checkValue
+    }
+
+    private fun checkActionCondition(
+        actionCondition: ActionCondition<Actor, Actor>?,
+        actionId: Int,
+        actionIndex: Int,
+        actor: Actor,
+        actorIndex: Int,
+        actors: Collection<Actor>,
+    ): Boolean {
+        val checkValue: Boolean = actionCondition?.check(actor, actors) ?: false
+        logger.info(
+            "actionCondition.id={} actionCondition.actionChecks.size={} actionCondition.simpleName={} action.id={} action.index={} actor.id={} actor.index={} actors.size={} id={} simpleName={} turn={}",
+            actionCondition?.id,
+            actionCondition?.actionChecks?.size,
+            actionCondition?.simpleName,
+            actionId,
+            actionIndex,
+            actor.id,
+            actorIndex,
+            actors.size,
+            id,
+            simpleName,
+            turn
+        )
+        return checkValue
+    }
+
+    private fun checkActionTarget(
+        actionTarget: ActionTarget<Actor, Actor>?,
+        actionId: Int,
+        actionIndex: Int,
+    ): Boolean {
+        val checkValue: Boolean = actionTarget != null
+        logger.info(
+            "actionTarget.attributeCriteria.size={} actionTarget.id={} action.id={} action.index={} id={} simpleName={} turn={}",
+            actionTarget?.id,
+            actionTarget?.attributeCriteria?.size,
+            actionId,
+            actionIndex,
             id,
             simpleName,
             turn
@@ -78,10 +139,11 @@ class BattleSystem : Identifier,
     }
 
     fun checkActorRemoval(actor: Actor, actorIndex: Int): Boolean {
-        val checkValue: Boolean =
-            !checkActorActions(actor, actorIndex) || !checkActorHitPoints(actor, actorIndex) || checkActorRunning(
-                actor, actorIndex
-            )
+        val checkValue: Boolean = !checkActorActions(actor, actorIndex) || !checkActorHitPoints(
+            actor, actorIndex
+        ) || checkActorRunning(
+            actor, actorIndex
+        )
         logger.trace(
             "actor.allegiance={} actor.id={} actor.index={} checkValue={} id={} simpleName={} turn={}",
             actor.allegiance,
@@ -256,28 +318,12 @@ class BattleSystem : Identifier,
         return checkValue
     }
 
-    fun getAction(
-        actors: Collection<Actor>,
-        indexedValueActor: IndexedValue<Actor>,
-    ): IndexedValue<Action<Actor, Actor>>? {
-        val indexedValue: IndexedValue<Action<Actor, Actor>>? = indexedValueActor.value.actions.withIndex()
-            .firstOrNull { indexedValue: IndexedValue<Action<Actor, Actor>> ->
-                checkActorAction(
-                    indexedValue.value, indexedValue.index, indexedValueActor.value, indexedValueActor.index, actors
-                )
-            }
+    fun getActionTarget(actors: Collection<Actor>): Actor? {
+        val actor: Actor? = actors.firstOrNull()
         logger.info(
-            "action.id={} action.index={} actor.id={} actor.index={} actors.size={} id={} simpleName={} turn={}",
-            indexedValue?.value?.id,
-            indexedValue?.index,
-            indexedValueActor.value.id,
-            indexedValueActor.value,
-            actors.size,
-            id,
-            simpleName,
-            turn
+            "actor.id={} actors.size={} id={} simpleName={} turn={}", actor?.id, actors.size, id, simpleName, turn
         )
-        return indexedValue
+        return actor
     }
 
     fun getActionTargets(
@@ -285,8 +331,9 @@ class BattleSystem : Identifier,
         indexedValueAction: IndexedValue<Action<Actor, Actor>>,
         indexedValueActor: IndexedValue<Actor>,
     ): Collection<Actor> {
-        val targetedActors: Collection<Actor> =
-            indexedValueAction.value.actionTarget?.target(indexedValueActor.value, actors) ?: emptyList()
+        val targetedActors: Collection<Actor> = indexedValueAction.value.actionTarget?.target(
+            indexedValueActor.value, actors
+        ) ?: emptyList()
         logger.info(
             "action.actionTarget.id={} action.id={} action.index={} actor.id={} actor.index={} actors.size={} id={} simpleName={} targetedActors.size={} turn={}",
             indexedValueAction.value.actionTarget?.id,
@@ -306,41 +353,20 @@ class BattleSystem : Identifier,
     fun getActionTargetOrder(
         actors: Collection<Actor>,
         indexedValueAction: IndexedValue<Action<Actor, Actor>>,
-        indexedValueActor: IndexedValue<Actor>,
     ): Collection<Actor> {
         logger.info(
-            "action.attributeSort.attributeName={} action.attributeSort.id={} action.attributeSort.sortType={} action.id={} action.index={} actor.id={} actor.index={} actors.size={} id={} simpleName={} turn={}",
+            "action.attributeSort.attributeName={} action.attributeSort.id={} action.attributeSort.sortType={} action.id={} action.index={} actors.size={} id={} simpleName={} turn={}",
             indexedValueAction.value.attributeSort?.attributeName,
             indexedValueAction.value.attributeSort?.id,
             indexedValueAction.value.attributeSort?.sortType,
             indexedValueAction.value.id,
             indexedValueAction.index,
-            indexedValueActor.value.id,
-            indexedValueActor.index,
             actors.size,
             id,
             simpleName,
             turn
         )
         return indexedValueAction.value.attributeSort?.sort(actors) ?: actors
-    }
-
-    fun getActor(actorIterator: Iterator<IndexedValue<Actor>>): IndexedValue<Actor>? {
-        val hasNext: Boolean = actorIterator.hasNext()
-        var indexedValueActor: IndexedValue<Actor>? = null
-        if (hasNext) {
-            indexedValueActor = actorIterator.next()
-            tickActor(indexedValueActor.value, indexedValueActor.index)
-        }
-        logger.info(
-            "actorIterator.hasNext={} actor.id={} actor.index={} id={} simpleName={}",
-            hasNext,
-            indexedValueActor?.value?.id,
-            indexedValueActor?.index,
-            id,
-            simpleName
-        )
-        return indexedValueActor
     }
 
     private fun getActorOrder(actor: Actor, actorIndex: Int): Int {
@@ -358,7 +384,7 @@ class BattleSystem : Identifier,
         return attributeValue
     }
 
-    fun getActors(actors: Collection<Actor>): Iterator<IndexedValue<Actor>> {
+    fun getActorIterator(actors: Collection<Actor>): Iterator<IndexedValue<Actor>> {
         logger.info(
             "actors.size={} id={} simpleName={} turn={}", actors.size, id, simpleName, turn
         )
@@ -367,6 +393,68 @@ class BattleSystem : Identifier,
         }.withIndex().sortedByDescending { indexedValue: IndexedValue<Actor> ->
             getActorOrder(indexedValue.value, indexedValue.index)
         }.iterator()
+    }
+
+    fun getIndexedAction(
+        actors: Collection<Actor>,
+        indexedValueActor: IndexedValue<Actor>,
+    ): IndexedValue<Action<Actor, Actor>>? {
+        val indexedValue: IndexedValue<Action<Actor, Actor>>? = indexedValueActor.value.actions.withIndex()
+            .firstOrNull { indexedValue: IndexedValue<Action<Actor, Actor>> ->
+                checkAction(
+                    indexedValue.value, indexedValue.index, indexedValueActor.value, indexedValueActor.index, actors
+                )
+            }
+        logger.info(
+            "action.id={} action.index={} actor.id={} actor.index={} actors.size={} id={} simpleName={} turn={}",
+            indexedValue?.value?.id,
+            indexedValue?.index,
+            indexedValueActor.value.id,
+            indexedValueActor.value,
+            actors.size,
+            id,
+            simpleName,
+            turn
+        )
+        return indexedValue
+    }
+
+    fun getIndexedActor(actorIterator: Iterator<IndexedValue<Actor>>): IndexedValue<Actor>? {
+        val hasNext: Boolean = actorIterator.hasNext()
+        var indexedValueActor: IndexedValue<Actor>? = null
+        if (hasNext) {
+            indexedValueActor = actorIterator.next()
+            tickActor(indexedValueActor.value, indexedValueActor.index)
+        }
+        logger.info(
+            "actorIterator.hasNext={} actor.id={} actor.index={} id={} simpleName={}",
+            hasNext,
+            indexedValueActor?.value?.id,
+            indexedValueActor?.index,
+            id,
+            simpleName
+        )
+        return indexedValueActor
+    }
+
+    fun getReviewable(
+        indexedValueAction: IndexedValue<Action<Actor, Actor>>,
+        indexedValueActor: IndexedValue<Actor>,
+        targetActor: Actor,
+    ): Reviewable? {
+        val reviewable: Reviewable? = indexedValueAction.value.ability?.use(indexedValueActor.value, targetActor)
+        logger.info(
+            "action.id={} action.index={} actor.id={} actor.index={} id={} simpleName={} targetActor.id={} turn={}",
+            indexedValueAction.value.id,
+            indexedValueAction.index,
+            indexedValueActor.value.id,
+            indexedValueActor.index,
+            id,
+            simpleName,
+            targetActor.id,
+            turn
+        )
+        return reviewable
     }
 
     private fun tickActor(actor: Actor, actorIndex: Int) {

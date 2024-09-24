@@ -889,12 +889,24 @@ fun main() {
         actor.magicPotionShift = 7
         actor.runRangeMaximum = (0..16).random()
         actor.runShift = 2
+        if ((0..1).random() == 1) {
+            val shield = Shield(
+                defense = (3..10).random()
+            )
+            actor.shield = shield
+        }
         actor.sleepRequirementMaximum = (0..16).random()
         actor.sleepResistanceMaximum = (0..16).random()
         actor.sleepResolutionMaximum = 3
         actor.strength = (1..10).random()
         actor.turnsSleepMaximum = (3..6).random()
         actor.turnsSleepMinimum = (0..<actor.turnsSleepMaximum).random()
+        if ((0..1).random() == 1) {
+            val weapon = Weapon(
+                attack = (3..10).random()
+            )
+            actor.weapon = weapon
+        }
         actors.add(actor)
     }
 

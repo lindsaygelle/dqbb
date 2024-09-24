@@ -1,5 +1,6 @@
 package dqbb
 
-interface Invoker : Identifier,
+interface Invoker : HitPointer,
+    Identifier,
     Nameable,
     SleepAccumulator
