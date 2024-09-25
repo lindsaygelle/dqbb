@@ -9,7 +9,7 @@ abstract class Ability<A : Invoker, B : Receiver> : Identifier {
     protected abstract fun apply(invoker: A, receiver: B): Reviewable
 
     protected open fun checkInvoker(invoker: A): Boolean {
-        val checkValue: Boolean = checkInvokerTurnsSleep(invoker)
+        val checkValue: Boolean = checkInvokerHitPoints(invoker) && checkInvokerTurnsSleep(invoker)
         logger.info(
             "checkValue={} id={} invoker.id={} invoker.simpleName={} simpleName={}",
             checkValue,
@@ -17,6 +17,20 @@ abstract class Ability<A : Invoker, B : Receiver> : Identifier {
             invoker.id,
             invoker.simpleName,
             simpleName,
+        )
+        return checkValue
+    }
+
+    private fun checkInvokerHitPoints(invoker: A): Boolean {
+        val checkValue: Boolean = invoker.hitPoints > 0
+        logger.info(
+            "checkValue={} id={} invoker.hitPoints={} invoker.id={} invoker.simpleName={} simpleName={}",
+            checkValue,
+            id,
+            invoker.hitPoints,
+            invoker.id,
+            invoker.simpleName,
+            simpleName
         )
         return checkValue
     }

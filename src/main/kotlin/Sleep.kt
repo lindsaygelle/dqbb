@@ -18,7 +18,7 @@ class Sleep<A : SleepInvoker, B : SleepReceiver>(
             receiver.simpleName,
             receiver.turnsSleep
         )
-        return getReviewable(invoker, receiver)
+        return getReviewable(invoker, true, receiver, false)
     }
 
     override fun checkReceiver(receiver: B): Boolean {
@@ -107,11 +107,12 @@ class Sleep<A : SleepInvoker, B : SleepReceiver>(
         return sleepResistance
     }
 
-    private fun getReviewable(invoker: A, receiver: B): Reviewable {
+    private fun getReviewable(invoker: A, invokerIsValid: Boolean, receiver: B, receiverIsValid: Boolean): Reviewable {
         return ReviewSleep(
             id,
             simpleName,
             invoker.id,
+            invokerIsValid,
             invoker.name,
             invoker.simpleName,
             magicCost,
@@ -120,6 +121,7 @@ class Sleep<A : SleepInvoker, B : SleepReceiver>(
             receiver.armor?.name,
             receiver.armor?.simpleName,
             receiver.id,
+            receiverIsValid,
             receiver.name,
             receiver.simpleName,
             receiver.turnsSleep,
@@ -127,14 +129,14 @@ class Sleep<A : SleepInvoker, B : SleepReceiver>(
     }
 
     override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, receiver)
+        return getReviewable(invoker, false, receiver, false)
     }
 
     override fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, receiver)
+        return getReviewable(invoker, true, receiver, false)
     }
 
     override fun getReviewableRequirementInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, receiver)
+        return getReviewable(invoker, true, receiver, false)
     }
 }

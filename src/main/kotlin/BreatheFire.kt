@@ -26,7 +26,7 @@ class BreatheFire<A : BreatheFireInvoker, B : BreatheFireReceiver>(
             receiver.simpleName,
             simpleName
         )
-        return getReviewable(invoker, breatheFire, receiver)
+        return getReviewable(invoker, breatheFire, true, receiver, true)
     }
 
     override fun checkReceiver(receiver: B): Boolean {
@@ -102,12 +102,19 @@ class BreatheFire<A : BreatheFireInvoker, B : BreatheFireReceiver>(
         return breatheFire
     }
 
-    private fun getReviewable(invoker: A, invokerBreatheFire: Int?, receiver: B): Reviewable {
+    private fun getReviewable(
+        invoker: A,
+        invokerBreatheFire: Int?,
+        invokerIsValid: Boolean,
+        receiver: B,
+        receiverIsValid: Boolean,
+    ): Reviewable {
         return ReviewBreatheFire(
             id,
             simpleName,
             invokerBreatheFire,
             invoker.id,
+            invokerIsValid,
             invoker.name,
             invoker.simpleName,
             magicCost,
@@ -117,16 +124,17 @@ class BreatheFire<A : BreatheFireInvoker, B : BreatheFireReceiver>(
             receiver.armor?.simpleName,
             receiver.hitPoints,
             receiver.id,
+            receiverIsValid,
             receiver.name,
             receiver.simpleName,
         )
     }
 
     override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, null, receiver)
+        return getReviewable(invoker, null, false, receiver, false)
     }
 
     override fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, null, receiver)
+        return getReviewable(invoker, null, true, receiver, false)
     }
 }

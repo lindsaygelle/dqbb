@@ -18,7 +18,7 @@ class MagicPotion<A : MagicPotionInvoker, B : MagicReceiver> : AbilityItem<A, B>
             receiver.simpleName,
             simpleName
         )
-        return getReviewable(invoker, magicPotion, receiver)
+        return getReviewable(invoker, true, magicPotion, receiver, true)
     }
 
     override fun checkReceiver(receiver: B): Boolean {
@@ -63,30 +63,6 @@ class MagicPotion<A : MagicPotionInvoker, B : MagicReceiver> : AbilityItem<A, B>
         return checkValue
     }
 
-    private fun getReviewable(invoker: A, invokerMagicPotionPoints: Int?, receiver: B): Reviewable {
-        return ReviewMagicPotion(
-            id,
-            simpleName,
-            invoker.items.getOrDefault(itemName, 0),
-            invoker.id,
-            invokerMagicPotionPoints,
-            invoker.name,
-            invoker.simpleName,
-            receiver.id,
-            receiver.magicPoints,
-            receiver.name,
-            receiver.simpleName,
-        )
-    }
-
-    override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, null, receiver)
-    }
-
-    override fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, null, receiver)
-    }
-
     private fun getMagicPotion(invoker: A): Int {
         val magicPotion: Int = invoker.magicPotion
         logger.info(
@@ -102,5 +78,38 @@ class MagicPotion<A : MagicPotionInvoker, B : MagicReceiver> : AbilityItem<A, B>
             simpleName
         )
         return magicPotion
+    }
+
+    private fun getReviewable(
+        invoker: A,
+        invokerIsValid: Boolean,
+        invokerMagicPotionPoints: Int?,
+        receiver: B,
+        receiverIsValid: Boolean,
+    ): Reviewable {
+        return ReviewMagicPotion(
+            id,
+            simpleName,
+            invoker.id,
+            invokerIsValid,
+            invoker.items.getOrDefault(itemName, 0),
+            invokerMagicPotionPoints,
+            invoker.name,
+            invoker.simpleName,
+            receiver.id,
+            receiverIsValid,
+            receiver.magicPoints,
+            receiver.magicPointsMaximum,
+            receiver.name,
+            receiver.simpleName,
+        )
+    }
+
+    override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, false, null, receiver, false)
+    }
+
+    override fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, true, null, receiver, false)
     }
 }

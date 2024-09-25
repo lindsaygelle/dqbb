@@ -1,29 +1,111 @@
 package dqbb
 
 import java.awt.*
+import java.awt.Image
 import java.awt.image.BufferedImage
 import javax.swing.JButton
 
-class PanelBattle(private var actors: Collection<Actor>) : Panel(),
-        Runnable {
+class PanelBattle(
+    actors: Collection<Actor>,
+) : Panel(),
+    Runnable {
     private enum class StateType {
         RESET,
-        RETRIEVE_ACTOR_ITERATOR,
-        RETRIEVE_ACTOR_TARGETS,
         RETRIEVE_INDEXED_ACTION,
+        RETRIEVE_ACTOR_ITERATOR,
         RETRIEVE_INDEXED_ACTOR,
-        SORT_ACTOR_TARGETS,
-        USE_INDEXED_ACTION,
+        RETRIEVE_REVIEWABLE,
+        RETRIEVE_TARGET_ACTOR,
+        RETRIEVE_TARGETED_ACTORS,
+        RETRIEVE_TARGETED_ACTORS_ORDER,
     }
 
+    private var actors: Collection<Actor> = actors
+        set(value) {
+            field = value
+            logger.debug(
+                "actors.hashCode={} actors.size={} id={} simpleName={}", field.hashCode(), field.size, id, simpleName
+            )
+        }
+
     private val allegiances: MutableSet<Int> = mutableSetOf()
+
     private var actorIterator: Iterator<IndexedValue<Actor>>? = null
-    private var battleSystem: BattleSystem = BattleSystem()
-    private var bufferedImage: BufferedImage = BufferedImage(480, 320, BufferedImage.TYPE_INT_RGB)
+        set(value) {
+            field = value
+            logger.debug(
+                "actorIterator.hashCode={} actorIterator.hasNext={} id={} simpleName={}",
+                field?.hashCode(),
+                field?.hasNext(),
+                id,
+                simpleName
+            )
+        }
+
+    private val battleSystem: BattleSystem = BattleSystem()
+
+    private val bufferedImage: BufferedImage = BufferedImage(480, 320, BufferedImage.TYPE_INT_RGB)
+
     private var indexedValueAction: IndexedValue<Action<Actor, Actor>>? = null
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} indexedValueAction.index={} indexedValueAction.value.id={} simpleName={}",
+                id,
+                field?.index,
+                field?.value?.id,
+                simpleName
+            )
+        }
+
     private var indexedValueActor: IndexedValue<Actor>? = null
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} indexedValueActor.index={} indexedValueActor.value.id={} simpleName={}",
+                id,
+                field?.index,
+                field?.value?.id,
+                simpleName
+            )
+        }
+
+    private var reviewable: Reviewable? = null
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} reviewable.id={} reviewable.simpleName={} simpleName={}",
+                id,
+                field?.id,
+                field?.simpleName,
+                simpleName
+            )
+        }
+
     private var stateType: StateType = StateType.RESET
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} simpleName={} stateType.name={} stateType.ordinal={}", id, simpleName, field.name, field.ordinal
+            )
+        }
+
+    private var targetActor: Actor? = null
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} simpleName={} targetActor.id={}", id, simpleName, field?.id
+            )
+        }
+
     private var targetedActors: Collection<Actor>? = null
+        set(value) {
+            field = value
+            logger.debug(
+                "id={} simpleName={} targetActors.size={}", id, simpleName, field?.size
+            )
+        }
+
     private val jButtonNext = JButton("NEXT")
 
     init {
@@ -32,10 +114,82 @@ class PanelBattle(private var actors: Collection<Actor>) : Panel(),
         add(jButtonNext, BorderLayout.SOUTH)
 
         jButtonNext.addActionListener {
-            processNextStep()
+            process()
+            jButtonNext.text = stateType.name
         }
     }
 
+    private fun process() {
+        when (stateType) {
+            StateType.RESET -> processReset()
+            StateType.RETRIEVE_ACTOR_ITERATOR -> processActorIterator()
+            StateType.RETRIEVE_INDEXED_ACTOR -> processIndexedActor()
+            StateType.RETRIEVE_INDEXED_ACTION -> processIndexedAction()
+            StateType.RETRIEVE_TARGETED_ACTORS -> processTargetedActors()
+            StateType.RETRIEVE_TARGETED_ACTORS_ORDER -> processTargetedActorsOrder()
+            StateType.RETRIEVE_TARGET_ACTOR -> processTargetActor()
+            StateType.RETRIEVE_REVIEWABLE -> processReviewable()
+        }
+    }
+
+    private fun processActorIterator() {
+        actorIterator = battleSystem.getActorIterator(actors)
+        stateType = StateType.RETRIEVE_INDEXED_ACTOR
+    }
+
+    private fun processIndexedAction() {
+        indexedValueAction = battleSystem.getIndexedAction(actors, indexedValueActor!!)
+        stateType = if (indexedValueAction != null) StateType.RETRIEVE_TARGETED_ACTORS else StateType.RETRIEVE_INDEXED_ACTOR
+    }
+
+    private fun processIndexedActor() {
+        indexedValueActor = battleSystem.getIndexedActor(actorIterator!!)
+        stateType = if (indexedValueActor != null) StateType.RETRIEVE_INDEXED_ACTION else StateType.RESET
+    }
+
+    private fun processReset() {
+        allegiances.clear()
+        actors = actors.filterIndexed { index: Int, actor: Actor ->
+            val checkValue: Boolean = !battleSystem.checkActorRemoval(actor, index)
+            if (checkValue) {
+                allegiances.add(actor.allegiance)
+            }
+            checkValue
+        }
+        if (allegiances.size > 1) {
+            stateType = StateType.RETRIEVE_ACTOR_ITERATOR
+        } else {
+            jButtonNext.isEnabled = false
+        }
+    }
+
+    private fun processReviewable() {
+        reviewable = battleSystem.getReviewable(indexedValueAction!!, indexedValueActor!!, targetActor!!)
+        stateType = StateType.RETRIEVE_INDEXED_ACTOR
+    }
+
+    private fun processTargetActor() {
+        targetActor = battleSystem.getActionTarget(targetedActors!!)
+        stateType = if (targetActor != null) StateType.RETRIEVE_REVIEWABLE else StateType.RETRIEVE_TARGET_ACTOR
+    }
+
+    private fun processTargetedActors() {
+        targetedActors = battleSystem.getActionTargets(actors, indexedValueAction!!, indexedValueActor!!)
+        stateType = if (targetedActors != null) StateType.RETRIEVE_TARGETED_ACTORS_ORDER else StateType.RETRIEVE_INDEXED_ACTOR
+    }
+
+    private fun processTargetedActorsOrder() {
+        targetedActors = battleSystem.getActionTargetOrder(targetedActors!!, indexedValueAction!!)
+        stateType = if (targetedActors != null) StateType.RETRIEVE_TARGET_ACTOR else StateType.RETRIEVE_INDEXED_ACTOR
+    }
+
+    override fun paintComponent(g: Graphics) {
+        super.paintComponent(g)
+        draw(bufferedImage.graphics as Graphics2D)
+        g.drawImage(bufferedImage, 0, 0, null)
+    }
+
+    /*
     private fun draw(graphics2D: Graphics2D) {
         indexedValueActor?.let {
             graphics2D.color = Color.BLACK
@@ -45,16 +199,87 @@ class PanelBattle(private var actors: Collection<Actor>) : Panel(),
         }
     }
 
-    private fun drawAbility(simpleName: String) {
-        if (indexedValueAction != null) {
-            val abilitySimpleName = indexedValueAction!!.value.simpleName
+     */
 
+    private fun draw(graphics2D: Graphics2D) {
+        // Draw the background for all states
+        graphics2D.color = Color.BLACK
+        graphics2D.fillRect(0, 0, width, height)
+
+        when (stateType) {
+            StateType.RETRIEVE_ACTOR_ITERATOR -> {
+                // Display text saying "Getting actors"
+                graphics2D.color = Color.WHITE
+                graphics2D.drawString("Getting actors...", width / 2 - 50, height / 2)
+            }
+            StateType.RETRIEVE_INDEXED_ACTOR -> {
+                graphics2D.color = Color.WHITE
+                graphics2D.drawString("Retrieving next actors...", width / 2 - 50, height / 2)
+            }
+            StateType.RETRIEVE_INDEXED_ACTION -> {
+                indexedValueActor?.let {
+                    // Draw text "Deciding..." above the actor's head
+                    val actorImageX = (width - it.value.bufferedImageWidth) / 2
+                    val actorImageY = (height - it.value.bufferedImageHeight) / 2
+                    drawActor(it.value, it.index, graphics2D.fontMetrics, graphics2D, it.index)
+
+                    graphics2D.color = Color.WHITE
+                    graphics2D.drawString("Deciding...", actorImageX, actorImageY - 20)
+                }
+            }
+            StateType.RETRIEVE_TARGETED_ACTORS -> {
+                indexedValueActor?.let {
+                    // Draw the actor as before
+                    val actorImageX = (width - it.value.bufferedImageWidth) / 2
+                    val actorImageY = (height - it.value.bufferedImageHeight) / 2
+                    drawActor(it.value, it.index, graphics2D.fontMetrics, graphics2D, it.index)
+
+                    // Randomly select an actor every 2 seconds and draw its sprite in a small box above the main actor
+                    val randomActor = actors.random()
+                        // Define the box size and position for the random actor sprite
+                        val boxWidth = 25
+                        val boxHeight = 25
+                        val boxX = actorImageX
+                        val boxY = actorImageY - boxHeight - 10
+
+                        // Draw the box
+                        graphics2D.color = Color.YELLOW
+                        graphics2D.drawRect(boxX, boxY, boxWidth, boxHeight)
+
+                        // Draw the random actor's sprite inside the box, scaling if necessary
+                        val randomActorImage = randomActor.bufferedImage
+                        val scaledImage = randomActorImage?.getScaledInstance(boxWidth, boxHeight, Image.SCALE_SMOOTH)
+                        graphics2D.drawImage(scaledImage, boxX, boxY, null)
+
+                }
+            }
+
+            StateType.RETRIEVE_TARGETED_ACTORS_ORDER -> {
+                indexedValueActor?.let {
+                    // Reuse the animation for targeted actors
+                    val actorImageX = (width - it.value.bufferedImageWidth) / 2
+                    val actorImageY = (height - it.value.bufferedImageHeight) / 2
+                    drawActor(it.value, it.index, graphics2D.fontMetrics, graphics2D, it.index)
+
+                    val randomActor = actors.random()
+                    val shouldRedraw = System.currentTimeMillis() / 2000 % 2 == 0L
+                    if (shouldRedraw) {
+                        graphics2D.color = Color.YELLOW
+                        graphics2D.drawString("Reordering targets: ${randomActor.id}", actorImageX, actorImageY - 20)
+                    }
+                }
+            }
+            else -> {
+                // Default draw the actor in other states
+                indexedValueActor?.let {
+                    drawActor(it.value, it.index, graphics2D.fontMetrics, graphics2D, it.index)
+                }
+            }
         }
+
+        graphics2D.dispose() // Cleanup after drawing
     }
 
-    private fun drawActorActionSleep(actor: Actor, graphics2D: Graphics2D) {
-
-    }
 
     private fun drawActor(actor: Actor, actorIndex: Int, fontMetrics: FontMetrics, graphics2D: Graphics2D, index: Int) {
 
@@ -187,106 +412,6 @@ class PanelBattle(private var actors: Collection<Actor>) : Panel(),
         graphics2D.color = Color.YELLOW
         graphics2D.drawString(line, x, yPosition)
         yPosition -= lineHeight
-    }
-
-    override fun paintComponent(g: Graphics) {
-        super.paintComponent(g)
-        draw(bufferedImage.graphics as Graphics2D)
-        g.drawImage(bufferedImage, 0, 0, null)
-    }
-
-
-    private fun processNextStep() {
-        when (stateType) {
-            StateType.RETRIEVE_ACTOR_ITERATOR -> {
-                actorIterator = battleSystem.getActors(actors)
-                stateType = StateType.RETRIEVE_INDEXED_ACTOR
-                jButtonNext.text = stateType.name
-            }
-
-            StateType.RETRIEVE_INDEXED_ACTOR -> {
-                if (actorIterator?.hasNext() == true) {
-                    indexedValueActor = battleSystem.getActor(actorIterator!!)
-                    stateType = StateType.RETRIEVE_INDEXED_ACTION
-                    jButtonNext.text = stateType.name
-                } else {
-                    stateType = StateType.RESET
-                    jButtonNext.text = stateType.name
-                }
-            }
-
-            StateType.RETRIEVE_INDEXED_ACTION -> {
-                indexedValueActor?.let { indexedValueActor ->
-                    indexedValueAction =
-                        battleSystem.getAction(actors, indexedValueActor)
-                    if (indexedValueAction != null) {
-                        stateType = StateType.RETRIEVE_ACTOR_TARGETS
-                        jButtonNext.text = stateType.name
-                    } else {
-                        println("cannot find an action for this actor!!!!")
-                        stateType = StateType.RETRIEVE_INDEXED_ACTOR
-                        jButtonNext.text = stateType.name
-                    }
-                }
-            }
-
-            StateType.RETRIEVE_ACTOR_TARGETS -> {
-                indexedValueAction?.let { indexedValueAction ->
-                    indexedValueActor?.let { indexedValueActor ->
-                        targetedActors = battleSystem.getActionTargets(actors, indexedValueAction, indexedValueActor)
-                        stateType = StateType.SORT_ACTOR_TARGETS
-                        jButtonNext.text = stateType.name
-                    }
-                }
-            }
-
-            StateType.SORT_ACTOR_TARGETS -> {
-                indexedValueAction?.let { indexedValueAction ->
-                    indexedValueActor?.let { indexedValueActor ->
-                        targetedActors?.let {
-                            targetedActors =
-                                battleSystem.getActionTargetOrder(it, indexedValueAction, indexedValueActor)
-                            stateType = StateType.USE_INDEXED_ACTION
-                            jButtonNext.text = stateType.name
-                        }
-                    }
-                }
-            }
-
-            StateType.USE_INDEXED_ACTION -> {
-                indexedValueAction?.let { indexedValueAction ->
-                    indexedValueActor?.let { indexedValueActor ->
-                        targetedActors?.let {
-                            val reviewable: Reviewable? =
-                                indexedValueAction.value.ability?.use(indexedValueActor.value, it.first())
-                            println(reviewable)
-                            stateType = StateType.RETRIEVE_INDEXED_ACTOR
-                            jButtonNext.text = stateType.name
-                        }
-                    }
-                }
-            }
-
-            StateType.RESET -> {
-                allegiances.clear()
-                actors = actors.filterIndexed { index: Int, actor: Actor ->
-                    val checkValue: Boolean = !battleSystem.checkActorRemoval(actor, index)
-                    if (checkValue) {
-                        allegiances.add(actor.allegiance)
-                    }
-                    checkValue
-                }
-                if (allegiances.size > 1) {
-                    indexedValueAction = null
-                    indexedValueActor = null
-                    stateType = StateType.RETRIEVE_ACTOR_ITERATOR
-                    jButtonNext.text = "Start Next Round"
-                } else {
-                    jButtonNext.text = "Battle Ended"
-                    jButtonNext.isEnabled = false
-                }
-            }
-        }
     }
 
     override fun run() {

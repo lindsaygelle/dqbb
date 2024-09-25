@@ -13,7 +13,7 @@ class Run<A : RunInvoker, B : RunReceiver> : Ability<A, B>() {
             receiver.simpleName,
             simpleName
         )
-        return getReviewable(invoker, receiver)
+        return getReviewable(invoker, true, receiver)
     }
 
     override fun checkReceiver(receiver: B): Boolean {
@@ -103,15 +103,17 @@ class Run<A : RunInvoker, B : RunReceiver> : Ability<A, B>() {
         return runResistance
     }
 
-    private fun getReviewable(invoker: A, receiver: B): Reviewable {
+    private fun getReviewable(invoker: A, invokerIsValid: Boolean, receiver: B): Reviewable {
         return ReviewRun(
             id,
             simpleName,
             invoker.id,
             invoker.isRunning,
+            invokerIsValid,
             invoker.name,
             invoker.simpleName,
             receiver.id,
+            true,
             receiver.name,
             receiver.simpleName,
             receiver.turnsSleep,
@@ -119,6 +121,6 @@ class Run<A : RunInvoker, B : RunReceiver> : Ability<A, B>() {
     }
 
     override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, receiver)
+        return getReviewable(invoker, false, receiver)
     }
 }

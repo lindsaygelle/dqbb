@@ -36,7 +36,7 @@ abstract class AbilityAttack<A : AttackInvoker, B : AttackReceiver> : Ability<A,
             receiver.simpleName,
             simpleName
         )
-        return getReviewable(invoker, attackPoints, attackType, receiver)
+        return getReviewable(invoker, attackPoints, attackType, true, receiver, true)
     }
 
 
@@ -169,46 +169,6 @@ abstract class AbilityAttack<A : AttackInvoker, B : AttackReceiver> : Ability<A,
 
     protected abstract fun getAttackPointsRangeWeakMinimum(invoker: A, receiver: B): Int
 
-    private fun getReviewable(
-        invoker: A,
-        invokerAttack: Int?,
-        invokerAttackType: AttackType?,
-        receiver: B,
-    ): Reviewable {
-        return ReviewAttack(
-            id,
-            simpleName,
-            invokerAttack,
-            invokerAttackType,
-            invoker.id,
-            invoker.name,
-            invoker.simpleName,
-            invoker.weapon?.attack,
-            invoker.weapon?.id,
-            invoker.weapon?.name,
-            invoker.weapon?.simpleName,
-            receiver.armor?.defense,
-            receiver.armor?.id,
-            receiver.armor?.name,
-            receiver.armor?.simpleName,
-            receiver.hitPoints,
-            receiver.id,
-            receiver.name,
-            receiver.shield?.defense,
-            receiver.shield?.id,
-            receiver.shield?.name,
-            receiver.shield?.simpleName,
-            receiver.simpleName,
-        )
-    }
-
-    override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, null, null, receiver)
-    }
-
-    private fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, null, null, receiver)
-    }
 
     protected fun getInvokerAttack(invoker: A): Int {
         val attack: Int = getInvokerStrength(invoker) + getInvokerWeaponAttack(invoker)
@@ -305,5 +265,50 @@ abstract class AbilityAttack<A : AttackInvoker, B : AttackReceiver> : Ability<A,
             receiver.simpleName
         )
         return receiver.shield?.defense ?: 0
+    }
+
+    private fun getReviewable(
+        invoker: A,
+        invokerAttack: Int?,
+        invokerAttackType: AttackType?,
+        invokerIsValid: Boolean,
+        receiver: B,
+        receiverIsValid: Boolean,
+    ): Reviewable {
+        return ReviewAttack(
+            id,
+            simpleName,
+            invokerAttack,
+            invokerAttackType,
+            invoker.id,
+            invokerIsValid,
+            invoker.name,
+            invoker.simpleName,
+            invoker.weapon?.attack,
+            invoker.weapon?.id,
+            invoker.weapon?.name,
+            invoker.weapon?.simpleName,
+            receiver.armor?.defense,
+            receiver.armor?.id,
+            receiver.armor?.name,
+            receiver.armor?.simpleName,
+            receiver.hitPoints,
+            receiver.id,
+            receiverIsValid,
+            receiver.name,
+            receiver.shield?.defense,
+            receiver.shield?.id,
+            receiver.shield?.name,
+            receiver.shield?.simpleName,
+            receiver.simpleName,
+        )
+    }
+
+    override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, null, null, false, receiver, false)
+    }
+
+    private fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
+        return getReviewable(invoker, null, null, true, receiver, false)
     }
 }

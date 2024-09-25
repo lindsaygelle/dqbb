@@ -18,7 +18,7 @@ class Herb<A : HerbInvoker, B : HealReceiver> : AbilityItem<A, B>(
             receiver.simpleName,
             simpleName
         )
-        return getReviewable(invoker, herbPoints, receiver)
+        return getReviewable(invoker, herbPoints, true, receiver, true)
     }
 
     override fun checkReceiver(receiver: B): Boolean {
@@ -80,27 +80,35 @@ class Herb<A : HerbInvoker, B : HealReceiver> : AbilityItem<A, B>(
         return herb
     }
 
-    private fun getReviewable(invoker: A, invokerHerb: Int?, receiver: B): Reviewable {
+    private fun getReviewable(
+        invoker: A,
+        invokerHerb: Int?,
+        invokerIsValid: Boolean,
+        receiver: B,
+        receiverIsValid: Boolean,
+    ): Reviewable {
         return ReviewHerb(
             id,
             simpleName,
             invokerHerb,
             invoker.id,
+            invokerIsValid,
             invoker.items.getOrDefault(itemName, 0),
             invoker.name,
             invoker.simpleName,
             receiver.hitPoints,
             receiver.id,
+            receiverIsValid,
             receiver.name,
             receiver.simpleName,
         )
     }
 
     override fun getReviewableInvokerInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, null, receiver)
+        return getReviewable(invoker, null, false, receiver, false)
     }
 
     override fun getReviewableReceiverInvalid(invoker: A, receiver: B): Reviewable {
-        return getReviewable(invoker, null, receiver)
+        return getReviewable(invoker, null, true, receiver, false)
     }
 }
