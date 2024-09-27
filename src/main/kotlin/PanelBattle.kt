@@ -46,6 +46,10 @@ class PanelBattle(
 
     private val bufferedImage: BufferedImage = BufferedImage(480, 320, BufferedImage.TYPE_INT_RGB)
 
+    private val graphics2D: Graphics2D = bufferedImage.graphics as Graphics2D
+
+    private val fontMetrics: FontMetrics = graphics2D.fontMetrics
+
     private var indexedValueAction: IndexedValue<Action<Actor, Actor>>? = null
         set(value) {
             field = value
@@ -69,6 +73,8 @@ class PanelBattle(
                 simpleName
             )
         }
+
+    private val rectangle: Rectangle = Rectangle(bufferedImage.width, bufferedImage.height)
 
     private var reviewable: Reviewable? = null
         set(value) {
@@ -117,6 +123,111 @@ class PanelBattle(
             process()
             jButtonNext.text = stateType.name
         }
+    }
+
+
+    private fun drawAbilityIdentifier(
+        ability: Ability<Actor, Actor>,
+        fontMetrics: FontMetrics,
+        graphics2D: Graphics2D,
+        rectangle: Rectangle,
+    ) {
+        val message = ability.simpleName
+        val x: Int = (rectangle.centerX - (fontMetrics.stringWidth(message) / 2)).toInt()
+        val y: Int = (rectangle.y + 60)
+        graphics2D.color = Color.ORANGE
+        graphics2D.drawString(message, x, y)
+    }
+
+    private fun drawActorBufferedImage(bufferedImage: BufferedImage, graphics2D: Graphics2D, rectangle: Rectangle) {
+        val x = (rectangle.centerX - (bufferedImage.width / 2))
+        val y = (rectangle.centerY - (bufferedImage.height / 2))
+        drawImage(bufferedImage, graphics2D, x.toInt(), y.toInt())
+    }
+
+    private fun drawActorIdentifier(
+        actor: Actor,
+        actorIndex: Int,
+        fontMetrics: FontMetrics,
+        graphics2D: Graphics2D,
+        rectangle: Rectangle,
+    ) {
+        val message = "${actor?.name ?: actor.simpleName} (ID:${actor.id}) (INDEX:$actorIndex)"
+        val x: Int = (rectangle.centerX - (fontMetrics.stringWidth(message) / 2)).toInt()
+        val y: Int = (rectangle.y + 30)
+        graphics2D.color = Color.WHITE
+        graphics2D.drawString(message, x, y)
+    }
+
+    private fun drawImage(image: Image, graphics2D: Graphics2D, x: Int, y: Int) {
+        graphics2D.drawImage(image, x, y, null)
+    }
+
+    private fun drawRetrieveActorIterator(graphics2D: Graphics2D, fontMetrics: FontMetrics, rectangle: Rectangle) {
+        val message = "Retrieving actors (${actors.size}) for current turn!"
+        val x: Int = (rectangle.centerX - (fontMetrics.stringWidth(message) / 2)).toInt()
+        val y: Int = (rectangle.y + 30)
+        graphics2D.color = Color.WHITE
+        graphics2D.drawString(message, x, y)
+    }
+
+    private fun drawRetrieveIndexedAction(
+        actor: Actor,
+        actorIndex: Int,
+        graphics2D: Graphics2D,
+        fontMetrics: FontMetrics,
+        rectangle: Rectangle,
+    ) {
+        drawActorAttributes(actor, actorIndex, fontMetrics, graphics2D, 10, 10, 10)
+        actor.bufferedImage?.let { bufferedImage: BufferedImage ->
+            drawActorBufferedImage(bufferedImage, graphics2D, rectangle)
+        }
+        actor.actions.random().ability?.let { ability: Ability<Actor, Actor> ->
+            drawAbilityIdentifier(ability, fontMetrics, graphics2D, rectangle)
+        }
+        drawActorIdentifier(actor, actorIndex, fontMetrics, graphics2D, rectangle)
+
+        val message = "Deciding action to perform"
+        val messageX = (rectangle.centerX - (fontMetrics.stringWidth(message) / 2))
+        val messageY = (rectangle.centerY + 60)
+        graphics2D.drawString(message, messageX.toInt(), messageY.toInt())
+    }
+
+    private fun drawRetrieveIndexedActor(graphics2D: Graphics2D, fontMetrics: FontMetrics, rectangle: Rectangle) {
+        val message = "Retrieving first actor"
+        val x: Int = (rectangle.centerX - (fontMetrics.stringWidth(message) / 2)).toInt()
+        val y: Int = (rectangle.y + 30)
+        graphics2D.color = Color.WHITE
+        graphics2D.drawString(message, x, y)
+    }
+
+    private fun drawRetrieveTargetedActors(
+        action: Action<Actor, Actor>,
+        actionIndex: Int,
+        actor: Actor,
+        actorIndex: Int,
+        actors: Collection<Actor>,
+        fontMetrics: FontMetrics,
+        graphics2D: Graphics2D,
+        rectangle: Rectangle,
+    ) {
+        actor.bufferedImage?.let { bufferedImage: BufferedImage ->
+            drawActorBufferedImage(bufferedImage, graphics2D, rectangle)
+        }
+        actors.random().bufferedImage?.let { bufferedImage: BufferedImage ->
+            val image: Image = bufferedImage.getScaledInstance(30, 30, Image.SCALE_SMOOTH)
+            val x = (rectangle.centerX - (image.getWidth(null) / 2))
+            val y = (rectangle.centerY - (image.getHeight(null) / 2))
+            drawImage(image, graphics2D, x.toInt(), y.toInt() - 60)
+        }
+        action.ability?.let { ability: Ability<Actor, Actor> ->
+            drawAbilityIdentifier(ability, fontMetrics, graphics2D, rectangle)
+        }
+        drawActorIdentifier(actor, actorIndex, fontMetrics, graphics2D, rectangle)
+        val message = "Deciding actor to target for ${action.ability?.simpleName ?: "Action"}"
+        val messageX = (rectangle.centerX - (fontMetrics.stringWidth(message) / 2))
+        val messageY = (rectangle.centerY + 60)
+        graphics2D.drawString(message, messageX.toInt(), messageY.toInt())
     }
 
     private fun process() {
@@ -185,78 +296,55 @@ class PanelBattle(
 
     override fun paintComponent(g: Graphics) {
         super.paintComponent(g)
-        draw(bufferedImage.graphics as Graphics2D)
+        draw(graphics2D, fontMetrics, rectangle)
         g.drawImage(bufferedImage, 0, 0, null)
     }
 
-    /*
-    private fun draw(graphics2D: Graphics2D) {
-        indexedValueActor?.let {
-            graphics2D.color = Color.BLACK
-            graphics2D.fillRect(0, 0, width, height)
-            drawActor(it.value, it.index, graphics2D.fontMetrics, graphics2D, it.index)
-            graphics2D.dispose()
-        }
-    }
 
-     */
-
-    private fun draw(graphics2D: Graphics2D) {
-        // Draw the background for all states
+    private fun draw(
+        graphics2D: Graphics2D,
+        fontMetrics: FontMetrics,
+        rectangle: Rectangle,
+    ) { // Draw the background for all states
         graphics2D.color = Color.BLACK
         graphics2D.fillRect(0, 0, width, height)
 
         when (stateType) {
             StateType.RETRIEVE_ACTOR_ITERATOR -> {
-                // Display text saying "Getting actors"
-                graphics2D.color = Color.WHITE
-                graphics2D.drawString("Getting actors...", width / 2 - 50, height / 2)
+                drawRetrieveActorIterator(graphics2D, fontMetrics, rectangle)
             }
-            StateType.RETRIEVE_INDEXED_ACTOR -> {
-                graphics2D.color = Color.WHITE
-                graphics2D.drawString("Retrieving next actors...", width / 2 - 50, height / 2)
-            }
-            StateType.RETRIEVE_INDEXED_ACTION -> {
-                indexedValueActor?.let {
-                    // Draw text "Deciding..." above the actor's head
-                    val actorImageX = (width - it.value.bufferedImageWidth) / 2
-                    val actorImageY = (height - it.value.bufferedImageHeight) / 2
-                    drawActor(it.value, it.index, graphics2D.fontMetrics, graphics2D, it.index)
 
-                    graphics2D.color = Color.WHITE
-                    graphics2D.drawString("Deciding...", actorImageX, actorImageY - 20)
+            StateType.RETRIEVE_INDEXED_ACTOR -> {
+                drawRetrieveIndexedActor(graphics2D, fontMetrics, rectangle)
+            }
+
+            StateType.RETRIEVE_INDEXED_ACTION -> {
+                indexedValueActor?.let { indexedValueActor ->
+                    drawRetrieveIndexedAction(
+                        indexedValueActor.value, indexedValueActor.index, graphics2D, fontMetrics, rectangle
+                    )
                 }
             }
+
             StateType.RETRIEVE_TARGETED_ACTORS -> {
-                indexedValueActor?.let {
-                    // Draw the actor as before
-                    val actorImageX = (width - it.value.bufferedImageWidth) / 2
-                    val actorImageY = (height - it.value.bufferedImageHeight) / 2
-                    drawActor(it.value, it.index, graphics2D.fontMetrics, graphics2D, it.index)
-
-                    // Randomly select an actor every 2 seconds and draw its sprite in a small box above the main actor
-                    val randomActor = actors.random()
-                        // Define the box size and position for the random actor sprite
-                        val boxWidth = 25
-                        val boxHeight = 25
-                        val boxX = actorImageX
-                        val boxY = actorImageY - boxHeight - 10
-
-                        // Draw the box
-                        graphics2D.color = Color.YELLOW
-                        graphics2D.drawRect(boxX, boxY, boxWidth, boxHeight)
-
-                        // Draw the random actor's sprite inside the box, scaling if necessary
-                        val randomActorImage = randomActor.bufferedImage
-                        val scaledImage = randomActorImage?.getScaledInstance(boxWidth, boxHeight, Image.SCALE_SMOOTH)
-                        graphics2D.drawImage(scaledImage, boxX, boxY, null)
-
+                indexedValueActor?.let { indexedValueActor: IndexedValue<Actor> ->
+                    indexedValueAction?.let { indexedValueAction: IndexedValue<Action<Actor, Actor>> ->
+                        drawRetrieveTargetedActors(
+                            indexedValueAction.value,
+                            indexedValueAction.index,
+                            indexedValueActor.value,
+                            indexedValueActor.index,
+                            actors,
+                            graphics2D.fontMetrics,
+                            graphics2D,
+                            rectangle
+                        )
+                    }
                 }
             }
 
             StateType.RETRIEVE_TARGETED_ACTORS_ORDER -> {
-                indexedValueActor?.let {
-                    // Reuse the animation for targeted actors
+                indexedValueActor?.let { // Reuse the animation for targeted actors
                     val actorImageX = (width - it.value.bufferedImageWidth) / 2
                     val actorImageY = (height - it.value.bufferedImageHeight) / 2
                     drawActor(it.value, it.index, graphics2D.fontMetrics, graphics2D, it.index)
@@ -269,15 +357,13 @@ class PanelBattle(
                     }
                 }
             }
-            else -> {
-                // Default draw the actor in other states
+
+            else -> { // Default draw the actor in other states
                 indexedValueActor?.let {
                     drawActor(it.value, it.index, graphics2D.fontMetrics, graphics2D, it.index)
                 }
             }
         }
-
-        graphics2D.dispose() // Cleanup after drawing
     }
 
 
