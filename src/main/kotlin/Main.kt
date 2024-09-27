@@ -6,6 +6,7 @@ import java.io.File
 import java.net.URL
 import javax.imageio.ImageIO
 import javax.swing.JFrame
+import javax.swing.Timer
 
 
 abstract class Resource<T> {
@@ -920,7 +921,10 @@ fun main() {
     frame.setResizable(false)
     frame.setLocationRelativeTo(null)
     frame.setVisible(true)
-    while (true) {
-        panelBattle.run()
+    // Timer to run at 60 FPS (16.67 ms per frame)
+    val delay = (1000 / 60)  // milliseconds for 60 FPS
+    val timer = Timer(delay) {
+        panelBattle.run()  // Update the panel
     }
+    timer.start()
 }
