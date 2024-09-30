@@ -24,14 +24,18 @@ abstract class AbilityMagicRequirement<A : MagicInvoker, B : Receiver>(
     protected abstract fun applyUpdate(invoker: A, receiver: B): Reviewable
 
     private fun checkRequirement(invoker: A, receiver: B): Boolean {
-        val checkValue: Boolean = getInvokerRequirement(invoker) > getReceiverResistance(receiver)
+        val invokerRequirement: Int = getInvokerRequirement(invoker)
+        val receiverResistance: Int = getReceiverResistance(receiver)
+        val checkValue: Boolean = invokerRequirement > receiverResistance
         logger.info(
-            "checkValue={} id={} invoker.id={} invoker.simpleName={} receiver.id={} receiver.simpleName={} simpleName={}",
+            "checkValue={} id={} invoker.id={} invoker.requirement={} invoker.simpleName={} receiver.id={} receiver.resistance={} receiver.simpleName={} simpleName={}",
             checkValue,
             id,
             invoker.id,
+            invokerRequirement,
             invoker.simpleName,
             receiver.id,
+            receiverResistance,
             receiver.simpleName,
             simpleName
         )

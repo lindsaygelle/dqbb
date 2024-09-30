@@ -125,7 +125,6 @@ class PanelBattle(
         }
     }
 
-
     private fun drawAbilityIdentifier(
         ability: Ability<Actor, Actor>,
         fontMetrics: FontMetrics,
@@ -159,6 +158,94 @@ class PanelBattle(
         graphics2D.drawString(message, x, y)
     }
 
+    private fun drawActorBufferedImageThumbnail(
+        bufferedImage: BufferedImage,
+        graphics2D: Graphics2D,
+        rectangle: Rectangle,
+    ) {
+        val image: Image = bufferedImage.getScaledInstance(30, 30, Image.SCALE_SMOOTH)
+        val x: Int = (rectangle.centerX - (image.getWidth(null) / 2)).toInt()
+        val y: Int = (rectangle.centerY - (image.getHeight(null) / 2)).toInt()
+        drawImage(image, graphics2D, x, y - 60)
+    }
+
+    private fun drawArmor(
+        armor: Armor?,
+        fontMetrics: FontMetrics,
+        graphics2D: Graphics2D,
+        lineHeight: Int,
+        rectangle: Rectangle,
+    ) {
+        val x: Int = rectangle.x + 10
+        val y: Int = rectangle.y + 10
+        drawArmorBlocksSleep(armor, fontMetrics, graphics2D, x, y)
+        drawArmorBlocksStopSpell(armor, fontMetrics, graphics2D, x, y + lineHeight)
+        drawArmorBreatheFireReduction(armor, fontMetrics, graphics2D, x, y + (lineHeight * 2))
+        drawArmorDefense(armor, fontMetrics, graphics2D, x, y + (lineHeight * 3))
+        drawArmorHurtReduction(armor, fontMetrics, graphics2D, x, y + (lineHeight * 4))
+        drawArmorId(armor, fontMetrics, graphics2D, x, y + (lineHeight * 5))
+        drawArmorName(armor, fontMetrics, graphics2D, x, y + (lineHeight * 6))
+    }
+
+    private fun drawArmorBlocksSleep(
+        armor: Armor?,
+        fontMetrics: FontMetrics,
+        graphics2D: Graphics2D,
+        x: Int,
+        y: Int,
+    ) {
+        val value = "BLOCKS SLEEP: ${if (armor?.blocksSleep == true) "Y" else "N"}"
+        graphics2D.drawString(value, x, y)
+    }
+
+    private fun drawArmorBlocksStopSpell(
+        armor: Armor?,
+        fontMetrics: FontMetrics,
+        graphics2D: Graphics2D,
+        x: Int,
+        y: Int,
+    ) {
+        val value = "BLOCKS STOP SPELL: ${if (armor?.blocksStopSpell == true) "Y" else "N"}"
+        graphics2D.drawString(value, x, y)
+    }
+
+    private fun drawArmorBreatheFireReduction(
+        armor: Armor?,
+        fontMetrics: FontMetrics,
+        graphics2D: Graphics2D,
+        x: Int,
+        y: Int,
+    ) {
+        val value = "BREATHE FIRE REDUCTION: ${armor?.breatheFireReduction ?: 0}"
+        graphics2D.drawString(value, x, y)
+    }
+
+    private fun drawArmorDefense(armor: Armor?, fontMetrics: FontMetrics, graphics2D: Graphics2D, x: Int, y: Int) {
+        val value = "DEFENSE: ${armor?.defense ?: "?"}"
+        graphics2D.drawString(value, x, y)
+    }
+
+    private fun drawArmorHurtReduction(
+        armor: Armor?,
+        fontMetrics: FontMetrics,
+        graphics2D: Graphics2D,
+        x: Int,
+        y: Int,
+    ) {
+        val value = "HURT REDUCTION: ${armor?.hurtReduction ?: 0}"
+        graphics2D.drawString(value, x, y)
+    }
+
+    private fun drawArmorId(armor: Armor?, fontMetrics: FontMetrics, graphics2D: Graphics2D, x: Int, y: Int) {
+        val value = "ID: ${armor?.id ?: "?"}"
+        graphics2D.drawString(value, x, y)
+    }
+
+    private fun drawArmorName(armor: Armor?, fontMetrics: FontMetrics, graphics2D: Graphics2D, x: Int, y: Int) {
+        val value = "NAME: ${armor?.name ?: "?"}"
+        graphics2D.drawString(value, x, y)
+    }
+
     private fun drawImage(image: Image, graphics2D: Graphics2D, x: Int, y: Int) {
         graphics2D.drawImage(image, x, y, null)
     }
@@ -177,8 +264,8 @@ class PanelBattle(
         graphics2D: Graphics2D,
         fontMetrics: FontMetrics,
         rectangle: Rectangle,
-    ) {
-        drawActorAttributes(actor, actorIndex, fontMetrics, graphics2D, 10, 10, 10)
+    ) { // drawActorAttributes(actor, actorIndex, fontMetrics, graphics2D, 10, 10, 10)
+        drawArmor(actor.armor, fontMetrics, graphics2D, 10, rectangle)
         actor.bufferedImage?.let { bufferedImage: BufferedImage ->
             drawActorBufferedImage(bufferedImage, graphics2D, rectangle)
         }
@@ -201,6 +288,27 @@ class PanelBattle(
         graphics2D.drawString(message, x, y)
     }
 
+    private fun drawRetrieveTargetActor(
+        ability: Ability<Actor, Actor>,
+        actor: Actor,
+        actorIndex: Int,
+        fontMetrics: FontMetrics,
+        graphics2D: Graphics2D,
+        rectangle: Rectangle,
+        targetActor: Actor,
+    ) { // drawActorAttributes(actor, actorIndex, fontMetrics, graphics2D, 10, 10, 10)
+        drawActorIdentifier(actor, actorIndex, fontMetrics, graphics2D, rectangle)
+        drawArmor(actor.armor, fontMetrics, graphics2D, 10, rectangle)
+        actor.bufferedImage?.let { bufferedImage: BufferedImage ->
+            drawActorBufferedImage(bufferedImage, graphics2D, rectangle)
+        }
+        val message = "${actor.name ?: actor.simpleName}:${actor.id} uses ${ability.simpleName}:${ability.id} on ${targetActor.name ?: targetActor.simpleName}:${targetActor.id}!"
+        val x: Int = (rectangle.centerX - (fontMetrics.stringWidth(message) / 2)).toInt()
+        val y: Int = (rectangle.centerY + 30).toInt()
+        graphics2D.color = if (System.currentTimeMillis() % 2 == 0L) Color.ORANGE else Color.WHITE
+        graphics2D.drawString(message, x, y)
+    }
+
     private fun drawRetrieveTargetedActors(
         action: Action<Actor, Actor>,
         actionIndex: Int,
@@ -210,24 +318,70 @@ class PanelBattle(
         fontMetrics: FontMetrics,
         graphics2D: Graphics2D,
         rectangle: Rectangle,
-    ) {
+    ) { // drawActorAttributes(actor, actorIndex, fontMetrics, graphics2D, 10, 10, 10)
+        drawActorIdentifier(actor, actorIndex, fontMetrics, graphics2D, rectangle)
+        drawArmor(actor.armor, fontMetrics, graphics2D, 10, rectangle)
         actor.bufferedImage?.let { bufferedImage: BufferedImage ->
             drawActorBufferedImage(bufferedImage, graphics2D, rectangle)
         }
+
         actors.random().bufferedImage?.let { bufferedImage: BufferedImage ->
-            val image: Image = bufferedImage.getScaledInstance(30, 30, Image.SCALE_SMOOTH)
-            val x = (rectangle.centerX - (image.getWidth(null) / 2))
-            val y = (rectangle.centerY - (image.getHeight(null) / 2))
-            drawImage(image, graphics2D, x.toInt(), y.toInt() - 60)
+            drawActorBufferedImageThumbnail(bufferedImage, graphics2D, rectangle)
         }
         action.ability?.let { ability: Ability<Actor, Actor> ->
             drawAbilityIdentifier(ability, fontMetrics, graphics2D, rectangle)
         }
-        drawActorIdentifier(actor, actorIndex, fontMetrics, graphics2D, rectangle)
-        val message = "Deciding actor to target for ${action.ability?.simpleName ?: "Action"}"
+        val message = "Decide actors to target for ${action.ability?.simpleName ?: "Action"}"
         val messageX = (rectangle.centerX - (fontMetrics.stringWidth(message) / 2))
         val messageY = (rectangle.centerY + 60)
+        graphics2D.color = Color.WHITE
         graphics2D.drawString(message, messageX.toInt(), messageY.toInt())
+    }
+
+    private fun drawRetrieveTargetedActorsOrder(
+        action: Action<Actor, Actor>,
+        actionIndex: Int,
+        actor: Actor,
+        actorIndex: Int,
+        actors: Collection<Actor>,
+        fontMetrics: FontMetrics,
+        graphics2D: Graphics2D,
+        rectangle: Rectangle,
+    ) { // drawActorAttributes(actor, actorIndex, fontMetrics, graphics2D, 10, 10, 10)
+        drawActorIdentifier(actor, actorIndex, fontMetrics, graphics2D, rectangle)
+        drawArmor(actor.armor, fontMetrics, graphics2D, 10, rectangle)
+        actor.bufferedImage?.let { bufferedImage: BufferedImage ->
+            drawActorBufferedImage(bufferedImage, graphics2D, rectangle)
+        }
+        actors.random().bufferedImage?.let { bufferedImage: BufferedImage ->
+            drawActorBufferedImageThumbnail(bufferedImage, graphics2D, rectangle)
+        }
+        action.ability?.let { ability: Ability<Actor, Actor> ->
+            drawAbilityIdentifier(ability, fontMetrics, graphics2D, rectangle)
+        }
+        val message = "Sort targets for ${action.ability?.simpleName ?: "Action"}"
+        val messageX = (rectangle.centerX - (fontMetrics.stringWidth(message) / 2))
+        val messageY = (rectangle.centerY + 60)
+        graphics2D.color = Color.WHITE
+        graphics2D.drawString(message, messageX.toInt(), messageY.toInt())
+    }
+
+    private fun drawRetrieveReviewable(
+        actor: Actor,
+        actorIndex: Int,
+        fontMetrics: FontMetrics,
+        graphics2D: Graphics2D,
+        rectangle: Rectangle,
+        reviewable: Reviewable,
+        targetActor: Actor,
+    ) { // drawActorAttributes(actor, actorIndex, fontMetrics, graphics2D, 10, 10, 10)
+        drawActorIdentifier(actor, actorIndex, fontMetrics, graphics2D, rectangle)
+        actor.bufferedImage?.let { bufferedImage: BufferedImage ->
+            drawActorBufferedImage(bufferedImage, graphics2D, rectangle)
+        }
+        targetActor.bufferedImage?.let { bufferedImage: BufferedImage ->
+            drawActorBufferedImageThumbnail(bufferedImage, graphics2D, rectangle)
+        }
     }
 
     private fun process() {
@@ -300,12 +454,11 @@ class PanelBattle(
         g.drawImage(bufferedImage, 0, 0, null)
     }
 
-
     private fun draw(
         graphics2D: Graphics2D,
         fontMetrics: FontMetrics,
         rectangle: Rectangle,
-    ) { // Draw the background for all states
+    ) {
         graphics2D.color = Color.BLACK
         graphics2D.fillRect(0, 0, width, height)
 
@@ -319,7 +472,7 @@ class PanelBattle(
             }
 
             StateType.RETRIEVE_INDEXED_ACTION -> {
-                indexedValueActor?.let { indexedValueActor ->
+                indexedValueActor?.let { indexedValueActor: IndexedValue<Actor> ->
                     drawRetrieveIndexedAction(
                         indexedValueActor.value, indexedValueActor.index, graphics2D, fontMetrics, rectangle
                     )
@@ -335,7 +488,7 @@ class PanelBattle(
                             indexedValueActor.value,
                             indexedValueActor.index,
                             actors,
-                            graphics2D.fontMetrics,
+                            fontMetrics,
                             graphics2D,
                             rectangle
                         )
@@ -344,30 +497,73 @@ class PanelBattle(
             }
 
             StateType.RETRIEVE_TARGETED_ACTORS_ORDER -> {
-                indexedValueActor?.let { // Reuse the animation for targeted actors
-                    val actorImageX = (width - it.value.bufferedImageWidth) / 2
-                    val actorImageY = (height - it.value.bufferedImageHeight) / 2
-                    drawActor(it.value, it.index, graphics2D.fontMetrics, graphics2D, it.index)
-
-                    val randomActor = actors.random()
-                    val shouldRedraw = System.currentTimeMillis() / 2000 % 2 == 0L
-                    if (shouldRedraw) {
-                        graphics2D.color = Color.YELLOW
-                        graphics2D.drawString("Reordering targets: ${randomActor.id}", actorImageX, actorImageY - 20)
+                indexedValueActor?.let { indexedValueActor: IndexedValue<Actor> ->
+                    indexedValueAction?.let { indexedValueAction: IndexedValue<Action<Actor, Actor>> ->
+                        drawRetrieveTargetedActorsOrder(
+                            indexedValueAction.value,
+                            indexedValueAction.index,
+                            indexedValueActor.value,
+                            indexedValueActor.index,
+                            actors,
+                            fontMetrics,
+                            graphics2D,
+                            rectangle
+                        )
                     }
                 }
             }
 
-            else -> { // Default draw the actor in other states
-                indexedValueActor?.let {
-                    drawActor(it.value, it.index, graphics2D.fontMetrics, graphics2D, it.index)
+            StateType.RETRIEVE_TARGET_ACTOR -> {
+                indexedValueActor?.let { indexedValueActor: IndexedValue<Actor> ->
+                    indexedValueAction?.let { indexedValueAction: IndexedValue<Action<Actor, Actor>> ->
+                        indexedValueAction.value.ability?.let { ability: Ability<Actor, Actor> ->
+                            targetActor?.let { targetActor: Actor ->
+                                drawRetrieveTargetActor(
+                                    ability,
+                                    indexedValueActor.value,
+                                    indexedValueActor.index,
+                                    fontMetrics,
+                                    graphics2D,
+                                    rectangle,
+                                    targetActor,
+                                )
+                            }
+                        }
+                    }
                 }
+            }
+
+            StateType.RETRIEVE_REVIEWABLE -> {
+                indexedValueActor?.let { indexedValueActor: IndexedValue<Actor> ->
+                    targetActor?.let { targetActor: Actor ->
+                        reviewable?.let { reviewable: Reviewable ->
+                            drawRetrieveReviewable(
+                                indexedValueActor.value,
+                                indexedValueActor.index,
+                                fontMetrics,
+                                graphics2D,
+                                rectangle,
+                                reviewable,
+                                targetActor,
+                            )
+                        }
+                    }
+                }
+            }
+
+            StateType.RESET -> {
+
             }
         }
     }
 
-
-    private fun drawActor(actor: Actor, actorIndex: Int, fontMetrics: FontMetrics, graphics2D: Graphics2D, index: Int) {
+    private fun drawActor(
+        actor: Actor,
+        actorIndex: Int,
+        fontMetrics: FontMetrics,
+        graphics2D: Graphics2D,
+        index: Int,
+    ) {
 
         val actorImageX = (width - actor.bufferedImageWidth) / 2
         val actorImageY = (height - actor.bufferedImageHeight) / 2
@@ -376,8 +572,9 @@ class PanelBattle(
         // Draw actor information
         val lineHeight = 20
 
-        drawActorArmor(actor.armor, fontMetrics, graphics2D, lineHeight, width - 20, 20)
-        drawActorAttributes(actor, actorIndex, fontMetrics, graphics2D, lineHeight, 20, 20)
+        drawActorArmor(
+            actor.armor, fontMetrics, graphics2D, lineHeight, width - 20, 20
+        ) // drawActorAttributes(actor, actorIndex, fontMetrics, graphics2D, lineHeight, 20, 20)
         drawActorShield(fontMetrics, graphics2D, lineHeight, actor.shield, width - 20, height - 20)
         drawActorWeapon(fontMetrics, graphics2D, lineHeight, actor.weapon, 20, height - 20)
     }
