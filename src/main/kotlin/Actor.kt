@@ -185,7 +185,7 @@ class Actor : ActionInvoker,
             )
         }
 
-    private val herbCount: Int
+    val herbCount: Int
         get() = items.getOrDefault(ItemName.HERB, 0)
 
     override var healScale: Int = 0
@@ -252,7 +252,7 @@ class Actor : ActionInvoker,
             )
         }
 
-    private val hitPointsPercentage: Int
+    val hitPointsPercentage: Int
         get() = getPercentage(hitPoints, hitPointsMaximum)
 
     override var hurtMoreScale: Int = 0
@@ -363,10 +363,10 @@ class Actor : ActionInvoker,
             )
         }
 
-    private val magicPointsPercentage: Int
+    val magicPointsPercentage: Int
         get() = getPercentage(magicPoints, magicPointsMaximum)
 
-    private val magicPotionCount: Int
+    val magicPotionCount: Int
         get() = items.getOrDefault(ItemName.MAGIC_POTION, 0)
 
     override var magicPotionRangeMaximum: Int = 0
