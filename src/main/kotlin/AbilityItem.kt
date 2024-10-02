@@ -38,7 +38,7 @@ abstract class AbilityItem<A : ItemInvoker, B : Receiver>(
     }
 
     private fun checkInvokerItemExists(invoker: A): Boolean {
-        val itemExists = invoker.items.contains(itemName)
+        val itemExists: Boolean = invoker.items.contains(itemName)
         logger.info(
             "id={} invoker.id={} invoker.simpleName={} itemExists={} itemName={} simpleName={}",
             id,

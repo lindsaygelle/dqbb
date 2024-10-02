@@ -201,7 +201,7 @@ abstract class AbilityAttack<A : AttackInvoker, B : AttackReceiver> : Ability<A,
             invoker.id,
             invoker.simpleName,
             invoker.weapon?.attack,
-            invoker.weapon?.attack
+            invoker.weapon?.id
         )
         return invoker.weapon?.attack ?: 0
     }

@@ -849,13 +849,13 @@ fun main() {
         actor.actions = actions
         actor.allegiance = i % 2
         actor.agility = (0..10).random()
-        if ((0..3).random() == 0) {
+        if ((0..1).random() == 1) {
             val armor = Armor(
                 blocksSleep = listOf(true, false).random(),
                 blocksStopSpell = listOf(true, false).random(),
-                breatheFireReduction = (0..30).random(),
-                defense = (1..40).random(),
-                hurtReduction = (0..30).random(),
+                breatheFireReduction = (1..10).random(),
+                defense = (3..10).random(),
+                hurtReduction = (1..10).random(),
             )
             actor.armor = armor
         }
@@ -890,7 +890,7 @@ fun main() {
         actor.magicPotionShift = 7
         actor.runRangeMaximum = (0..16).random()
         actor.runShift = 2
-        if ((0..1).random() == 1) {
+        if ((0..1).random() == 0) {
             val shield = Shield(
                 defense = (3..10).random()
             )
