@@ -28,6 +28,25 @@ object Image : Resource<BufferedImage>() {
     }
 }
 
+fun getRandomSpritesFolder(): File? { // Get the class loader to access the resources directory
+    val classLoader = object {}.javaClass.classLoader
+
+    // Load the base directory (images folder) from resources
+    val baseDirectoryURL = classLoader.getResource("images") ?: return null
+    val baseDirectory = File(baseDirectoryURL.toURI())
+
+    // Get the list of subdirectories (nes, gbc, snes, mobile)
+    val subDirectories = baseDirectory.listFiles { file -> file.isDirectory } ?: return null
+
+    // Get the list of 'sprites/' folders from each subdirectory
+    val spritesFolders = subDirectories.mapNotNull { subDir ->
+        val spritesFolder = File(subDir, "sprites")
+        if (spritesFolder.exists() && spritesFolder.isDirectory) spritesFolder else null
+    }
+
+    return spritesFolders.random()
+}
+
 fun main() {
 
     val attackEnemy = AttackEnemy<Actor, Actor>()
@@ -44,8 +63,7 @@ fun main() {
     val stopSpell = StopSpell<Actor, Actor>(2)
 
     val actionAttackEnemy = Action(
-        ability = attackEnemy,
-        actionCondition = ActionCondition(
+        ability = attackEnemy, actionCondition = ActionCondition(
             actionChecks = listOf(
                 ActionCheck(
                     attributeCriteria = listOf(
@@ -58,12 +76,10 @@ fun main() {
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.ENEMY
+                    ), selectionType = SelectionType.ENEMY
                 )
             )
-        ),
-        actionTarget = ActionTarget(
+        ), actionTarget = ActionTarget(
             attributeCriteria = listOf(
                 AttributeCriterion(
                     attributeComparisons = listOf(
@@ -74,19 +90,14 @@ fun main() {
                         )
                     )
                 )
-            ),
-            selectionType = SelectionType.ENEMY
-        ),
-        attributeSort = AttributeSort(
-            attributeName = AttributeName.HIT_POINTS,
-            sortType = SortType.DESCENDING
-        ),
-        priorityType = PriorityType.LOW
+            ), selectionType = SelectionType.ENEMY
+        ), attributeSort = AttributeSort(
+            attributeName = AttributeName.HIT_POINTS, sortType = SortType.DESCENDING
+        ), priorityType = PriorityType.LOW
     )
 
     val actionAttackHero = Action(
-        ability = attackHero,
-        actionCondition = ActionCondition(
+        ability = attackHero, actionCondition = ActionCondition(
             actionChecks = listOf(
                 ActionCheck(
                     attributeCriteria = listOf(
@@ -99,12 +110,10 @@ fun main() {
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.ENEMY
+                    ), selectionType = SelectionType.ENEMY
                 )
             )
-        ),
-        actionTarget = ActionTarget(
+        ), actionTarget = ActionTarget(
             attributeCriteria = listOf(
                 AttributeCriterion(
                     attributeComparisons = listOf(
@@ -115,19 +124,14 @@ fun main() {
                         )
                     )
                 )
-            ),
-            selectionType = SelectionType.ENEMY
-        ),
-        attributeSort = AttributeSort(
-            attributeName = AttributeName.HIT_POINTS,
-            sortType = SortType.DESCENDING
-        ),
-        priorityType = PriorityType.LOW
+            ), selectionType = SelectionType.ENEMY
+        ), attributeSort = AttributeSort(
+            attributeName = AttributeName.HIT_POINTS, sortType = SortType.DESCENDING
+        ), priorityType = PriorityType.LOW
     )
 
     val actionBreatheFire = Action(
-        ability = breatheFire,
-        actionCondition = ActionCondition(
+        ability = breatheFire, actionCondition = ActionCondition(
             actionChecks = listOf(
                 ActionCheck(
                     attributeCriteria = listOf(
@@ -137,23 +141,19 @@ fun main() {
                                     attributeName = AttributeName.HIT_POINTS_PERCENTAGE,
                                     operatorType = OperatorType.GREATER_THAN,
                                     value = 25
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.MAGIC_POINTS,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = breatheFire.magicCost
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.TURNS_STOP_SPELL,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.SELF
-                ),
-                ActionCheck(
+                    ), selectionType = SelectionType.SELF
+                ), ActionCheck(
                     attributeCriteria = listOf(
                         AttributeCriterion(
                             attributeComparisons = listOf(
@@ -164,12 +164,10 @@ fun main() {
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.ENEMY
+                    ), selectionType = SelectionType.ENEMY
                 )
             )
-        ),
-        actionTarget = ActionTarget(
+        ), actionTarget = ActionTarget(
             attributeCriteria = listOf(
                 AttributeCriterion(
                     attributeComparisons = listOf(
@@ -180,19 +178,14 @@ fun main() {
                         )
                     )
                 )
-            ),
-            selectionType = SelectionType.ENEMY
-        ),
-        attributeSort = AttributeSort(
-            attributeName = AttributeName.HIT_POINTS,
-            sortType = SortType.DESCENDING
-        ),
-        priorityType = PriorityType.entries.random()
+            ), selectionType = SelectionType.ENEMY
+        ), attributeSort = AttributeSort(
+            attributeName = AttributeName.HIT_POINTS, sortType = SortType.DESCENDING
+        ), priorityType = PriorityType.entries.random()
     )
 
     val actionHeal = Action(
-        ability = heal,
-        actionCondition = ActionCondition(
+        ability = heal, actionCondition = ActionCondition(
             actionChecks = listOf(
                 ActionCheck(
                     attributeCriteria = listOf(
@@ -202,23 +195,19 @@ fun main() {
                                     attributeName = AttributeName.HIT_POINTS_PERCENTAGE,
                                     operatorType = OperatorType.GREATER_THAN,
                                     value = 25
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.MAGIC_POINTS,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = heal.magicCost
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.TURNS_STOP_SPELL,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.SELF
-                ),
-                ActionCheck(
+                    ), selectionType = SelectionType.SELF
+                ), ActionCheck(
                     attributeCriteria = listOf(
                         AttributeCriterion(
                             attributeComparisons = listOf(
@@ -226,20 +215,17 @@ fun main() {
                                     attributeName = AttributeName.HIT_POINTS_PERCENTAGE,
                                     operatorType = OperatorType.LESS_THAN_EQUAL,
                                     value = 25
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.HIT_POINTS,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = 1
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.ALLY
+                    ), selectionType = SelectionType.ALLY
                 )
             )
-        ),
-        actionTarget = ActionTarget(
+        ), actionTarget = ActionTarget(
             attributeCriteria = listOf(
                 AttributeCriterion(
                     attributeComparisons = listOf(
@@ -250,19 +236,14 @@ fun main() {
                         )
                     )
                 )
-            ),
-            selectionType = SelectionType.ALLY
-        ),
-        attributeSort = AttributeSort(
-            attributeName = AttributeName.HIT_POINTS,
-            sortType = SortType.ASCENDING
-        ),
-        priorityType = PriorityType.entries.random()
+            ), selectionType = SelectionType.ALLY
+        ), attributeSort = AttributeSort(
+            attributeName = AttributeName.HIT_POINTS, sortType = SortType.ASCENDING
+        ), priorityType = PriorityType.entries.random()
     )
 
     val actionHerb = Action(
-        ability = herb,
-        actionCondition = ActionCondition(
+        ability = herb, actionCondition = ActionCondition(
             actionChecks = listOf(
                 ActionCheck(
                     attributeCriteria = listOf(
@@ -272,29 +253,23 @@ fun main() {
                                     attributeName = AttributeName.HIT_POINTS_PERCENTAGE,
                                     operatorType = OperatorType.GREATER_THAN,
                                     value = 25
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.MAGIC_POINTS,
                                     operatorType = OperatorType.LESS_THAN,
                                     value = heal.magicCost
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.TURNS_SLEEP,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.HERB_COUNT,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = 1
                                 )
-                            ),
-                            matchType = MatchType.ALL
+                            ), matchType = MatchType.ALL
                         )
-                    ),
-                    selectionType = SelectionType.SELF
-                ),
-                ActionCheck(
+                    ), selectionType = SelectionType.SELF
+                ), ActionCheck(
                     attributeCriteria = listOf(
                         AttributeCriterion(
                             attributeComparisons = listOf(
@@ -302,20 +277,17 @@ fun main() {
                                     attributeName = AttributeName.HIT_POINTS_PERCENTAGE,
                                     operatorType = OperatorType.LESS_THAN_EQUAL,
                                     value = 25
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.HIT_POINTS,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = 1
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.ALLY
+                    ), selectionType = SelectionType.ALLY
                 )
             )
-        ),
-        actionTarget = ActionTarget(
+        ), actionTarget = ActionTarget(
             attributeCriteria = listOf(
                 AttributeCriterion(
                     attributeComparisons = listOf(
@@ -326,19 +298,14 @@ fun main() {
                         )
                     )
                 )
-            ),
-            selectionType = SelectionType.ALLY
-        ),
-        attributeSort = AttributeSort(
-            attributeName = AttributeName.HIT_POINTS,
-            sortType = SortType.ASCENDING
-        ),
-        priorityType = PriorityType.entries.random()
+            ), selectionType = SelectionType.ALLY
+        ), attributeSort = AttributeSort(
+            attributeName = AttributeName.HIT_POINTS, sortType = SortType.ASCENDING
+        ), priorityType = PriorityType.entries.random()
     )
 
     val actionHealMore = Action(
-        ability = healMore,
-        actionCondition = ActionCondition(
+        ability = healMore, actionCondition = ActionCondition(
             actionChecks = listOf(
                 ActionCheck(
                     attributeCriteria = listOf(
@@ -348,23 +315,19 @@ fun main() {
                                     attributeName = AttributeName.HIT_POINTS_PERCENTAGE,
                                     operatorType = OperatorType.GREATER_THAN,
                                     value = 25
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.MAGIC_POINTS,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = healMore.magicCost
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.TURNS_STOP_SPELL,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.SELF
-                ),
-                ActionCheck(
+                    ), selectionType = SelectionType.SELF
+                ), ActionCheck(
                     attributeCriteria = listOf(
                         AttributeCriterion(
                             attributeComparisons = listOf(
@@ -372,20 +335,17 @@ fun main() {
                                     attributeName = AttributeName.HIT_POINTS_PERCENTAGE,
                                     operatorType = OperatorType.LESS_THAN_EQUAL,
                                     value = 25
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.HIT_POINTS,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = 1
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.ALLY
+                    ), selectionType = SelectionType.ALLY
                 )
             )
-        ),
-        actionTarget = ActionTarget(
+        ), actionTarget = ActionTarget(
             attributeCriteria = listOf(
                 AttributeCriterion(
                     attributeComparisons = listOf(
@@ -396,19 +356,14 @@ fun main() {
                         )
                     )
                 )
-            ),
-            selectionType = SelectionType.ALLY
-        ),
-        attributeSort = AttributeSort(
-            attributeName = AttributeName.HIT_POINTS,
-            sortType = SortType.ASCENDING
-        ),
-        priorityType = PriorityType.entries.random()
+            ), selectionType = SelectionType.ALLY
+        ), attributeSort = AttributeSort(
+            attributeName = AttributeName.HIT_POINTS, sortType = SortType.ASCENDING
+        ), priorityType = PriorityType.entries.random()
     )
 
     val actionHurt = Action(
-        ability = hurt,
-        actionCondition = ActionCondition(
+        ability = hurt, actionCondition = ActionCondition(
             actionChecks = listOf(
                 ActionCheck(
                     attributeCriteria = listOf(
@@ -418,23 +373,19 @@ fun main() {
                                     attributeName = AttributeName.HIT_POINTS_PERCENTAGE,
                                     operatorType = OperatorType.GREATER_THAN,
                                     value = 25
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.MAGIC_POINTS,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = hurt.magicCost
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.TURNS_STOP_SPELL,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.SELF
-                ),
-                ActionCheck(
+                    ), selectionType = SelectionType.SELF
+                ), ActionCheck(
                     attributeCriteria = listOf(
                         AttributeCriterion(
                             attributeComparisons = listOf(
@@ -445,12 +396,10 @@ fun main() {
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.ENEMY
+                    ), selectionType = SelectionType.ENEMY
                 )
             )
-        ),
-        actionTarget = ActionTarget(
+        ), actionTarget = ActionTarget(
             attributeCriteria = listOf(
                 AttributeCriterion(
                     attributeComparisons = listOf(
@@ -461,19 +410,14 @@ fun main() {
                         )
                     )
                 )
-            ),
-            selectionType = SelectionType.ENEMY
-        ),
-        attributeSort = AttributeSort(
-            attributeName = AttributeName.HIT_POINTS,
-            sortType = SortType.DESCENDING
-        ),
-        priorityType = PriorityType.entries.random()
+            ), selectionType = SelectionType.ENEMY
+        ), attributeSort = AttributeSort(
+            attributeName = AttributeName.HIT_POINTS, sortType = SortType.DESCENDING
+        ), priorityType = PriorityType.entries.random()
     )
 
     val actionHurtMore = Action(
-        ability = hurtMore,
-        actionCondition = ActionCondition(
+        ability = hurtMore, actionCondition = ActionCondition(
             actionChecks = listOf(
                 ActionCheck(
                     attributeCriteria = listOf(
@@ -483,23 +427,19 @@ fun main() {
                                     attributeName = AttributeName.HIT_POINTS_PERCENTAGE,
                                     operatorType = OperatorType.GREATER_THAN,
                                     value = 25
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.MAGIC_POINTS,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = hurtMore.magicCost
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.TURNS_STOP_SPELL,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.SELF
-                ),
-                ActionCheck(
+                    ), selectionType = SelectionType.SELF
+                ), ActionCheck(
                     attributeCriteria = listOf(
                         AttributeCriterion(
                             attributeComparisons = listOf(
@@ -510,12 +450,10 @@ fun main() {
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.ENEMY
+                    ), selectionType = SelectionType.ENEMY
                 )
             )
-        ),
-        actionTarget = ActionTarget(
+        ), actionTarget = ActionTarget(
             attributeCriteria = listOf(
                 AttributeCriterion(
                     attributeComparisons = listOf(
@@ -526,19 +464,14 @@ fun main() {
                         )
                     )
                 )
-            ),
-            selectionType = SelectionType.ENEMY
-        ),
-        attributeSort = AttributeSort(
-            attributeName = AttributeName.HIT_POINTS,
-            sortType = SortType.DESCENDING
-        ),
-        priorityType = PriorityType.entries.random()
+            ), selectionType = SelectionType.ENEMY
+        ), attributeSort = AttributeSort(
+            attributeName = AttributeName.HIT_POINTS, sortType = SortType.DESCENDING
+        ), priorityType = PriorityType.entries.random()
     )
 
     val actionMagicPotion = Action(
-        ability = magicPotion,
-        actionCondition = ActionCondition(
+        ability = magicPotion, actionCondition = ActionCondition(
             actionChecks = listOf(
                 ActionCheck(
                     attributeCriteria = listOf(
@@ -548,29 +481,23 @@ fun main() {
                                     attributeName = AttributeName.MAGIC_POINTS_PERCENTAGE,
                                     operatorType = OperatorType.GREATER_THAN,
                                     value = 25
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.MAGIC_POINTS,
                                     operatorType = OperatorType.LESS_THAN,
                                     value = heal.magicCost
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.TURNS_SLEEP,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.MAGIC_POTION_COUNT,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = 1
                                 )
-                            ),
-                            matchType = MatchType.ALL
+                            ), matchType = MatchType.ALL
                         )
-                    ),
-                    selectionType = SelectionType.SELF
-                ),
-                ActionCheck(
+                    ), selectionType = SelectionType.SELF
+                ), ActionCheck(
                     attributeCriteria = listOf(
                         AttributeCriterion(
                             attributeComparisons = listOf(
@@ -578,20 +505,17 @@ fun main() {
                                     attributeName = AttributeName.MAGIC_POINTS_PERCENTAGE,
                                     operatorType = OperatorType.LESS_THAN_EQUAL,
                                     value = 25
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.MAGIC_POINTS,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = 1
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.ALLY
+                    ), selectionType = SelectionType.ALLY
                 )
             )
-        ),
-        actionTarget = ActionTarget(
+        ), actionTarget = ActionTarget(
             attributeCriteria = listOf(
                 AttributeCriterion(
                     attributeComparisons = listOf(
@@ -602,19 +526,14 @@ fun main() {
                         )
                     )
                 )
-            ),
-            selectionType = SelectionType.ALLY
-        ),
-        attributeSort = AttributeSort(
-            attributeName = AttributeName.MAGIC_POINTS,
-            sortType = SortType.ASCENDING
-        ),
-        priorityType = PriorityType.entries.random()
+            ), selectionType = SelectionType.ALLY
+        ), attributeSort = AttributeSort(
+            attributeName = AttributeName.MAGIC_POINTS, sortType = SortType.ASCENDING
+        ), priorityType = PriorityType.entries.random()
     )
 
     val actionRun = Action(
-        ability = run,
-        actionCondition = ActionCondition(
+        ability = run, actionCondition = ActionCondition(
             actionChecks = listOf(
                 ActionCheck(
                     attributeCriteria = listOf(
@@ -624,23 +543,19 @@ fun main() {
                                     attributeName = AttributeName.HIT_POINTS_PERCENTAGE,
                                     operatorType = OperatorType.LESS_THAN_EQUAL,
                                     value = 5
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.MAGIC_POINTS,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.TURNS_SLEEP,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.SELF
-                ),
-                ActionCheck(
+                    ), selectionType = SelectionType.SELF
+                ), ActionCheck(
                     attributeCriteria = listOf(
                         AttributeCriterion(
                             attributeComparisons = listOf(
@@ -651,12 +566,10 @@ fun main() {
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.ENEMY
+                    ), selectionType = SelectionType.ENEMY
                 )
             )
-        ),
-        actionTarget = ActionTarget(
+        ), actionTarget = ActionTarget(
             attributeCriteria = listOf(
                 AttributeCriterion(
                     attributeComparisons = listOf(
@@ -667,19 +580,14 @@ fun main() {
                         )
                     )
                 )
-            ),
-            selectionType = SelectionType.ENEMY
-        ),
-        attributeSort = AttributeSort(
-            attributeName = AttributeName.AGILITY,
-            sortType = SortType.ASCENDING
-        ),
-        priorityType = PriorityType.entries.random()
+            ), selectionType = SelectionType.ENEMY
+        ), attributeSort = AttributeSort(
+            attributeName = AttributeName.AGILITY, sortType = SortType.ASCENDING
+        ), priorityType = PriorityType.entries.random()
     )
 
     val actionSleep = Action(
-        ability = sleep,
-        actionCondition = ActionCondition(
+        ability = sleep, actionCondition = ActionCondition(
             actionChecks = listOf(
                 ActionCheck(
                     attributeCriteria = listOf(
@@ -689,23 +597,19 @@ fun main() {
                                     attributeName = AttributeName.HIT_POINTS_PERCENTAGE,
                                     operatorType = OperatorType.GREATER_THAN,
                                     value = 25
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.MAGIC_POINTS,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = sleep.magicCost
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.TURNS_STOP_SPELL,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.SELF
-                ),
-                ActionCheck(
+                    ), selectionType = SelectionType.SELF
+                ), ActionCheck(
                     attributeCriteria = listOf(
                         AttributeCriterion(
                             attributeComparisons = listOf(
@@ -713,20 +617,17 @@ fun main() {
                                     attributeName = AttributeName.HIT_POINTS,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = 1
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.TURNS_SLEEP,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.ENEMY
+                    ), selectionType = SelectionType.ENEMY
                 )
             )
-        ),
-        actionTarget = ActionTarget(
+        ), actionTarget = ActionTarget(
             attributeCriteria = listOf(
                 AttributeCriterion(
                     attributeComparisons = listOf(
@@ -737,19 +638,14 @@ fun main() {
                         )
                     )
                 )
-            ),
-            selectionType = SelectionType.ENEMY
-        ),
-        attributeSort = AttributeSort(
-            attributeName = AttributeName.HIT_POINTS,
-            sortType = SortType.DESCENDING
-        ),
-        priorityType = PriorityType.entries.random()
+            ), selectionType = SelectionType.ENEMY
+        ), attributeSort = AttributeSort(
+            attributeName = AttributeName.HIT_POINTS, sortType = SortType.DESCENDING
+        ), priorityType = PriorityType.entries.random()
     )
 
     val actionStopSpell = Action(
-        ability = stopSpell,
-        actionCondition = ActionCondition(
+        ability = stopSpell, actionCondition = ActionCondition(
             actionChecks = listOf(
                 ActionCheck(
                     attributeCriteria = listOf(
@@ -759,23 +655,19 @@ fun main() {
                                     attributeName = AttributeName.HIT_POINTS_PERCENTAGE,
                                     operatorType = OperatorType.GREATER_THAN,
                                     value = 25
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.MAGIC_POINTS,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = stopSpell.magicCost
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.TURNS_STOP_SPELL,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.SELF
-                ),
-                ActionCheck(
+                    ), selectionType = SelectionType.SELF
+                ), ActionCheck(
                     attributeCriteria = listOf(
                         AttributeCriterion(
                             attributeComparisons = listOf(
@@ -783,20 +675,17 @@ fun main() {
                                     attributeName = AttributeName.HIT_POINTS,
                                     operatorType = OperatorType.GREATER_THAN_EQUAL,
                                     value = 1
-                                ),
-                                AttributeComparison(
+                                ), AttributeComparison(
                                     attributeName = AttributeName.TURNS_STOP_SPELL,
                                     operatorType = OperatorType.EQUAL,
                                     value = 0
                                 )
                             )
                         )
-                    ),
-                    selectionType = SelectionType.ENEMY
+                    ), selectionType = SelectionType.ENEMY
                 )
             )
-        ),
-        actionTarget = ActionTarget(
+        ), actionTarget = ActionTarget(
             attributeCriteria = listOf(
                 AttributeCriterion(
                     attributeComparisons = listOf(
@@ -807,23 +696,19 @@ fun main() {
                         )
                     )
                 )
-            ),
-            selectionType = SelectionType.ENEMY
-        ),
-        attributeSort = AttributeSort(
-            attributeName = AttributeName.HIT_POINTS,
-            sortType = SortType.DESCENDING
-        ),
-        priorityType = PriorityType.entries.random()
+            ), selectionType = SelectionType.ENEMY
+        ), attributeSort = AttributeSort(
+            attributeName = AttributeName.HIT_POINTS, sortType = SortType.DESCENDING
+        ), priorityType = PriorityType.entries.random()
     )
 
 
     val actors = mutableListOf<Actor>()
 
-    for (i in (0..4)) {
+    val randomSpritesFolder = getRandomSpritesFolder()
 
-        val d = Directory.get("sprites")?.listFiles()?.random()
-        val bufferedImage = ImageIO.read(d)
+
+    for (i in (0..4)) {
 
         val actions = mutableListOf(
             listOf(actionAttackEnemy, actionAttackHero).random(), actionRun, actionMagicPotion
@@ -846,6 +731,7 @@ fun main() {
         }
 
         val actor = Actor()
+
         actor.actions = actions
         actor.allegiance = i % 2
         actor.agility = (0..10).random()
@@ -862,7 +748,14 @@ fun main() {
         actor.breatheFireRangeMaximum = 255
         actor.breatheFireScale = 0x10
         actor.breatheFireShift = 0x07
-        actor.bufferedImage = bufferedImage
+
+        randomSpritesFolder?.let { folder ->
+            File(folder.absolutePath).listFiles().random()?.let {
+                actor.bufferedImage = ImageIO.read(it)
+            }
+            
+            println("Random sprites folder: ${folder.absolutePath}")
+        }
         actor.evasionRequirementMaximum = 32
         actor.healMoreScale = 0x55 // 10
         actor.healMoreShift = 0x0F //
@@ -920,8 +813,7 @@ fun main() {
     frame.pack()
     frame.setResizable(false)
     frame.setLocationRelativeTo(null)
-    frame.setVisible(true)
-    // Timer to run at 60 FPS (16.67 ms per frame)
+    frame.setVisible(true) // Timer to run at 60 FPS (16.67 ms per frame)
     val delay = (1000 / 60)  // milliseconds for 60 FPS
     val timer = Timer(delay) {
         panelBattle.run()  // Update the panel
