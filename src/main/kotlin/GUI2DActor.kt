@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.Image
 import java.awt.image.BufferedImage
 
-class Graphics2DActor {
+class GUI2DActor {
     fun draw(
         actor: Actor,
         color: Color,

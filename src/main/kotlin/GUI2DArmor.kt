@@ -5,7 +5,7 @@ import java.awt.Font
 import java.awt.FontMetrics
 import java.awt.Graphics2D
 
-class Graphics2DArmor {
+class GUI2DArmor {
     fun draw(
         armor: Armor?,
         color: Color,

@@ -1,7 +1,6 @@
 package dqbb
 
 import java.awt.*
-import java.awt.Image
 import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
@@ -51,17 +50,17 @@ class PanelBattle(
 
     private val graphics2D: Graphics2D = bufferedImage.graphics as Graphics2D
 
-    private val graphics2DAction: Graphics2DAction = Graphics2DAction()
+    private val gui2DAction: GUI2DAction = GUI2DAction()
 
-    private val graphics2DActor: Graphics2DActor = Graphics2DActor()
+    private val gui2DActor: GUI2DActor = GUI2DActor()
 
-    private val graphics2DArmor: Graphics2DArmor = Graphics2DArmor()
+    private val gui2DArmor: GUI2DArmor = GUI2DArmor()
 
-    private val graphics2DItem: Graphics2DItem = Graphics2DItem()
+    private val gui2DItem: GUI2DItem = GUI2DItem()
 
-    private val graphics2DShield: Graphics2DShield = Graphics2DShield()
+    private val gui2DShield: GUI2DShield = GUI2DShield()
 
-    private val graphics2DWeapon: Graphics2DWeapon = Graphics2DWeapon()
+    private val gui2DWeapon: GUI2DWeapon = GUI2DWeapon()
 
     private val font: Font = Font.createFont(
         Font.TRUETYPE_FONT, javaClass.getResourceAsStream("/fonts/DRAGON_QUEST.ttf")
@@ -269,25 +268,25 @@ class PanelBattle(
             null,
         )
         val lineHeight = 10
-        graphics2DActor.draw(
+        gui2DActor.drawBufferedImage(actor, Color.WHITE, font, fontMetrics, graphics2D, rectangle)
+        gui2DActor.draw(
             actor, Color.WHITE, font, fontMetrics, graphics2D, lineHeight, rectangle.x, rectangle.y
         )
-        var yPosition = graphics2DAction.draw(
+        var yPosition = gui2DAction.draw(
             actor.actions, Color.WHITE, font, fontMetrics, graphics2D, lineHeight, rectangle.width, rectangle.y
         )
-        yPosition = graphics2DArmor.draw(
+        yPosition = gui2DArmor.draw(
             actor.armor, Color.WHITE, font, fontMetrics, graphics2D, lineHeight, rectangle.width, yPosition
         )
-        yPosition = graphics2DItem.draw(
+        yPosition = gui2DItem.draw(
             Color.WHITE, font, fontMetrics, graphics2D, actor.items, lineHeight, rectangle.width, yPosition
         )
-        yPosition = graphics2DShield.draw(
+        yPosition = gui2DShield.draw(
             Color.WHITE, font, fontMetrics, graphics2D, lineHeight, actor.shield, rectangle.width, yPosition
         )
-        graphics2DWeapon.draw(
+        gui2DWeapon.draw(
             Color.WHITE, font, fontMetrics, graphics2D, lineHeight, actor.weapon, rectangle.width, yPosition
         )
-        graphics2DActor.drawBufferedImage(actor, Color.WHITE, font, fontMetrics, graphics2D, rectangle)
     }
 
     private fun drawRetrieveActorIterator(
@@ -357,13 +356,13 @@ class PanelBattle(
         rectangle: Rectangle,
         targetActor: Actor,
     ) {
-        graphics2DActor.drawBufferedImage(actor, Color.WHITE, font, fontMetrics, graphics2D, rectangle)
+        gui2DActor.drawBufferedImage(actor, Color.WHITE, font, fontMetrics, graphics2D, rectangle)
         if (temporaryActor == null || System.currentTimeMillis() % 4 == 0L) {
             temporaryActor = actors.random()
         }
 
         temporaryActor?.let { temporaryActor: Actor ->
-            graphics2DActor.drawBufferedImageThumbnail(
+            gui2DActor.drawBufferedImageThumbnail(
                 temporaryActor, Color.WHITE, font, fontMetrics, graphics2D, rectangle
             )
         }
@@ -392,7 +391,7 @@ class PanelBattle(
         }
 
         temporaryActor?.let { temporaryActor: Actor ->
-            graphics2DActor.drawBufferedImageThumbnail(
+            gui2DActor.drawBufferedImageThumbnail(
                 temporaryActor, Color.WHITE, font, fontMetrics, graphics2D, rectangle
             )
         }
@@ -421,7 +420,7 @@ class PanelBattle(
     ) {
         drawActor(actor, actorIndex, font, fontMetrics, graphics2D, rectangle)
         targetActor?.let { targetActor: Actor ->
-            graphics2DActor.drawBufferedImageThumbnail(
+            gui2DActor.drawBufferedImageThumbnail(
                 targetActor, Color.WHITE, font, fontMetrics, graphics2D, rectangle
             )
         }
@@ -445,8 +444,8 @@ class PanelBattle(
         reviewable: Reviewable,
         targetActor: Actor,
     ) {
-        graphics2DActor.drawBufferedImage(actor, Color.WHITE, font, fontMetrics, graphics2D, rectangle)
-        graphics2DActor.drawBufferedImageThumbnail(targetActor, Color.WHITE, font, fontMetrics, graphics2D, rectangle)
+        gui2DActor.drawBufferedImage(actor, Color.WHITE, font, fontMetrics, graphics2D, rectangle)
+        gui2DActor.drawBufferedImageThumbnail(targetActor, Color.WHITE, font, fontMetrics, graphics2D, rectangle)
     }
 
     private fun process() {

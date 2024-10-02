@@ -5,40 +5,40 @@ import java.awt.Font
 import java.awt.FontMetrics
 import java.awt.Graphics2D
 
-class Graphics2DShield {
+class GUI2DWeapon {
     fun draw(
         color: Color,
         font: Font,
         fontMetrics: FontMetrics,
         graphics2D: Graphics2D,
         lineHeight: Int,
-        shield: Shield?,
+        weapon: Weapon?,
         x: Int,
         y: Int,
     ): Int {
         val xPosition: Int = x - lineHeight
         var yPosition: Int = y + lineHeight
-        drawValue(Color.YELLOW, font, fontMetrics, graphics2D, "SHIELD", xPosition, yPosition)
+        drawValue(Color.YELLOW, font, fontMetrics, graphics2D, "WEAPON", xPosition, yPosition)
         yPosition += lineHeight
-        drawDefense(color, font, fontMetrics, graphics2D, shield, xPosition, yPosition)
+        drawAttack(color, font, fontMetrics, graphics2D, weapon, xPosition, yPosition)
         yPosition += lineHeight
-        drawId(color, font, fontMetrics, graphics2D, shield, xPosition, yPosition)
+        drawId(color, font, fontMetrics, graphics2D, weapon, xPosition, yPosition)
         yPosition += lineHeight
-        drawName(color, font, fontMetrics, graphics2D, shield, xPosition, yPosition)
+        drawName(color, font, fontMetrics, graphics2D, weapon, xPosition, yPosition)
         yPosition += lineHeight
         return yPosition
     }
 
-    private fun drawDefense(
+    private fun drawAttack(
         color: Color,
         font: Font,
         fontMetrics: FontMetrics,
         graphics2D: Graphics2D,
-        shield: Shield?,
+        weapon: Weapon?,
         x: Int,
         y: Int,
     ) {
-        val value = "Defense: ${shield?.defense ?: "?"}"
+        val value = "Attack: ${weapon?.attack ?: "?"}"
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
@@ -47,11 +47,11 @@ class Graphics2DShield {
         font: Font,
         fontMetrics: FontMetrics,
         graphics2D: Graphics2D,
-        shield: Shield?,
+        weapon: Weapon?,
         x: Int,
         y: Int,
     ) {
-        val value = "Identifier: ${shield?.id ?: "?"}"
+        val value = "Identifier: ${weapon?.id ?: "?"}"
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
@@ -60,11 +60,11 @@ class Graphics2DShield {
         font: Font,
         fontMetrics: FontMetrics,
         graphics2D: Graphics2D,
-        shield: Shield?,
+        weapon: Weapon?,
         x: Int,
         y: Int,
     ) {
-        val value = "Name: ${shield?.name ?: "?"}"
+        val value = "Name: ${weapon?.name ?: "?"}"
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 

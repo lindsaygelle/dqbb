@@ -5,7 +5,7 @@ import java.awt.Font
 import java.awt.FontMetrics
 import java.awt.Graphics2D
 
-class Graphics2DAction {
+class GUI2DAction {
     fun draw(
         actions: Collection<Action<Actor, Actor>>, color: Color,
         font: Font,

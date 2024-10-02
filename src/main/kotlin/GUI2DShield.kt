@@ -5,51 +5,66 @@ import java.awt.Font
 import java.awt.FontMetrics
 import java.awt.Graphics2D
 
-class Graphics2DItem {
+class GUI2DShield {
     fun draw(
         color: Color,
         font: Font,
         fontMetrics: FontMetrics,
         graphics2D: Graphics2D,
-        items: Map<ItemName, Int>,
         lineHeight: Int,
+        shield: Shield?,
         x: Int,
         y: Int,
     ): Int {
         val xPosition: Int = x - lineHeight
         var yPosition: Int = y + lineHeight
-        drawValue(Color.YELLOW, font, fontMetrics, graphics2D, "ITEMS", xPosition, yPosition)
+        drawValue(Color.YELLOW, font, fontMetrics, graphics2D, "SHIELD", xPosition, yPosition)
         yPosition += lineHeight
-        drawHerbs(color, font, fontMetrics, graphics2D, items, xPosition, yPosition)
+        drawDefense(color, font, fontMetrics, graphics2D, shield, xPosition, yPosition)
         yPosition += lineHeight
-        drawMagicPotions(color, font, fontMetrics, graphics2D, items, xPosition, yPosition)
+        drawId(color, font, fontMetrics, graphics2D, shield, xPosition, yPosition)
+        yPosition += lineHeight
+        drawName(color, font, fontMetrics, graphics2D, shield, xPosition, yPosition)
         yPosition += lineHeight
         return yPosition
     }
 
-    private fun drawHerbs(
+    private fun drawDefense(
         color: Color,
         font: Font,
         fontMetrics: FontMetrics,
         graphics2D: Graphics2D,
-        items: Map<ItemName, Int>,
+        shield: Shield?,
         x: Int,
         y: Int,
     ) {
-        val value = "Herbs: ${items.getOrDefault(ItemName.HERB, 0)}"
+        val value = "Defense: ${shield?.defense ?: "?"}"
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    private fun drawMagicPotions(
+    private fun drawId(
         color: Color,
         font: Font,
         fontMetrics: FontMetrics,
         graphics2D: Graphics2D,
-        items: Map<ItemName, Int>,
+        shield: Shield?,
         x: Int,
         y: Int,
     ) {
-        val value = "Magic Potions: ${items.getOrDefault(ItemName.MAGIC_POTION, 0)}"
+        val value = "Identifier: ${shield?.id ?: "?"}"
+        drawValue(color, font, fontMetrics, graphics2D, value, x, y)
+    }
+
+    private fun drawName(
+        color: Color,
+        font: Font,
+        fontMetrics: FontMetrics,
+        graphics2D: Graphics2D,
+        shield: Shield?,
+        x: Int,
+        y: Int,
+    ) {
+        val value = "Name: ${shield?.name ?: "?"}"
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
