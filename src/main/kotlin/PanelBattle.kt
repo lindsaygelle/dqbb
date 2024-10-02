@@ -51,9 +51,13 @@ class PanelBattle(
 
     private val graphics2D: Graphics2D = bufferedImage.graphics as Graphics2D
 
+    private val graphics2DAction: Graphics2DAction = Graphics2DAction()
+
     private val graphics2DActor: Graphics2DActor = Graphics2DActor()
 
     private val graphics2DArmor: Graphics2DArmor = Graphics2DArmor()
+
+    private val graphics2DItem: Graphics2DItem = Graphics2DItem()
 
     private val graphics2DShield: Graphics2DShield = Graphics2DShield()
 
@@ -129,6 +133,8 @@ class PanelBattle(
             )
         }
 
+    private var temporaryActor: Actor? = null
+
     private val jButtonNext = JButton(stateType.name)
 
     init {
@@ -196,6 +202,7 @@ class PanelBattle(
                                     ability,
                                     indexedValueActor.value,
                                     indexedValueActor.index,
+                                    actors,
                                     font,
                                     fontMetrics,
                                     graphics2D,
@@ -265,8 +272,14 @@ class PanelBattle(
         graphics2DActor.draw(
             actor, Color.WHITE, font, fontMetrics, graphics2D, lineHeight, rectangle.x, rectangle.y
         )
-        var yPosition = graphics2DArmor.draw(
-            actor.armor, Color.WHITE, font, fontMetrics, graphics2D, lineHeight, rectangle.width, rectangle.y
+        var yPosition = graphics2DAction.draw(
+            actor.actions, Color.WHITE, font, fontMetrics, graphics2D, lineHeight, rectangle.width, rectangle.y
+        )
+        yPosition = graphics2DArmor.draw(
+            actor.armor, Color.WHITE, font, fontMetrics, graphics2D, lineHeight, rectangle.width, yPosition
+        )
+        yPosition = graphics2DItem.draw(
+            Color.WHITE, font, fontMetrics, graphics2D, actor.items, lineHeight, rectangle.width, yPosition
         )
         yPosition = graphics2DShield.draw(
             Color.WHITE, font, fontMetrics, graphics2D, lineHeight, actor.shield, rectangle.width, yPosition
@@ -337,6 +350,7 @@ class PanelBattle(
         ability: Ability<Actor, Actor>,
         actor: Actor,
         actorIndex: Int,
+        actors: Collection<Actor>,
         font: Font,
         fontMetrics: FontMetrics,
         graphics2D: Graphics2D,
@@ -344,7 +358,15 @@ class PanelBattle(
         targetActor: Actor,
     ) {
         graphics2DActor.drawBufferedImage(actor, Color.WHITE, font, fontMetrics, graphics2D, rectangle)
-        graphics2DActor.drawBufferedImageThumbnail(targetActor, Color.WHITE, font, fontMetrics, graphics2D, rectangle)
+        if (temporaryActor == null || System.currentTimeMillis() % 4 == 0L) {
+            temporaryActor = actors.random()
+        }
+
+        temporaryActor?.let { temporaryActor: Actor ->
+            graphics2DActor.drawBufferedImageThumbnail(
+                temporaryActor, Color.WHITE, font, fontMetrics, graphics2D, rectangle
+            )
+        }
         val message = "${actor.name ?: actor.simpleName}:${actor.id} uses ${ability.simpleName}:${ability.id} on ${targetActor.name ?: targetActor.simpleName}:${targetActor.id}!"
         val x: Int = (rectangle.centerX - (fontMetrics.stringWidth(message) / 2)).toInt()
         val y: Int = (rectangle.centerY + 30).toInt()
@@ -365,13 +387,13 @@ class PanelBattle(
     ) {
         drawActor(actor, actorIndex, font, fontMetrics, graphics2D, rectangle)
 
-        if (targetActor == null || System.currentTimeMillis() % 4 == 0L) {
-            targetActor = actors.random()
+        if (temporaryActor == null || System.currentTimeMillis() % 4 == 0L) {
+            temporaryActor = actors.random()
         }
 
-        targetActor?.let { targetActor: Actor ->
+        temporaryActor?.let { temporaryActor: Actor ->
             graphics2DActor.drawBufferedImageThumbnail(
-                targetActor, Color.WHITE, font, fontMetrics, graphics2D, rectangle
+                temporaryActor, Color.WHITE, font, fontMetrics, graphics2D, rectangle
             )
         }
 

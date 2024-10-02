@@ -79,8 +79,6 @@ class Graphics2DActor {
         yPosition += lineHeight
         drawHitPointsPercentage(actor, color, font, fontMetrics, graphics2D, xPosition, yPosition)
         yPosition += lineHeight
-        drawHitPointsRange(actor, color, font, fontMetrics, graphics2D, xPosition, yPosition)
-        yPosition += lineHeight
         drawHurtMoreScale(actor, color, font, fontMetrics, graphics2D, xPosition, yPosition)
         yPosition += lineHeight
         drawHurtMoreShift(actor, color, font, fontMetrics, graphics2D, xPosition, yPosition)
@@ -114,8 +112,6 @@ class Graphics2DActor {
         drawMagicPointsMaximum(actor, color, font, fontMetrics, graphics2D, xPosition, yPosition)
         yPosition += lineHeight
         drawMagicPointsPercentage(actor, color, font, fontMetrics, graphics2D, xPosition, yPosition)
-        yPosition += lineHeight
-        drawMagicPointsRange(actor, color, font, fontMetrics, graphics2D, xPosition, yPosition)
         yPosition += lineHeight
         drawMagicPotionCount(actor, color, font, fontMetrics, graphics2D, xPosition, yPosition)
         yPosition += lineHeight
@@ -196,7 +192,7 @@ class Graphics2DActor {
         return yPosition
     }
 
-    fun drawActions(
+    private fun drawActions(
         actor: Actor,
         color: Color,
         font: Font,
@@ -209,7 +205,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawAgility(
+    private fun drawAgility(
         actor: Actor,
         color: Color,
         font: Font,
@@ -222,7 +218,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawAllegiance(
+    private fun drawAllegiance(
         actor: Actor,
         color: Color,
         font: Font,
@@ -235,7 +231,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawBreathe(
+    private fun drawBreathe(
         actor: Actor,
         color: Color,
         font: Font,
@@ -248,7 +244,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawBreatheFireRangeMaximum(
+    private fun drawBreatheFireRangeMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -262,7 +258,7 @@ class Graphics2DActor {
     }
 
 
-    fun drawBreatheFireRangeMinimum(
+    private fun drawBreatheFireRangeMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -275,7 +271,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawBreatheFireScale(
+    private fun drawBreatheFireScale(
         actor: Actor,
         color: Color,
         font: Font,
@@ -288,7 +284,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawBreatheFireShift(
+    private fun drawBreatheFireShift(
         actor: Actor,
         color: Color,
         font: Font,
@@ -334,7 +330,7 @@ class Graphics2DActor {
         }
     }
 
-    fun drawEvasionRequirement(
+    private fun drawEvasionRequirement(
         actor: Actor,
         color: Color,
         font: Font,
@@ -347,7 +343,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawEvasionRequirementMaximum(
+    private fun drawEvasionRequirementMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -360,7 +356,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawEvasionRequirementMinimum(
+    private fun drawEvasionRequirementMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -373,7 +369,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawExcellentAttackRequirement(
+    private fun drawExcellentAttackRequirement(
         actor: Actor,
         color: Color,
         font: Font,
@@ -386,7 +382,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawExcellentAttackRequirementMaximum(
+    private fun drawExcellentAttackRequirementMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -399,7 +395,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawExcellentAttackRequirementMinimum(
+    private fun drawExcellentAttackRequirementMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -412,7 +408,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHealMoreScale(
+    private fun drawHealMoreScale(
         actor: Actor,
         color: Color,
         font: Font,
@@ -425,7 +421,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHealMoreShift(
+    private fun drawHealMoreShift(
         actor: Actor,
         color: Color,
         font: Font,
@@ -438,7 +434,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHealRange(
+    private fun drawHealRange(
         actor: Actor,
         color: Color,
         font: Font,
@@ -451,7 +447,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHealRangeMaximum(
+    private fun drawHealRangeMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -464,7 +460,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHealRangeMinimum(
+    private fun drawHealRangeMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -477,7 +473,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHerbCount(
+    private fun drawHerbCount(
         actor: Actor,
         color: Color,
         font: Font,
@@ -490,7 +486,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHealScale(
+    private fun drawHealScale(
         actor: Actor,
         color: Color,
         font: Font,
@@ -503,7 +499,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHealShift(
+    private fun drawHealShift(
         actor: Actor,
         color: Color,
         font: Font,
@@ -516,7 +512,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHerbRange(
+    private fun drawHerbRange(
         actor: Actor,
         color: Color,
         font: Font,
@@ -529,7 +525,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHerbRangeMaximum(
+    private fun drawHerbRangeMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -542,7 +538,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHerbRangeMinimum(
+    private fun drawHerbRangeMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -555,7 +551,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHerbScale(
+    private fun drawHerbScale(
         actor: Actor,
         color: Color,
         font: Font,
@@ -568,7 +564,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHerbShift(
+    private fun drawHerbShift(
         actor: Actor,
         color: Color,
         font: Font,
@@ -581,7 +577,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHitPoints(
+    private fun drawHitPoints(
         actor: Actor,
         color: Color,
         font: Font,
@@ -594,7 +590,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHitPointsMaximum(
+    private fun drawHitPointsMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -607,7 +603,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHitPointsPercentage(
+    private fun drawHitPointsPercentage(
         actor: Actor,
         color: Color,
         font: Font,
@@ -620,20 +616,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHitPointsRange(
-        actor: Actor,
-        color: Color,
-        font: Font,
-        fontMetrics: FontMetrics,
-        graphics2D: Graphics2D,
-        x: Int,
-        y: Int,
-    ) {
-        val value = "Hit Points: ${actor.hitPoints}-${actor.hitPointsMaximum} (${actor.hitPointsPercentage}%)"
-        drawValue(color, font, fontMetrics, graphics2D, value, x, y)
-    }
-
-    fun drawHurtMoreScale(
+    private fun drawHurtMoreScale(
         actor: Actor,
         color: Color,
         font: Font,
@@ -646,7 +629,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHurtMoreShift(
+    private fun drawHurtMoreShift(
         actor: Actor,
         color: Color,
         font: Font,
@@ -659,7 +642,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHurtRange(
+    private fun drawHurtRange(
         actor: Actor,
         color: Color,
         font: Font,
@@ -672,7 +655,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHurtRangeMaximum(
+    private fun drawHurtRangeMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -685,7 +668,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHurtRangeMinimum(
+    private fun drawHurtRangeMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -698,7 +681,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHurtRequirement(
+    private fun drawHurtRequirement(
         actor: Actor,
         color: Color,
         font: Font,
@@ -711,7 +694,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHurtRequirementMaximum(
+    private fun drawHurtRequirementMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -724,7 +707,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHurtRequirementMinimum(
+    private fun drawHurtRequirementMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -737,7 +720,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHurtResistance(
+    private fun drawHurtResistance(
         actor: Actor,
         color: Color,
         font: Font,
@@ -750,7 +733,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHurtResistanceMaximum(
+    private fun drawHurtResistanceMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -763,7 +746,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHurtResistanceMinimum(
+    private fun drawHurtResistanceMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -776,7 +759,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHurtScale(
+    private fun drawHurtScale(
         actor: Actor,
         color: Color,
         font: Font,
@@ -789,7 +772,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawHurtShift(
+    private fun drawHurtShift(
         actor: Actor,
         color: Color,
         font: Font,
@@ -802,7 +785,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawIsRunning(
+    private fun drawIsRunning(
         actor: Actor,
         color: Color,
         font: Font,
@@ -815,7 +798,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawMagicPoints(
+    private fun drawMagicPoints(
         actor: Actor,
         color: Color,
         font: Font,
@@ -828,7 +811,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawMagicPointsMaximum(
+    private fun drawMagicPointsMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -841,7 +824,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawMagicPointsPercentage(
+    private fun drawMagicPointsPercentage(
         actor: Actor,
         color: Color,
         font: Font,
@@ -854,20 +837,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawMagicPointsRange(
-        actor: Actor,
-        color: Color,
-        font: Font,
-        fontMetrics: FontMetrics,
-        graphics2D: Graphics2D,
-        x: Int,
-        y: Int,
-    ) {
-        val value = "Magic Points: ${actor.magicPoints}-${actor.magicPointsMaximum} (${actor.magicPointsPercentage})"
-        drawValue(color, font, fontMetrics, graphics2D, value, x, y)
-    }
-
-    fun drawMagicPotionCount(
+    private fun drawMagicPotionCount(
         actor: Actor,
         color: Color,
         font: Font,
@@ -880,7 +850,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawMagicPotionRange(
+    private fun drawMagicPotionRange(
         actor: Actor,
         color: Color,
         font: Font,
@@ -893,7 +863,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawMagicPotionRangeMaximum(
+    private fun drawMagicPotionRangeMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -906,7 +876,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawMagicPotionRangeMinimum(
+    private fun drawMagicPotionRangeMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -919,7 +889,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawMagicPotionScale(
+    private fun drawMagicPotionScale(
         actor: Actor,
         color: Color,
         font: Font,
@@ -932,7 +902,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawMagicPotionShift(
+    private fun drawMagicPotionShift(
         actor: Actor,
         color: Color,
         font: Font,
@@ -945,7 +915,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawName(
+    private fun drawName(
         actor: Actor,
         color: Color,
         font: Font,
@@ -958,7 +928,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawRunRange(
+    private fun drawRunRange(
         actor: Actor,
         color: Color,
         font: Font,
@@ -971,7 +941,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawRunRangeMaximum(
+    private fun drawRunRangeMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -984,7 +954,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawRunRangeMinimum(
+    private fun drawRunRangeMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -997,7 +967,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawRunShift(
+    private fun drawRunShift(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1010,7 +980,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawSleepRequirement(
+    private fun drawSleepRequirement(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1023,7 +993,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawSleepRequirementMaximum(
+    private fun drawSleepRequirementMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1036,7 +1006,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawSleepRequirementMinimum(
+    private fun drawSleepRequirementMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1049,7 +1019,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawSleepResistance(
+    private fun drawSleepResistance(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1062,7 +1032,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawSleepResistanceMaximum(
+    private fun drawSleepResistanceMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1075,7 +1045,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawSleepResistanceMinimum(
+    private fun drawSleepResistanceMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1088,7 +1058,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawSleepResolution(
+    private fun drawSleepResolution(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1101,7 +1071,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawSleepResolutionMaximum(
+    private fun drawSleepResolutionMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1114,7 +1084,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawSleepResolutionMinimum(
+    private fun drawSleepResolutionMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1127,7 +1097,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawStopSpellRequirement(
+    private fun drawStopSpellRequirement(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1140,7 +1110,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawStopSpellRequirementMaximum(
+    private fun drawStopSpellRequirementMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1153,7 +1123,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawStopSpellRequirementMinimum(
+    private fun drawStopSpellRequirementMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1166,7 +1136,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawStopSpellResistance(
+    private fun drawStopSpellResistance(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1179,7 +1149,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawStopSpellResistanceMaximum(
+    private fun drawStopSpellResistanceMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1192,7 +1162,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawStopSpellResistanceMinimum(
+    private fun drawStopSpellResistanceMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1205,7 +1175,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawStopSpellResolution(
+    private fun drawStopSpellResolution(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1218,7 +1188,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawStopSpellResolutionMaximum(
+    private fun drawStopSpellResolutionMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1231,7 +1201,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawStopSpellResolutionMinimum(
+    private fun drawStopSpellResolutionMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1244,7 +1214,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawStrength(
+    private fun drawStrength(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1257,7 +1227,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawTurn(
+    private fun drawTurn(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1270,7 +1240,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawTurnsSleep(
+    private fun drawTurnsSleep(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1283,7 +1253,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawTurnsSleepMaximum(
+    private fun drawTurnsSleepMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1296,7 +1266,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawTurnsSleepMinimum(
+    private fun drawTurnsSleepMinimum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1309,7 +1279,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawTurnsStopSpell(
+    private fun drawTurnsStopSpell(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1322,7 +1292,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawTurnsStopSpellMaximum(
+    private fun drawTurnsStopSpellMaximum(
         actor: Actor,
         color: Color,
         font: Font,
@@ -1335,7 +1305,7 @@ class Graphics2DActor {
         drawValue(color, font, fontMetrics, graphics2D, value, x, y)
     }
 
-    fun drawTurnsStopSpellMinimum(
+    private fun drawTurnsStopSpellMinimum(
         actor: Actor,
         color: Color,
         font: Font,
