@@ -7,7 +7,6 @@ import javax.imageio.ImageIO
 import javax.swing.JButton
 
 class PanelBattle(
-    actors: Collection<Actor>,
 ) : Panel(),
     Runnable {
     private enum class StateType {
@@ -20,7 +19,7 @@ class PanelBattle(
         RETRIEVE_TARGETED_ACTORS,
     }
 
-    private var actors: Collection<Actor> = actors
+    var actors: Collection<Actor> = emptyList()
         set(value) {
             field = value
             logger.debug(
@@ -46,7 +45,7 @@ class PanelBattle(
 
     private val bufferedImage: BufferedImage = BufferedImage(720, 680, BufferedImage.TYPE_INT_RGB)
 
-    private val bufferedImageField: BufferedImage = ImageIO.read(javaClass.getResource("/scenes/FIELD.png"))
+    var bufferedImageField: BufferedImage? = null
 
     private val graphics2D: Graphics2D = bufferedImage.graphics as Graphics2D
 
@@ -261,12 +260,15 @@ class PanelBattle(
         graphics2D: Graphics2D,
         rectangle: Rectangle,
     ) {
-        graphics2D.drawImage(
-            bufferedImageField,
-            (rectangle.centerX - (bufferedImageField.width / 2)).toInt(),
-            (rectangle.centerY - (bufferedImageField.height / 2)).toInt(),
-            null,
-        )
+        bufferedImageField?.let { bufferedImage: BufferedImage ->
+            graphics2D.drawImage(
+                bufferedImage,
+                (rectangle.centerX - (bufferedImage.width / 2)).toInt(),
+                (rectangle.centerY - (bufferedImage.height / 2)).toInt(),
+                null,
+            )
+        }
+
         val lineHeight = 10
         gui2DActor.drawBufferedImage(actor, Color.WHITE, font, fontMetrics, graphics2D, rectangle)
         gui2DActor.draw(
