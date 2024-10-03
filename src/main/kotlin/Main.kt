@@ -7,47 +7,19 @@ import java.net.URL
 import javax.imageio.ImageIO
 import javax.swing.JFrame
 import javax.swing.Timer
+import kotlin.system.exitProcess
 
-
-abstract class Resource<T> {
-    abstract fun get(name: String): T?
-    protected fun getResource(name: String): URL? {
-        return javaClass.getResource(name)
-    }
-}
-
-object Directory : Resource<File>() {
-    override fun get(name: String): File? {
-        return getResource(if (name.startsWith("/")) name else "/$name")?.toURI()?.let { File(it) }
-    }
-}
-
-object Image : Resource<BufferedImage>() {
-    override fun get(name: String): BufferedImage? {
-        return getResource(name)?.let { ImageIO.read(it) }
-    }
-}
-
-fun getRandomSpritesFolder(): File? { // Get the class loader to access the resources directory
-    val classLoader = object {}.javaClass.classLoader
-
-    // Load the base directory (images folder) from resources
-    val baseDirectoryURL = classLoader.getResource("images") ?: return null
-    val baseDirectory = File(baseDirectoryURL.toURI())
-
-    // Get the list of subdirectories (nes, gbc, snes, mobile)
-    val subDirectories = baseDirectory.listFiles { file -> file.isDirectory } ?: return null
-
-    // Get the list of 'sprites/' folders from each subdirectory
-    val spritesFolders = subDirectories.mapNotNull { subDir ->
-        val spritesFolder = File(subDir, "sprites")
-        if (spritesFolder.exists() && spritesFolder.isDirectory) spritesFolder else null
-    }
-
-    return spritesFolders.random()
-}
 
 fun main() {
+
+    val imageFolders = File({}.javaClass.getResource("/images").toURI()).listFiles().filter { file: File? ->
+        file?.isDirectory() ?: false
+    }
+    val imageFolder = imageFolders.random()
+    val imageSceneFolder = File(imageFolder.absolutePath + "/scenes")
+    val imageSpriteFolder = File(imageFolder.absolutePath + "/sprites")
+    val sceneImageFiles = imageSceneFolder.listFiles()
+    val spriteImageFiles = imageSpriteFolder.listFiles()
 
     val attackEnemy = AttackEnemy<Actor, Actor>()
     val attackHero = AttackHero<Actor, Actor>()
@@ -702,11 +674,7 @@ fun main() {
         ), priorityType = PriorityType.entries.random()
     )
 
-
-    val actors = mutableListOf<Actor>()
-
-    val randomSpritesFolder = getRandomSpritesFolder()
-
+    val actors: MutableList<Actor> = mutableListOf()
 
     for (i in (0..4)) {
 
@@ -748,14 +716,7 @@ fun main() {
         actor.breatheFireRangeMaximum = 255
         actor.breatheFireScale = 0x10
         actor.breatheFireShift = 0x07
-
-        randomSpritesFolder?.let { folder ->
-            File(folder.absolutePath).listFiles().random()?.let {
-                actor.bufferedImage = ImageIO.read(it)
-            }
-            
-            println("Random sprites folder: ${folder.absolutePath}")
-        }
+        actor.bufferedImage = ImageIO.read(spriteImageFiles.random())
         actor.evasionRequirementMaximum = 32
         actor.healMoreScale = 0x55 // 10
         actor.healMoreShift = 0x0F //
@@ -804,7 +765,9 @@ fun main() {
         actors.add(actor)
     }
 
-    val panelBattle = PanelBattle(actors)
+    val panelBattle = PanelBattle()
+    panelBattle.actors = actors
+    panelBattle.bufferedImageField = ImageIO.read(sceneImageFiles.random())
 
     val frame = Frame()
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
